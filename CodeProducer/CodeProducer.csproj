@@ -139,12 +139,6 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Program.cs" />
-    <Compile Include="Forms\PhysicsEquationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PhysicsEquationForm.Designer.cs">
-      <DependentUpon>PhysicsEquationForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\TypeChoser.resx">
       <DependentUpon>TypeChoser.cs</DependentUpon>
@@ -187,10 +181,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PhysicsEquationForm.resx">
-      <DependentUpon>PhysicsEquationForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
