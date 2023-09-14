@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Utte.Code.Code.Helpers;
-using static Utte.Code.Method;
 
 namespace Utte.Code.Code.SupportClasses
 {

@@ -88,6 +88,13 @@ namespace Utte.Code.Code.Helpers
                 codeWriter.WriteLine("/// <returns></returns>", true);
         }
 
+        /// <summary>
+        /// Produces description text with parameters and return parameter
+        /// </summary>
+        /// <param name="codeWriter"></param>
+        /// <param name="description"></param>
+        /// <param name="returnparameter"></param>
+        /// <param name="parameters"></param>
         public static void ProduceDescription(this CodeWriter codeWriter, string description, bool returnparameter, params string[] parameters)
         {
             codeWriter.ProduceDescription(description);
