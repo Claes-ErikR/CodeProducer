@@ -48,9 +48,9 @@ namespace Utte.Code
             _constructor = constructor;
             _equalitycomparison = equalitycomparison;
             _produceempty = produceempty;
-            _operatorimplementations.ImplementationClasses.AddRange(operatorclasses);
-            if (_operatorimplementations.ImplementationClasses.Count > 0)
-                _operatorimplementations.ImplementsArithmetic = true;
+            _operatorImplementationWriter.ImplementationClasses.AddRange(operatorclasses);
+            if (_operatorImplementationWriter.ImplementationClasses.Count > 0)
+                _operatorImplementationWriter.ImplementsArithmetic = true;
             _implementdeconstruct = implementdeconstruct;
         }
 
@@ -273,7 +273,7 @@ namespace Utte.Code
         /// </summary>
         protected void ProduceOperators()
         {
-            if (_equalitycomparison || _operatorimplementations.ImplementsArithmetic)
+            if (_equalitycomparison || _operatorImplementationWriter.ImplementsArithmetic)
             {
                 _codeWriter.WriteLine("#region Operators", true);
                 _codeWriter.WriteLine("");
@@ -312,9 +312,9 @@ namespace Utte.Code
                     _codeWriter.WriteLine("}", true);
                     _codeWriter.WriteLine("");
                 }
-                if (_operatorimplementations.ImplementsArithmetic)
+                if (_operatorImplementationWriter.ImplementsArithmetic)
                 {
-                    _operatorimplementations.WriteOperators(_codeWriter, "    ", _name);
+                    _operatorImplementationWriter.WriteOperators(_codeWriter, _name);
                 }
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");

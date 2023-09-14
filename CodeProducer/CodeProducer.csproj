@@ -66,6 +66,7 @@
     <Compile Include="Code\Helpers\DescriptionHelper.cs" />
     <Compile Include="Code\StructProducer.cs" />
     <Compile Include="Code\SupportClasses\CodeWriter.cs" />
+    <Compile Include="Code\SupportClasses\OperatorImplementationWriter.cs" />
     <Compile Include="Controls\TypeChoser.cs">
       <SubType>Component</SubType>
     </Compile>

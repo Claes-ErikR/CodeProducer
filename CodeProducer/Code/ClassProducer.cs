@@ -112,8 +112,8 @@ namespace Utte.Code
         /// <param name="operatorclass"></param>
         public void AddOperatorClass(string operatorclass)
         {
-            _operatorimplementations.ImplementationClasses.Add(operatorclass);
-            _operatorimplementations.ImplementsArithmetic = true;
+            _operatorImplementationWriter.ImplementationClasses.Add(operatorclass);
+            _operatorImplementationWriter.ImplementsArithmetic = true;
         }
 
         /// <summary>
@@ -873,7 +873,7 @@ namespace Utte.Code
         {
             if (!IsStatic)
             {
-                _operatorimplementations.ImplementsComparison = true;
+                _operatorImplementationWriter.ImplementsComparison = true;
                 _interfaces.Add("IComparable");
                 _interfaces.Add("IComparable<" + _name + ">");
 
@@ -938,7 +938,7 @@ namespace Utte.Code
         {
             if (!IsStatic)
             {
-                _operatorimplementations.ImplementsEquality = true;
+                _operatorImplementationWriter.ImplementsEquality = true;
                 _interfaces.Add("IEquatable<" + _name + ">");
 
                 Method method = new Method();
@@ -1774,12 +1774,12 @@ namespace Utte.Code
         /// </summary>
         protected void WriteOperators()
         {
-            if (_operatorimplementations.ImplementsEquality || _operatorimplementations.ImplementsComparison || _operatorimplementations.ImplementsArithmetic)
+            if (_operatorImplementationWriter.ImplementsAny)
             {
                 _codeWriter.WriteLine("#region Operators", true);
                 _codeWriter.WriteLine("");
-                _operatorimplementations.WriteOperators(_codeWriter, "    ", _name);
-                if (_operatorimplementations.ImplementsEquality)
+                _operatorImplementationWriter.WriteOperators(_codeWriter, _name);
+                if (_operatorImplementationWriter.ImplementsEquality)
                 {
                     _codeWriter.ProduceDescription("Compares lhs and rhs for equality");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
@@ -1814,7 +1814,7 @@ namespace Utte.Code
                     _codeWriter.WriteLine("}", true);
                     _codeWriter.WriteLine("");
                 }
-                if (_operatorimplementations.ImplementsComparison)
+                if (_operatorImplementationWriter.ImplementsComparison)
                 {
                     _codeWriter.ProduceDescription("Check if lhs is smaller than rhs");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
