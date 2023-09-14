@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Code\CodeGeneratorBase.cs" />
     <Compile Include="Code\StructProducer.cs" />
+    <Compile Include="Code\SupportClasses\CodeWriter.cs" />
     <Compile Include="Controls\TypeChoser.cs">
       <SubType>Component</SubType>
     </Compile>
