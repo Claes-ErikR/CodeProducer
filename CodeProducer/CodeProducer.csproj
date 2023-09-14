@@ -90,12 +90,6 @@
     <Compile Include="Forms\BaseForm.Designer.cs">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CodeTestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\CodeTestForm.Designer.cs">
-      <DependentUpon>CodeTestForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\DialogClass.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,10 +138,6 @@
     <EmbeddedResource Include="Controls\ClassProducerControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ClassProducerControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CodeTestForm.resx">
-      <DependentUpon>CodeTestForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DialogClass.resx">
       <SubType>Designer</SubType>
