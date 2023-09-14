@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\CodeGeneratorBase.cs" />
-    <Compile Include="Code\DataBaseSupport.cs" />
     <Compile Include="Code\StructProducer.cs" />
     <Compile Include="Controls\TypeChoser.cs">
       <SubType>Component</SubType>
