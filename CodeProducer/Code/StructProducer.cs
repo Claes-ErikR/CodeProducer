@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
-using Utte.Text;
+using Utte.Code.Code.SupportClasses;
 
 namespace Utte.Code
 {
@@ -42,7 +40,7 @@ namespace Utte.Code
         /// <param name="implementdeconstruct"></param>
         public StructProducer(string name, string description, string visibility, List<StructMember> members, bool constructor, bool equalitycomparison, bool produceempty, string filename, List<string> operatorclasses, bool implementdeconstruct) : base(name)
         {
-            _streamwriter = new StreamWriter(filename);
+            _codeWriter = new CodeWriter(filename, 4);
             _description = description;
             _visibility = visibility;
             _members = members;
@@ -64,32 +62,32 @@ namespace Utte.Code
         /// </summary>
         public void Produce()
         {
-            _indentspaces = 0;
+            _codeWriter.Indentation = 0;
             if (_description != "")
                 ProduceDescription(_description);
             if (_visibility == "ProtectedInternal")
-                Write("protected internal", true);
+                _codeWriter.Write("protected internal", true);
             else
-                Write(_visibility.ToString().ToLower(), true);
-            Write(" struct ");
+                _codeWriter.Write(_visibility.ToString().ToLower(), true);
+            _codeWriter.Write(" struct ");
             if (_equalitycomparison)
             {
-                Write(_name);
-                Write(" : IEquatable<");
-                Write(_name);
-                WriteLine(">");
+                _codeWriter.Write(_name);
+                _codeWriter.Write(" : IEquatable<");
+                _codeWriter.Write(_name);
+                _codeWriter.WriteLine(">");
             }
             else
-                WriteLine(_name);
-            WriteLine("{", true);
-            _indentspaces += 4;
+                _codeWriter.WriteLine(_name);
+            _codeWriter.WriteLine("{", true);
+            _codeWriter.AddIndentation();
             ProduceMembers();
             ProduceConstructor();
             ProducePublicMethods();
             ProduceEmpty();
             ProduceOperators();
-            _indentspaces -= 4;
-            WriteLine("}", true);
+            _codeWriter.SubtractIndentation();
+            _codeWriter.WriteLine("}", true);
         }
 
         #endregion
@@ -103,46 +101,46 @@ namespace Utte.Code
         {
             if (_produceempty)
             {
-                WriteLine("#region Static constructor", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#region Static constructor", true);
+                _codeWriter.WriteLine("");
                 ProduceDescription("Sets empty instance", false);
-                WriteLine("static " + _name + "()", true);
-                WriteLine("{", true);
-                _indentspaces += 4;
-                WriteLine("Empty = new " + _name + "();", true);
-                _indentspaces -= 4;
-                WriteLine("}", true);
-                WriteLine("");
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("static " + _name + "()", true);
+                _codeWriter.WriteLine("{", true);
+                _codeWriter.AddIndentation();
+                _codeWriter.WriteLine("Empty = new " + _name + "();", true);
+                _codeWriter.SubtractIndentation();
+                _codeWriter.WriteLine("}", true);
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
 
                 if (_equalitycomparison)
                 {
-                    WriteLine("#region Public static methods", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("#region Public static methods", true);
+                    _codeWriter.WriteLine("");
                     StructMember structmember = new StructMember();
                     structmember.Name = "instance";
                     structmember.Type = _name;
                     List<StructMember> structmemberlist = new List<StructMember>() { structmember };
                     ProduceDescription("Compares to empty instance", structmemberlist, true);
-                    WriteLine("public static bool IsEmpty(" + _name + " instance)", true);
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("return instance == Empty;", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
-                    WriteLine("#endregion", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("public static bool IsEmpty(" + _name + " instance)", true);
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("return instance == Empty;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
+                    _codeWriter.WriteLine("#endregion", true);
+                    _codeWriter.WriteLine("");
                 }
 
-                WriteLine("#region Static properties", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#region Static properties", true);
+                _codeWriter.WriteLine("");
                 ProduceDescription("Returns empty instance", false);
-                WriteLine("public static " + _name + " Empty { get; }", true);
-                WriteLine("");
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("public static " + _name + " Empty { get; }", true);
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -151,12 +149,12 @@ namespace Utte.Code
         /// </summary>
         protected void ProducePublicMethods()
         {
-            WriteLine("#region Public methods", true);
-            WriteLine("");
+            _codeWriter.WriteLine("#region Public methods", true);
+            _codeWriter.WriteLine("");
             ProduceDescription("Returns string representation of struct", true);
-            WriteLine("public override string ToString()", true);
-            WriteLine("{", true);
-            _indentspaces += 4;
+            _codeWriter.WriteLine("public override string ToString()", true);
+            _codeWriter.WriteLine("{", true);
+            _codeWriter.AddIndentation();
             StringBuilder sb = new StringBuilder();
             sb.Append("return ");
             foreach (StructMember member in _members)
@@ -169,43 +167,43 @@ namespace Utte.Code
             if (sb.Length > 9)
                 sb.Remove(sb.Length - 9, 9);
             sb.Append(";");
-            WriteLine(sb.ToString(), true);
-            _indentspaces -= 4;
-            WriteLine("}", true);
-            WriteLine("");
+            _codeWriter.WriteLine(sb.ToString(), true);
+            _codeWriter.SubtractIndentation();
+            _codeWriter.WriteLine("}", true);
+            _codeWriter.WriteLine("");
             if (_equalitycomparison)
             {
                 ProduceDescription("Compares the instance to an object add parameter description ...", true);
-                WriteLine("public override bool Equals(object obj)", true);
-                WriteLine("{", true);
-                _indentspaces += 4;
-                WriteLine("if (obj==null)", true);
-                _indentspaces += 4;
-                WriteLine("return false;", true);
-                _indentspaces -= 4;
-                Write("if (obj is ", true);
-                Write(_name);
-                WriteLine(")");
-                _indentspaces += 4;
-                Write("return this.Equals((", true);
-                Write(_name);
-                WriteLine(")obj);");
-                _indentspaces -= 4;
-                WriteLine("return false;", true);
-                _indentspaces -= 4;
-                WriteLine("}", true);
-                WriteLine("");
+                _codeWriter.WriteLine("public override bool Equals(object obj)", true);
+                _codeWriter.WriteLine("{", true);
+                _codeWriter.AddIndentation();
+                _codeWriter.WriteLine("if (obj==null)", true);
+                _codeWriter.AddIndentation();
+                _codeWriter.WriteLine("return false;", true);
+                _codeWriter.SubtractIndentation();
+                _codeWriter.Write("if (obj is ", true);
+                _codeWriter.Write(_name);
+                _codeWriter.WriteLine(")");
+                _codeWriter.AddIndentation();
+                _codeWriter.Write("return this.Equals((", true);
+                _codeWriter.Write(_name);
+                _codeWriter.WriteLine(")obj);");
+                _codeWriter.SubtractIndentation();
+                _codeWriter.WriteLine("return false;", true);
+                _codeWriter.SubtractIndentation();
+                _codeWriter.WriteLine("}", true);
+                _codeWriter.WriteLine("");
 
                 ProduceDescription("Compares the instance to an object, typesafe add parameter description ...", true);
-                Write("public bool Equals(", true);
-                Write(_name);
-                WriteLine(" obj)");
-                WriteLine("{", true);
-                _indentspaces += 4;
-                WriteLine("if (obj==null)", true);
-                _indentspaces += 4;
-                WriteLine("return false;", true);
-                _indentspaces -= 4;
+                _codeWriter.Write("public bool Equals(", true);
+                _codeWriter.Write(_name);
+                _codeWriter.WriteLine(" obj)");
+                _codeWriter.WriteLine("{", true);
+                _codeWriter.AddIndentation();
+                _codeWriter.WriteLine("if (obj==null)", true);
+                _codeWriter.AddIndentation();
+                _codeWriter.WriteLine("return false;", true);
+                _codeWriter.SubtractIndentation();
                 sb = new StringBuilder();
                 sb.Append("return ");
                 foreach (StructMember member in _members)
@@ -219,54 +217,54 @@ namespace Utte.Code
                 }
                 sb.Remove(sb.Length - 4, 4);
                 sb.Append(";");
-                WriteLine(sb.ToString(), true);
-                _indentspaces -= 4;
-                WriteLine("}", true);
-                WriteLine("");
+                _codeWriter.WriteLine(sb.ToString(), true);
+                _codeWriter.SubtractIndentation();
+                _codeWriter.WriteLine("}", true);
+                _codeWriter.WriteLine("");
 
                 ProduceDescription("Get hashcode calculated from string representation of the instance", true);
-                WriteLine("public override int GetHashCode()", true);
-                WriteLine("{", true);
-                _indentspaces += 4;
-                WriteLine("return this.ToString().GetHashCode();", true);
-                _indentspaces -= 4;
-                WriteLine("}", true);
-                WriteLine("");
+                _codeWriter.WriteLine("public override int GetHashCode()", true);
+                _codeWriter.WriteLine("{", true);
+                _codeWriter.AddIndentation();
+                _codeWriter.WriteLine("return this.ToString().GetHashCode();", true);
+                _codeWriter.SubtractIndentation();
+                _codeWriter.WriteLine("}", true);
+                _codeWriter.WriteLine("");
             }
             if(_implementdeconstruct)
             {
                 if (_members.Count > 1)
                 {
                     ProduceDescription("Deconstructs struct into properties", true);
-                    Write("public void Deconstruct(", true);
+                    _codeWriter.Write("public void Deconstruct(", true);
                     for (int i = 0; i < _members.Count; i++)
                     {
-                        Write("out ");
-                        Write(_members[i].Type);
+                        _codeWriter.Write("out ");
+                        _codeWriter.Write(_members[i].Type);
                         if (_members[i].IsNullable)
-                            Write("?");
-                        Write(" ");
-                        Write(_members[i].Name.ToLower());
+                            _codeWriter.Write("?");
+                        _codeWriter.Write(" ");
+                        _codeWriter.Write(_members[i].Name.ToLower());
                         if(i < _members.Count - 1)
-                            Write(", ");
+                            _codeWriter.Write(", ");
                     }
-                    Write(")");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
+                    _codeWriter.Write(")");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
                     foreach (var member in _members)
                     {
-                        Write(member.Name.ToLower(), true);
-                        Write(" = ");
-                        Write(member.Name);
-                        WriteLine(";");
+                        _codeWriter.Write(member.Name.ToLower(), true);
+                        _codeWriter.Write(" = ");
+                        _codeWriter.Write(member.Name);
+                        _codeWriter.WriteLine(";");
                     }
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                 }
             }
-            WriteLine("#endregion", true);
-            WriteLine("");
+            _codeWriter.WriteLine("#endregion", true);
+            _codeWriter.WriteLine("");
         }
 
         /// <summary>
@@ -276,49 +274,49 @@ namespace Utte.Code
         {
             if (_equalitycomparison || _operatorimplementations.ImplementsArithmetic)
             {
-                WriteLine("#region Operators", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#region Operators", true);
+                _codeWriter.WriteLine("");
                 if (_equalitycomparison)
                 {
                     ProduceDescription("Compares lhs and rhs for equality");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator ==(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    Write("return ", true);
-                    Write(_name);
-                    WriteLine(".Equals(lhs,rhs);");
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator ==(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.Write("return ", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(".Equals(lhs,rhs);");
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                     ProduceDescription("Compares lhs and rhs for inequality");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator !=(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("return !(lhs == rhs);", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator !=(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("return !(lhs == rhs);", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                 }
                 if (_operatorimplementations.ImplementsArithmetic)
                 {
-                    _operatorimplementations.WriteOperators(_streamwriter, "    ", _name);
+                    _operatorimplementations.WriteOperators(_codeWriter, "    ", _name);
                 }
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -333,12 +331,12 @@ namespace Utte.Code
                     members.Add(member);
             if (members.Count != 0)
             {
-                WriteLine("#region Constructors", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#region Constructors", true);
+                _codeWriter.WriteLine("");
                 ProduceDescription("Initializes members", members);
-                Write("public ", true);
-                Write(_name);
-                Write("(");
+                _codeWriter.Write("public ", true);
+                _codeWriter.Write(_name);
+                _codeWriter.Write("(");
                 StringBuilder sb = new StringBuilder();
                 foreach (StructMember member in members)
                 {
@@ -350,22 +348,22 @@ namespace Utte.Code
                     sb.Append(", ");
                 }
                 sb.Remove(sb.Length - 2, 2);
-                Write(sb.ToString());
-                WriteLine(")");
-                WriteLine("{", true);
-                _indentspaces += 4;
+                _codeWriter.Write(sb.ToString());
+                _codeWriter.WriteLine(")");
+                _codeWriter.WriteLine("{", true);
+                _codeWriter.AddIndentation();
                 foreach (StructMember member in members)
                 {
-                    Write(member.Name, true);
-                    Write(" = ");
-                    Write(member.Name.ToLower());
-                    WriteLine(";");
+                    _codeWriter.Write(member.Name, true);
+                    _codeWriter.Write(" = ");
+                    _codeWriter.Write(member.Name.ToLower());
+                    _codeWriter.WriteLine(";");
                 }
-                _indentspaces -= 4;
-                WriteLine("}", true);
-                WriteLine("");
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.SubtractIndentation();
+                _codeWriter.WriteLine("}", true);
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -374,24 +372,24 @@ namespace Utte.Code
         /// </summary>
         protected void ProduceMembers()
         {
-            WriteLine("");
-            WriteLine("#region Public members", true);
-            WriteLine("");
+            _codeWriter.WriteLine("");
+            _codeWriter.WriteLine("#region Public members", true);
+            _codeWriter.WriteLine("");
             foreach (StructMember member in _members)
             {
-                Write("public ", true);
+                _codeWriter.Write("public ", true);
                 if (member.ReadOnly)
-                    Write("readonly ");
-                Write(member.Type);
+                    _codeWriter.Write("readonly ");
+                _codeWriter.Write(member.Type);
                 if (member.IsNullable)
-                    Write("?");
-                Write(" ");
-                Write(member.Name);
-                WriteLine(";");
+                    _codeWriter.Write("?");
+                _codeWriter.Write(" ");
+                _codeWriter.Write(member.Name);
+                _codeWriter.WriteLine(";");
             }
-            WriteLine("");
-            WriteLine("#endregion", true);
-            WriteLine("");
+            _codeWriter.WriteLine("");
+            _codeWriter.WriteLine("#endregion", true);
+            _codeWriter.WriteLine("");
         }
 
         #endregion

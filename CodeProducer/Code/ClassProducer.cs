@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
+using Utte.Code.Code.SupportClasses;
 
 namespace Utte.Code
 {
@@ -71,7 +70,7 @@ namespace Utte.Code
         public ClassProducer(string name, List<string> attributes, ClassType classtype, bool formcomponent, Visibility visibility, string parentclass, string description, string filename)
             : this(name,attributes, classtype, formcomponent, visibility, parentclass,description)
         {
-            _streamwriter = new StreamWriter(filename);
+            _codeWriter = new CodeWriter(filename, 4);
         }
 
         #endregion
@@ -302,7 +301,7 @@ namespace Utte.Code
         /// <param name="classproducer"></param>
         public void AddClass(ClassProducer classproducer)
         {
-            classproducer._streamwriter = _streamwriter;
+            classproducer._codeWriter = _codeWriter;
             _classes.Add(classproducer);
         }
 
@@ -475,13 +474,13 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("foreach (XmlNode currnode in node)", true);
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("if (currnode.Name == this.Name)", true);
+                    _codeWriter.WriteLine("foreach (XmlNode currnode in node)", true);
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("if (currnode.Name == this.Name)", true);
                     NotImplemented();
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
                 };
                 _methods.Add(method);
 
@@ -504,16 +503,16 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("if (Valid)", true);
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("XmlElement xmlelem;", true);
-                    WriteLine("XmlText xmltext;", true);
-                    WriteLine("xmlelem = document.CreateElement(\"\", this.Name, \"\");", true);
+                    _codeWriter.WriteLine("if (Valid)", true);
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("XmlElement xmlelem;", true);
+                    _codeWriter.WriteLine("XmlText xmltext;", true);
+                    _codeWriter.WriteLine("xmlelem = document.CreateElement(\"\", this.Name, \"\");", true);
                     NotImplemented();
-                    WriteLine("node.AppendChild(xmlelem);", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
+                    _codeWriter.WriteLine("node.AppendChild(xmlelem);", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
                 };
                 _methods.Add(method);
 
@@ -532,14 +531,14 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("foreach (XmlNode currnode in node)", true);
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("if (currnode.Name == this.Name)", true);
+                    _codeWriter.WriteLine("foreach (XmlNode currnode in node)", true);
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("if (currnode.Name == this.Name)", true);
                     NotImplemented();
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("return false;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("return false;", true);
                 };
                 _methods.Add(method);
 
@@ -652,9 +651,9 @@ namespace Utte.Code
                 method.Name = "Clone";
                 method.Text = delegate()
                 {
-                    Write(_name, true);
-                    Write(" clone = new ");
-                    Write(_name);
+                    _codeWriter.Write(_name, true);
+                    _codeWriter.Write(" clone = new ");
+                    _codeWriter.Write(_name);
                     StringBuilder sb=new StringBuilder("(");
                     foreach (Member member in _members)
                     {
@@ -668,29 +667,29 @@ namespace Utte.Code
                     if (sb.Length > 1)
                         sb.Remove(sb.Length - 2, 2);
                     sb.Append(");");
-                    WriteLine(sb.ToString());
+                    _codeWriter.WriteLine(sb.ToString());
                     foreach (Member member in _members)
                     {
                         if (!member.ConstructorSet && member.PrivateProtected)
                         {
-                            Write("clone._", true);
-                            Write(member.Name.ToLower());
-                            Write(" = ");
-                            Write("this._");
-                            Write(member.Name.ToLower());
-                            WriteLine(";");
+                            _codeWriter.Write("clone._", true);
+                            _codeWriter.Write(member.Name.ToLower());
+                            _codeWriter.Write(" = ");
+                            _codeWriter.Write("this._");
+                            _codeWriter.Write(member.Name.ToLower());
+                            _codeWriter.WriteLine(";");
                         }
                         else if (!member.ConstructorSet && member.SetProperty)
                         {
-                            Write("clone.", true);
-                            Write(member.Name);
-                            Write(" = ");
-                            Write("this.");
-                            Write(member.Name);
-                            WriteLine(";");
+                            _codeWriter.Write("clone.", true);
+                            _codeWriter.Write(member.Name);
+                            _codeWriter.Write(" = ");
+                            _codeWriter.Write("this.");
+                            _codeWriter.Write(member.Name);
+                            _codeWriter.WriteLine(";");
                         }
                     }
-                    WriteLine("return clone;",true);
+                    _codeWriter.WriteLine("return clone;",true);
                 };
                 _methods.Add(method);
             }
@@ -740,12 +739,12 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("if (format == null)", true);
-                    _indentspaces += 4;
-                    WriteLine("return ToString();", true);
-                    _indentspaces -= 4;
-                    WriteLine("string formatupper = format.ToUpper();", true);
-                    WriteLine("//Add code here", true);
+                    _codeWriter.WriteLine("if (format == null)", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("return ToString();", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("string formatupper = format.ToUpper();", true);
+                    _codeWriter.WriteLine("//Add code here", true);
                 };
                 _methods.Add(method);
 
@@ -770,7 +769,7 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("return ToString(format);", true);
+                    _codeWriter.WriteLine("return ToString(format);", true);
                 };
                 _methods.Add(method);
             }
@@ -830,7 +829,7 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("_list.Add(item);", true);
+                    _codeWriter.WriteLine("_list.Add(item);", true);
                 };
                 _methods.Add(method);
 
@@ -843,7 +842,7 @@ namespace Utte.Code
                 method.Name = "Clear";
                 method.Text = delegate()
                 {
-                    WriteLine("_list.Clear();", true);
+                    _codeWriter.WriteLine("_list.Clear();", true);
                 };
                 _methods.Add(method);
 
@@ -856,7 +855,7 @@ namespace Utte.Code
                 method.Name = "GetEnumerator";
                 method.Text = delegate()
                 {
-                    WriteLine("return _list.GetEnumerator();", true);
+                    _codeWriter.WriteLine("return _list.GetEnumerator();", true);
                 };
                 _methods.Add(method);
             }
@@ -892,15 +891,15 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    Write("if (obj is ", true);
-                    Write(_name);
-                    WriteLine(")");
-                    _indentspaces += 4;
-                    Write("return this.CompareTo((", true);
-                    Write(_name);
-                    WriteLine(")obj);");
-                    _indentspaces -= 4;
-                    WriteLine("throw new ArgumentException(\"Wrong type in sort comparison\");", true);
+                    _codeWriter.Write("if (obj is ", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(")");
+                    _codeWriter.AddIndentation();
+                    _codeWriter.Write("return this.CompareTo((", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(")obj);");
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("throw new ArgumentException(\"Wrong type in sort comparison\");", true);
                 };
                 _methods.Add(method);
 
@@ -919,12 +918,12 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    Write("if (", true);
-                    Write(_name.ToLower());
-                    WriteLine(" == null)");
-                    _indentspaces += 4;
-                    WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
-                    _indentspaces -= 4;
+                    _codeWriter.Write("if (", true);
+                    _codeWriter.Write(_name.ToLower());
+                    _codeWriter.WriteLine(" == null)");
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+                    _codeWriter.SubtractIndentation();
                     NotImplemented();
                 };
                 _methods.Add(method);
@@ -956,19 +955,19 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("if (obj==null)", true);
-                    _indentspaces += 4;
-                    WriteLine("return false;", true);
-                    _indentspaces -= 4;
-                    Write("if (obj is ", true);
-                    Write(_name);
-                    WriteLine(")");
-                    _indentspaces += 4;
-                    Write("return this.Equals((", true);
-                    Write(_name);
-                    WriteLine(")obj);");
-                    _indentspaces -= 4;
-                    WriteLine("return false;", true);
+                    _codeWriter.WriteLine("if (obj==null)", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("return false;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.Write("if (obj is ", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(")");
+                    _codeWriter.AddIndentation();
+                    _codeWriter.Write("return this.Equals((", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(")obj);");
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("return false;", true);
                 };
                 _methods.Add(method);
 
@@ -987,20 +986,20 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    Write("if (", true);
-                    Write(_name.ToLower());
-                    WriteLine("==null)");
-                    _indentspaces += 4;
-                    WriteLine("return false;", true);
-                    _indentspaces -= 4;
-                    Write("if (", true);
-                    Write(_name);
-                    Write(".ReferenceEquals(this, ");
-                    Write(_name.ToLower());
-                    WriteLine("))");
-                    _indentspaces += 4;
-                    WriteLine("return true;", true);
-                    _indentspaces -= 4;
+                    _codeWriter.Write("if (", true);
+                    _codeWriter.Write(_name.ToLower());
+                    _codeWriter.WriteLine("==null)");
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("return false;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.Write("if (", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(".ReferenceEquals(this, ");
+                    _codeWriter.Write(_name.ToLower());
+                    _codeWriter.WriteLine("))");
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("return true;", true);
+                    _codeWriter.SubtractIndentation();
                     StringBuilder sb = new StringBuilder("return ");
                     foreach (Member member in _members)
                         if(!member.Static)
@@ -1014,12 +1013,12 @@ namespace Utte.Code
                             sb.Append(") && ");
                         }
                     if (sb.ToString() == "return ")
-                        WriteLine("return true;", true);
+                        _codeWriter.WriteLine("return true;", true);
                     else
                     {
                         sb.Remove(sb.Length - 4, 4);
-                        Write(sb.ToString(), true);
-                        WriteLine(";");
+                        _codeWriter.Write(sb.ToString(), true);
+                        _codeWriter.WriteLine(";");
                     }
                 };
                 _methods.Add(method);
@@ -1033,7 +1032,7 @@ namespace Utte.Code
                 method.Name = "GetHashCode";
                 method.Text = delegate()
                 {
-                    WriteLine("return this.ToString().GetHashCode();", true);
+                    _codeWriter.WriteLine("return this.ToString().GetHashCode();", true);
                 };
                 _methods.Add(method);
 
@@ -1063,23 +1062,23 @@ namespace Utte.Code
                     method.Name = "ToString";
                     method.Text = delegate ()
                     {
-                        WriteLine("StringBuilder sb = new StringBuilder();", true);
+                        _codeWriter.WriteLine("StringBuilder sb = new StringBuilder();", true);
                         for (int i = 0; i < _members.Count; i++)
                         {
                             Member member = _members[i];
                             if (!member.Static)
                             {
-                                WriteLine("sb.Append(\"" + member.Name.ToString() + ": \");", true);
+                                _codeWriter.WriteLine("sb.Append(\"" + member.Name.ToString() + ": \");", true);
                                 if(member.Type == "string")
-                                    WriteLine("sb.Append(" + member.Name.ToString() + ");", true);
+                                    _codeWriter.WriteLine("sb.Append(" + member.Name.ToString() + ");", true);
                                 else
-                                    WriteLine("sb.Append(" + member.Name.ToString() + ".ToString());", true);
+                                    _codeWriter.WriteLine("sb.Append(" + member.Name.ToString() + ".ToString());", true);
                                 if(i < _members.Count - 1)
-                                    WriteLine("sb.Append(\", \");", true);
+                                    _codeWriter.WriteLine("sb.Append(\", \");", true);
                             }
                         }
-                        WriteLine("");
-                        WriteLine("return sb.ToString();", true);
+                        _codeWriter.WriteLine("");
+                        _codeWriter.WriteLine("return sb.ToString();", true);
                     };
                     _methods.Add(method);
                     _hastostring = true;
@@ -1117,10 +1116,10 @@ namespace Utte.Code
                 {
                     foreach (var member in _members)
                     {
-                        Write(member.Name.ToLower(), true);
-                        Write(" = ");
-                        Write(member.Name);
-                        WriteLine(";");
+                        _codeWriter.Write(member.Name.ToLower(), true);
+                        _codeWriter.Write(" = ");
+                        _codeWriter.Write(member.Name);
+                        _codeWriter.WriteLine(";");
                     }
                 };
                 _methods.Add(method);
@@ -1153,44 +1152,44 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("foreach (XmlNode currnode in node)", true);
-                    _indentspaces += 4;
+                    _codeWriter.WriteLine("foreach (XmlNode currnode in node)", true);
+                    _codeWriter.AddIndentation();
                     bool firstif=true;
                     foreach(Member member in _members)
                         if (member.PrivateProtected)
                         {
                             if (firstif)
                             {
-                                Write("if (currnode.Name == \"", true);
+                                _codeWriter.Write("if (currnode.Name == \"", true);
                                 firstif = false;
                             }
                             else
-                                Write("else if (currnode.Name == \"", true);
-                            Write(member.Name);
-                            WriteLine("\")");
-                            _indentspaces += 4;
+                                _codeWriter.Write("else if (currnode.Name == \"", true);
+                            _codeWriter.Write(member.Name);
+                            _codeWriter.WriteLine("\")");
+                            _codeWriter.AddIndentation();
                             if (member.ValueType)
                             {
-                                Write("_", true);
-                                Write(member.Name.ToLower());
-                                Write(" = ");
+                                _codeWriter.Write("_", true);
+                                _codeWriter.Write(member.Name.ToLower());
+                                _codeWriter.Write(" = ");
                                 if (member.Type == "string")
-                                    WriteLine("currnode.InnerText;");
+                                    _codeWriter.WriteLine("currnode.InnerText;");
                                 else
                                 {
-                                    Write(member.Type);
-                                    WriteLine(".Parse(currnode.InnerText);");
+                                    _codeWriter.Write(member.Type);
+                                    _codeWriter.WriteLine(".Parse(currnode.InnerText);");
                                 }
                             }
                             else
                             {
-                                Write("_", true);
-                                Write(member.Name.ToLower());
-                                WriteLine(".Read(currnode);");
+                                _codeWriter.Write("_", true);
+                                _codeWriter.Write(member.Name.ToLower());
+                                _codeWriter.WriteLine(".Read(currnode);");
                             }
-                            _indentspaces -= 4;
+                            _codeWriter.SubtractIndentation();
                         }
-                    _indentspaces -= 4;
+                    _codeWriter.SubtractIndentation();
                 };
                 _methods.Add(method);
 
@@ -1213,32 +1212,32 @@ namespace Utte.Code
                 method.Parameters = parameters;
                 method.Text = delegate()
                 {
-                    WriteLine("XmlElement xmlelem;", true);
-                    WriteLine("XmlText xmltext;", true);
+                    _codeWriter.WriteLine("XmlElement xmlelem;", true);
+                    _codeWriter.WriteLine("XmlText xmltext;", true);
                     foreach(Member member in _members)
                         if(member.PrivateProtected)
                         {
-                            WriteLine("");
-                            Write("xmlelem = document.CreateElement(\"\", \"", true);
-                            Write(member.Name);
-                            WriteLine("\", \"\");");
+                            _codeWriter.WriteLine("");
+                            _codeWriter.Write("xmlelem = document.CreateElement(\"\", \"", true);
+                            _codeWriter.Write(member.Name);
+                            _codeWriter.WriteLine("\", \"\");");
                             if(member.ValueType)
                             {
-                                Write("xmltext = document.CreateTextNode(_", true);
-                                Write(member.Name.ToString().ToLower());
+                                _codeWriter.Write("xmltext = document.CreateTextNode(_", true);
+                                _codeWriter.Write(member.Name.ToString().ToLower());
                                 if(member.Type=="string")
-                                    WriteLine(");");
+                                    _codeWriter.WriteLine(");");
                                 else
-                                    WriteLine(".ToString());");
-                                WriteLine("xmlelem.AppendChild(xmltext);", true);
+                                    _codeWriter.WriteLine(".ToString());");
+                                _codeWriter.WriteLine("xmlelem.AppendChild(xmltext);", true);
                             }
                             else
                             {
-                                Write("_", true);
-                                Write(member.Name.ToString().ToLower());
-                                WriteLine(".Save(document, xmlelem);");
+                                _codeWriter.Write("_", true);
+                                _codeWriter.Write(member.Name.ToString().ToLower());
+                                _codeWriter.WriteLine(".Save(document, xmlelem);");
                             }
-                            WriteLine("node.AppendChild(xmlelem);", true);
+                            _codeWriter.WriteLine("node.AppendChild(xmlelem);", true);
                         }
                 };
                 _methods.Add(method);
@@ -1260,45 +1259,45 @@ namespace Utte.Code
         }
 
         /// <summary>
-        /// Writes with indentspaces indentation
+        /// Writes with indentation
         /// </summary>
-        /// <param name="indentspaces"></param>
-        public void Produce(int indentspaces)
+        /// <param name="indentation"></param>
+        public void Produce(int indentation)
         {
-            _indentspaces = indentspaces;
+            _codeWriter.Indentation = indentation;
             ProduceDescription(_description);
             if (_attributes != null && _attributes.Count > 0)
             {
-                Write("[", true);
+                _codeWriter.Write("[", true);
                 for (int i = 0; i < _attributes.Count; i++)
                 {
                     if(i==0)
-                        Write(_attributes[i]);
+                        _codeWriter.Write(_attributes[i]);
                     else
-                        Write(_attributes[i],true);
+                        _codeWriter.Write(_attributes[i],true);
                     if (i == _attributes.Count - 1)
-                        WriteLine("]");
+                        _codeWriter.WriteLine("]");
                     else
-                        WriteLine(",");
+                        _codeWriter.WriteLine(",");
                 }
             }
             if(_visibility == Visibility.ProtectedInternal)
-                Write("protected internal", true);
+                _codeWriter.Write("protected internal", true);
             else
-                Write(_visibility.ToString().ToLower(),true);
+                _codeWriter.Write(_visibility.ToString().ToLower(),true);
             if (IsStatic)
-                Write(" static");
+                _codeWriter.Write(" static");
             if (IsSealed)
-                Write(" sealed");
+                _codeWriter.Write(" sealed");
             if (_formcomponent)
-                Write(" partial");
-            Write(" class ");
+                _codeWriter.Write(" partial");
+            _codeWriter.Write(" class ");
             if (_parentclass == "" && _interfaces.Count == 0)
-                WriteLine(_name);
+                _codeWriter.WriteLine(_name);
             else
             {
-                Write(_name);
-                Write(" : ");
+                _codeWriter.Write(_name);
+                _codeWriter.Write(" : ");
                 StringBuilder sb = new StringBuilder();
                 if (_parentclass != "")
                 {
@@ -1311,11 +1310,11 @@ namespace Utte.Code
                     sb.Append(", ");
                 }
                 sb.Remove(sb.Length - 2, 2);
-                WriteLine(sb.ToString());
+                _codeWriter.WriteLine(sb.ToString());
             }
-            WriteLine("{",true);
-            _indentspaces += 4;
-            WriteLine("");
+            _codeWriter.WriteLine("{",true);
+            _codeWriter.AddIndentation();
+            _codeWriter.WriteLine("");
             WritePrivateProtectedMembers(false);
             WritePrivateProtectedMembers(true);
             WriteConstructor();
@@ -1329,8 +1328,8 @@ namespace Utte.Code
             WriteClasses(true);
             WriteClasses(false);
             WriteOperators();
-            _indentspaces -= 4;
-            WriteLine("}",true);
+            _codeWriter.SubtractIndentation();
+            _codeWriter.WriteLine("}",true);
         }
 
         #endregion
@@ -1353,27 +1352,27 @@ namespace Utte.Code
             if (contains)
             {
                 if(staticmembers)
-                    WriteLine("#region Private static members", true);
+                    _codeWriter.WriteLine("#region Private static members", true);
                 else
-                    WriteLine("#region Private/protected members",true);
-                WriteLine("");
+                    _codeWriter.WriteLine("#region Private/protected members",true);
+                _codeWriter.WriteLine("");
                 foreach (Member member in _members)
                     if (member.PrivateProtected && (member.Static == staticmembers))
                     {
                         if(member.Static)
-                            Write("private static ", true);
+                            _codeWriter.Write("private static ", true);
                         else
-                            Write("private ", true);
-                        Write(member.Type);
+                            _codeWriter.Write("private ", true);
+                        _codeWriter.Write(member.Type);
                         if (member.ValueIsNullable)
-                            Write("?");
-                        Write(" _");
-                        Write(member.Name.ToLower());
-                        WriteLine(";");
+                            _codeWriter.Write("?");
+                        _codeWriter.Write(" _");
+                        _codeWriter.Write(member.Name.ToLower());
+                        _codeWriter.WriteLine(";");
                     }
-                WriteLine("");
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -1412,22 +1411,22 @@ namespace Utte.Code
                 }
             if (parameters.Count>0 || initialization.Count>0 || _formcomponent)
             {
-                WriteLine("#region Constructors", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#region Constructors", true);
+                _codeWriter.WriteLine("");
                 if(_formcomponent)
                 {
                     ProduceDescription("Initializes form", parameters);
-                    Write("public ",true);
-                    Write(_name);
-                    WriteLine("()");
-                    WriteLine("{",true);
-                    _indentspaces += 4;
-                    WriteLine("InitializeComponent();",true);
+                    _codeWriter.Write("public ",true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine("()");
+                    _codeWriter.WriteLine("{",true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("InitializeComponent();",true);
                     if(_interfaces.Contains("IValid"))
-                        WriteLine("_includexmlsave = true;",true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                        _codeWriter.WriteLine("_includexmlsave = true;",true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                 }
                 if (parameters.Count>0 || initialization.Count>0)
                 {
@@ -1439,8 +1438,8 @@ namespace Utte.Code
                     else
                         sb.Remove(sb.Length-5,5);
                     ProduceDescription(sb.ToString(), parameters);
-                    Write("public ",true);
-                    Write(_name);
+                    _codeWriter.Write("public ",true);
+                    _codeWriter.Write(_name);
                     if (parameters.Count > 0)
                     {
                         sb = new StringBuilder("(");
@@ -1455,39 +1454,39 @@ namespace Utte.Code
                         }
                         sb.Remove(sb.Length - 2, 2);
                         sb.Append(")");
-                        WriteLine(sb.ToString());
+                        _codeWriter.WriteLine(sb.ToString());
                     }
                     else
-                        WriteLine("()");
-                    WriteLine("{",true);
-                    _indentspaces += 4;
+                        _codeWriter.WriteLine("()");
+                    _codeWriter.WriteLine("{",true);
+                    _codeWriter.AddIndentation();
                     foreach (Method.Parameter parameter in parameters)
                     {
                         if (parameter.HasProtectedMember)
                         {
-                            Write("_", true);
-                            Write(parameter.Name);
+                            _codeWriter.Write("_", true);
+                            _codeWriter.Write(parameter.Name);
                         }
                         else
-                            Write(parameter.PropertyName, true);
-                        Write(" = ");
-                        Write(parameter.Name);
-                        WriteLine(";");
+                            _codeWriter.Write(parameter.PropertyName, true);
+                        _codeWriter.Write(" = ");
+                        _codeWriter.Write(parameter.Name);
+                        _codeWriter.WriteLine(";");
                     }
                     foreach (Member member in initialization)
                     {
-                        Write("_", true);
-                        Write(member.Name.ToLower());
-                        Write(" = new ");
-                        Write(member.Type);
-                        WriteLine("();");
+                        _codeWriter.Write("_", true);
+                        _codeWriter.Write(member.Name.ToLower());
+                        _codeWriter.Write(" = new ");
+                        _codeWriter.Write(member.Type);
+                        _codeWriter.WriteLine("();");
                     }
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                 }
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -1521,43 +1520,43 @@ namespace Utte.Code
                 }
             if (initialization.Count > 0)
             {
-                WriteLine("#region Static constructor", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#region Static constructor", true);
+                _codeWriter.WriteLine("");
                 ProduceDescription("Static constructor initializing private instances of objects");
-                Write("static ", true);
-                Write(_name);
-                WriteLine("()");
-                WriteLine("{", true);
-                _indentspaces += 4;
+                _codeWriter.Write("static ", true);
+                _codeWriter.Write(_name);
+                _codeWriter.WriteLine("()");
+                _codeWriter.WriteLine("{", true);
+                _codeWriter.AddIndentation();
                 foreach (Member member in initialization)
                 {
                     if (member.ValueType)
                     {
                         if(member.PrivateProtected)
                         {
-                            Write("_", true);
-                            Write(member.Name.ToLower());
+                            _codeWriter.Write("_", true);
+                            _codeWriter.Write(member.Name.ToLower());
                         }
                         else
-                            Write(member.Name, true);
-                        Write(" = ");
-                        Write(GetDefault(member.Type));
-                        WriteLine(";");
+                            _codeWriter.Write(member.Name, true);
+                        _codeWriter.Write(" = ");
+                        _codeWriter.Write(GetDefault(member.Type));
+                        _codeWriter.WriteLine(";");
                     }
                     else
                     {
-                        Write("_", true);
-                        Write(member.Name.ToLower());
-                        Write(" = new ");
-                        Write(member.Type);
-                        WriteLine("();");
+                        _codeWriter.Write("_", true);
+                        _codeWriter.Write(member.Name.ToLower());
+                        _codeWriter.Write(" = new ");
+                        _codeWriter.Write(member.Type);
+                        _codeWriter.WriteLine("();");
                     }
                 }
-                _indentspaces -= 4;
-                WriteLine("}", true);
-                WriteLine("");
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.SubtractIndentation();
+                _codeWriter.WriteLine("}", true);
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -1575,56 +1574,56 @@ namespace Utte.Code
             {
                 if(staticmethods)
                     if(Public)
-                        WriteLine("#region Public static methods", true);
+                        _codeWriter.WriteLine("#region Public static methods", true);
                     else
-                        WriteLine("#region Private static methods", true);
+                        _codeWriter.WriteLine("#region Private static methods", true);
                 else
                     if (Public)
-                        WriteLine("#region Public methods", true);
+                        _codeWriter.WriteLine("#region Public methods", true);
                     else
-                        WriteLine("#region Private/protected methods", true);
-                WriteLine("");
+                        _codeWriter.WriteLine("#region Private/protected methods", true);
+                _codeWriter.WriteLine("");
                 foreach (Method method in methods)
                 {
                     ProduceDescription(method.Description, method.Parameters, method.Type != "void");
                     if (method.Attributes != null && method.Attributes.Count > 0)
                     {
-                        Write("[", true);
+                        _codeWriter.Write("[", true);
                         for (int i = 0; i < method.Attributes.Count; i++)
                         {
                             if (i == 0)
-                                Write(method.Attributes[i]);
+                                _codeWriter.Write(method.Attributes[i]);
                             else
-                                Write(method.Attributes[i], true);
+                                _codeWriter.Write(method.Attributes[i], true);
                             if (i == method.Attributes.Count - 1)
-                                WriteLine("]");
+                                _codeWriter.WriteLine("]");
                             else
-                                WriteLine(",");
+                                _codeWriter.WriteLine(",");
                         }
                     }
                     if (Public)
                     {
-                        Write("public ", true);
+                        _codeWriter.Write("public ", true);
                         if (staticmethods)
-                            Write("static ");
+                            _codeWriter.Write("static ");
                     }
                     else
                     {
                         if (staticmethods)
-                            Write("private static ",true);
+                            _codeWriter.Write("private static ",true);
                         else
                         {
-                            Write(method.Visibility.ToString().ToLower(), true);
-                            Write(" ");
+                            _codeWriter.Write(method.Visibility.ToString().ToLower(), true);
+                            _codeWriter.Write(" ");
                         }
                     }
                     if(method.Override && !staticmethods)
-                        Write("override ");
-                    Write(method.Type);
-                    Write(" ");
-                    Write(method.Name);
+                        _codeWriter.Write("override ");
+                    _codeWriter.Write(method.Type);
+                    _codeWriter.Write(" ");
+                    _codeWriter.Write(method.Name);
                     if (method.Parameters==null || method.Parameters.Count == 0)
-                        WriteLine("()");
+                        _codeWriter.WriteLine("()");
                     else
                     {
                         StringBuilder sb = new StringBuilder("(");
@@ -1641,20 +1640,20 @@ namespace Utte.Code
                         }
                         sb.Remove(sb.Length - 2, 2);
                         sb.Append(")");
-                        WriteLine(sb.ToString());
+                        _codeWriter.WriteLine(sb.ToString());
                     }
-                    WriteLine("{", true);
-                    _indentspaces += 4;
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
                     if (method.Text == null)
                         NotImplemented();
                     else
                         method.Text();
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                 }
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -1670,10 +1669,10 @@ namespace Utte.Code
             if (members.Count>0)
             {
                 if(staticproperties)
-                    WriteLine("#region Static properties", true);
+                    _codeWriter.WriteLine("#region Static properties", true);
                 else
-                    WriteLine("#region Properties", true);
-                WriteLine("");
+                    _codeWriter.WriteLine("#region Properties", true);
+                _codeWriter.WriteLine("");
                 foreach (Member member in members)
                 {
                     string description;
@@ -1689,83 +1688,83 @@ namespace Utte.Code
                     ProduceDescription(description);
                     if (member.Attributes != null && member.Attributes.Count > 0)
                     {
-                        Write("[", true);
+                        _codeWriter.Write("[", true);
                         for (int i = 0; i < member.Attributes.Count; i++)
                         {
                             if (i == 0)
-                                Write(member.Attributes[i]);
+                                _codeWriter.Write(member.Attributes[i]);
                             else
-                                Write(member.Attributes[i], true);
+                                _codeWriter.Write(member.Attributes[i], true);
                             if (i == member.Attributes.Count - 1)
-                                WriteLine("]");
+                                _codeWriter.WriteLine("]");
                             else
-                                WriteLine(",");
+                                _codeWriter.WriteLine(",");
                         }
                     }
-                    Write("public ", true);
+                    _codeWriter.Write("public ", true);
                     if (staticproperties)
-                        Write("static ");
-                    Write(member.Type);
+                        _codeWriter.Write("static ");
+                    _codeWriter.Write(member.Type);
                     if (member.ValueIsNullable)
-                        Write("?");
-                    Write(" ");
+                        _codeWriter.Write("?");
+                    _codeWriter.Write(" ");
                     if (!member.PrivateProtected && (member.SetProperty || member.ProtectedSetProperty || member.GetProperty))
                     {
-                        Write(member.Name);
+                        _codeWriter.Write(member.Name);
                         if(member.ProtectedSetProperty)
-                            WriteLine(" { get; protected set; }");
+                            _codeWriter.WriteLine(" { get; protected set; }");
                         else if(member.SetProperty)
-                            WriteLine(" { get; set; }");
+                            _codeWriter.WriteLine(" { get; set; }");
                         else
-                            WriteLine(" { get; }");
+                            _codeWriter.WriteLine(" { get; }");
                     }
                     else
                     {
-                        WriteLine(member.Name);
-                        WriteLine("{", true);
-                        _indentspaces += 4;
-                        WriteLine("get", true);
-                        WriteLine("{", true);
-                        _indentspaces += 4;
+                        _codeWriter.WriteLine(member.Name);
+                        _codeWriter.WriteLine("{", true);
+                        _codeWriter.AddIndentation();
+                        _codeWriter.WriteLine("get", true);
+                        _codeWriter.WriteLine("{", true);
+                        _codeWriter.AddIndentation();
                         if (!string.IsNullOrEmpty(member.GetText))
-                            WriteLine(member.GetText, true);
+                            _codeWriter.WriteLine(member.GetText, true);
                         else if (member.PrivateProtected)
                         {
-                            Write("return _", true);
-                            Write(member.Name.ToLower());
-                            WriteLine(";");
+                            _codeWriter.Write("return _", true);
+                            _codeWriter.Write(member.Name.ToLower());
+                            _codeWriter.WriteLine(";");
                         }
                         else
                             NotImplemented();
-                        _indentspaces -= 4;
-                        WriteLine("}", true);
+                        _codeWriter.SubtractIndentation();
+                        _codeWriter.WriteLine("}", true);
                         if (member.ProtectedSetProperty)
-                            WriteLine("protected", true);
+                            _codeWriter.WriteLine("protected", true);
                         if (member.SetProperty || member.ProtectedSetProperty)
                         {
-                            WriteLine("set", true);
-                            WriteLine("{", true);
-                            _indentspaces += 4;
+                            _codeWriter.WriteLine("set", true);
+                            _codeWriter.WriteLine("{", true);
+                            _codeWriter.AddIndentation();
                             if (!string.IsNullOrEmpty(member.SetText))
-                                WriteLine(member.SetText, true);
+                                _codeWriter.WriteLine(member.SetText, true);
                             else if (member.PrivateProtected)
                             {
-                                Write("_", true);
-                                Write(member.Name.ToLower());
-                                WriteLine(" = value;");
+                                _codeWriter.Write("_", true);
+                                _codeWriter.Write(member.Name.ToLower());
+                                _codeWriter.WriteLine(" = value;");
                             }
                             else
                                 NotImplemented();
-                            _indentspaces -= 4;
-                            WriteLine("}", true);
+                            _codeWriter.SubtractIndentation();
+                            _codeWriter.WriteLine("}", true);
                         }
-                        _indentspaces -= 4;
-                        WriteLine("}", true);
+                        _codeWriter.SubtractIndentation();
+                        _codeWriter.WriteLine("}", true);
                     }
-                    WriteLine("");
+                    _codeWriter.WriteLine("");
                 }
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -1776,128 +1775,128 @@ namespace Utte.Code
         {
             if (_operatorimplementations.ImplementsEquality || _operatorimplementations.ImplementsComparison || _operatorimplementations.ImplementsArithmetic)
             {
-                WriteLine("#region Operators", true);
-                WriteLine("");
-                _operatorimplementations.WriteOperators(_streamwriter, "    ", _name);
+                _codeWriter.WriteLine("#region Operators", true);
+                _codeWriter.WriteLine("");
+                _operatorimplementations.WriteOperators(_codeWriter, "    ", _name);
                 if (_operatorimplementations.ImplementsEquality)
                 {
                     ProduceDescription("Compares lhs and rhs for equality");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator ==(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    Write("return ", true);
-                    Write(_name);
-                    WriteLine(".Equals(lhs,rhs);");
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator ==(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.Write("return ", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(".Equals(lhs,rhs);");
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                     ProduceDescription("Compares lhs and rhs for inequality");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator !=(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("return !(lhs == rhs);", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator !=(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("return !(lhs == rhs);", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                 }
                 if (_operatorimplementations.ImplementsComparison)
                 {
                     ProduceDescription("Check if lhs is smaller than rhs");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator <(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("if(lhs == null)", true);
-                    _indentspaces += 4;
-                    WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
-                    _indentspaces -= 4;
-                    WriteLine("return lhs.CompareTo(rhs)<0;", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator <(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("if(lhs == null)", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("return lhs.CompareTo(rhs)<0;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
 
                     ProduceDescription("Check if lhs is smaller than or equal to rhs");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator <=(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("if(lhs == null)", true);
-                    _indentspaces += 4;
-                    WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
-                    _indentspaces -= 4;
-                    WriteLine("return lhs.CompareTo(rhs)<=0;", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator <=(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("if(lhs == null)", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("return lhs.CompareTo(rhs)<=0;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
 
                     ProduceDescription("Check if lhs is greater than rhs");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator >(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("if(lhs == null)", true);
-                    _indentspaces += 4;
-                    WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
-                    _indentspaces -= 4;
-                    WriteLine("return lhs.CompareTo(rhs)>0;", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator >(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("if(lhs == null)", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("return lhs.CompareTo(rhs)>0;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
 
                     ProduceDescription("Check if lhs is greater than or equal to rhs");
-                    WriteLine("/// <param name=\"lhs\"></param>", true);
-                    WriteLine("/// <param name=\"rhs\"></param>", true);
-                    WriteLine("/// <returns></returns>", true);
-                    Write("public static bool operator >=(", true);
-                    Write(_name);
-                    Write(" lhs, ");
-                    Write(_name);
-                    WriteLine(" rhs)");
-                    WriteLine("{", true);
-                    _indentspaces += 4;
-                    WriteLine("if(lhs == null)", true);
-                    _indentspaces += 4;
-                    WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
-                    _indentspaces -= 4;
-                    WriteLine("return lhs.CompareTo(rhs)>=0;", true);
-                    _indentspaces -= 4;
-                    WriteLine("}", true);
-                    WriteLine("");
+                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
+                    _codeWriter.WriteLine("/// <returns></returns>", true);
+                    _codeWriter.Write("public static bool operator >=(", true);
+                    _codeWriter.Write(_name);
+                    _codeWriter.Write(" lhs, ");
+                    _codeWriter.Write(_name);
+                    _codeWriter.WriteLine(" rhs)");
+                    _codeWriter.WriteLine("{", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("if(lhs == null)", true);
+                    _codeWriter.AddIndentation();
+                    _codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("return lhs.CompareTo(rhs)>=0;", true);
+                    _codeWriter.SubtractIndentation();
+                    _codeWriter.WriteLine("}", true);
+                    _codeWriter.WriteLine("");
                 }
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 
@@ -1914,17 +1913,17 @@ namespace Utte.Code
             if (classes.Count > 0)
             {
                 if (Public)
-                    WriteLine("#region Public classes/structs", true);
+                    _codeWriter.WriteLine("#region Public classes/structs", true);
                 else
-                    WriteLine("#region Private/protected classes/structs", true);
-                WriteLine("");
+                    _codeWriter.WriteLine("#region Private/protected classes/structs", true);
+                _codeWriter.WriteLine("");
                 foreach (ClassProducer cp in classes)
                 {
-                    cp.Produce(_indentspaces);
-                    WriteLine("");
+                    cp.Produce(_codeWriter.Indentation);
+                    _codeWriter.WriteLine("");
                 }
-                WriteLine("#endregion", true);
-                WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
             }
         }
 

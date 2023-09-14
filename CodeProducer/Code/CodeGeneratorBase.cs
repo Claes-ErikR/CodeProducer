@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
+using Utte.Code.Code.SupportClasses;
 
 namespace Utte.Code
 {
@@ -14,8 +13,7 @@ namespace Utte.Code
 
         #region Private/protected members
 
-        protected int _indentspaces;
-        protected StreamWriter _streamwriter;
+        protected CodeWriter _codeWriter;
         protected string _name;
         protected OperatorImplementations _operatorimplementations;
 
@@ -50,14 +48,7 @@ namespace Utte.Code
         /// </summary>
         public void Dispose()
         {
-            try
-            {
-                _streamwriter.Close();
-            }
-            catch
-            {
-            }
-            _streamwriter.Dispose();
+            _codeWriter.Dispose();
         }
 
         #endregion
@@ -70,10 +61,10 @@ namespace Utte.Code
         /// <param name="description"></param>
         protected void ProduceDescription(string description)
         {
-            WriteLine("/// <summary>", true);
-            Write("/// ", true);
-            WriteLine(description);
-            WriteLine("/// </summary>", true);
+            _codeWriter.WriteLine("/// <summary>", true);
+            _codeWriter.Write("/// ", true);
+            _codeWriter.WriteLine(description);
+            _codeWriter.WriteLine("/// </summary>", true);
         }
 
         /// <summary>
@@ -87,9 +78,9 @@ namespace Utte.Code
             if (parameters != null)
                 foreach (Method.Parameter parameter in parameters)
                 {
-                    Write("/// <param name=\"", true);
-                    Write(parameter.Name);
-                    WriteLine("\"></param>");
+                    _codeWriter.Write("/// <param name=\"", true);
+                    _codeWriter.Write(parameter.Name);
+                    _codeWriter.WriteLine("\"></param>");
                 }
         }
 
@@ -104,12 +95,12 @@ namespace Utte.Code
             if (parameters != null)
                 foreach (StructMember parameter in parameters)
                 {
-                    Write("/// <param name=\"", true);
-                    Write(parameter.Name.ToLower());
-                    WriteLine("\"></param>");
+                    _codeWriter.Write("/// <param name=\"", true);
+                    _codeWriter.Write(parameter.Name.ToLower());
+                    _codeWriter.WriteLine("\"></param>");
                 }
             if (returnparameter)
-                WriteLine("/// <returns></returns>", true);
+                _codeWriter.WriteLine("/// <returns></returns>", true);
         }
 
         /// <summary>
@@ -121,7 +112,7 @@ namespace Utte.Code
         {
             ProduceDescription(description);
             if (returnparameter)
-                WriteLine("/// <returns></returns>", true);
+                _codeWriter.WriteLine("/// <returns></returns>", true);
         }
 
         /// <summary>
@@ -134,7 +125,7 @@ namespace Utte.Code
         {
             ProduceDescription(description, parameters);
             if (returnparameter)
-                WriteLine("/// <returns></returns>", true);
+                _codeWriter.WriteLine("/// <returns></returns>", true);
         }
 
         /// <summary>
@@ -142,51 +133,7 @@ namespace Utte.Code
         /// </summary>
         protected void NotImplemented()
         {
-            WriteLine("throw new NotImplementedException();", true);
-        }
-
-        /// <summary>
-        /// Writes text to file
-        /// </summary>
-        /// <param name="text"></param>
-        protected void Write(string text)
-        {
-            Write(text, false);
-        }
-
-        /// <summary>
-        /// Writes text to file starting with indentation
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="indent"></param>
-        protected void Write(string text, bool indent)
-        {
-            if (indent)
-                for (int i = 0; i < _indentspaces; i++)
-                    _streamwriter.Write(" ");
-            _streamwriter.Write(text);
-        }
-
-        /// <summary>
-        /// Writes text to file and goes to next line
-        /// </summary>
-        /// <param name="text"></param>
-        protected void WriteLine(string text)
-        {
-            WriteLine(text, false);
-        }
-
-        /// <summary>
-        /// Writes text to file starting with indentation and goes to next line
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="indent"></param>
-        protected void WriteLine(string text, bool indent)
-        {
-            if (indent)
-                for (int i = 0; i < _indentspaces; i++)
-                    _streamwriter.Write(" ");
-            _streamwriter.WriteLine(text);
+            _codeWriter.WriteLine("throw new NotImplementedException();", true);
         }
 
         #endregion
@@ -234,7 +181,7 @@ namespace Utte.Code
         /// <param name="writer"></param>
         /// <param name="indentspaces"></param>
         /// <param name="multdivoutputresultclass"></param>
-        public void WriteOperators(StreamWriter writer, string indentspaces, string multdivoutputresultclass)
+        public void WriteOperators(CodeWriter writer, string indentspaces, string multdivoutputresultclass)
         {
             WriteArithmeticOperators(writer, indentspaces, multdivoutputresultclass);
         }
@@ -249,7 +196,7 @@ namespace Utte.Code
         /// <param name="writer"></param>
         /// <param name="indentspaces"></param>
         /// <param name="multdivoutputresultclass"></param>
-        private void WriteArithmeticOperators(StreamWriter writer, string indentspaces, string multdivoutputresultclass)
+        private void WriteArithmeticOperators(CodeWriter writer, string indentspaces, string multdivoutputresultclass)
         {
             foreach (string implementclass in _implementationclasses)
             {
@@ -280,7 +227,7 @@ namespace Utte.Code
         /// <param name="rhstype"></param>
         /// <param name="op"></param>
         /// <param name="invert"></param>
-        private void WriteArithmeticOperator(StreamWriter writer, string indentspaces, string returntype, string lhstype, string rhstype, string op, bool invert)
+        private void WriteArithmeticOperator(CodeWriter writer, string indentspaces, string returntype, string lhstype, string rhstype, string op, bool invert)
         {
             writer.Write(indentspaces);
             writer.WriteLine("/// <summary>");

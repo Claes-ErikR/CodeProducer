@@ -115,5 +115,20 @@ namespace Utte.Code.Code.SupportClasses
         /// Returns the number of spaces indented per indentation level
         /// </summary>
         public int IndentSpacesPerIndentation { get; }
+
+        /// <summary>
+        /// Gets or sets the indentation level. Cannot be set to a negative number
+        /// </summary>
+        public int Indentation 
+        {
+            get 
+            { 
+                return _indentation; 
+            }
+            set 
+            { 
+                _indentation = Math.Max(value, 0); 
+            }
+        }
     }
 }
