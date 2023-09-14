@@ -46,36 +46,6 @@ namespace Utte.Code
             ShowNewForm(new GeneralClassForm());
         }
 
-        /// <summary>
-        /// Shows form for producing a physics equation class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void miPhysicsEquation_Click(object sender, EventArgs e)
-        {
-            ShowNewForm(new PhysicsEquationForm());
-        }
-
-        /// <summary>
-        /// Shows form for producing a form/component class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void miFormComponent_Click(object sender, EventArgs e)
-        {
-            ShowNewForm(new FormComponentForm());
-        }
-
-        /// <summary>
-        /// Shows form for producing an attribute class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void miAttribute_Click(object sender, EventArgs e)
-        {
-            ShowNewForm(new AttributeForm());
-        }
-
         #endregion
 
         #region Structs
@@ -88,34 +58,6 @@ namespace Utte.Code
         private void miGeneralStruct_Click(object sender, EventArgs e)
         {
             ShowNewForm(new GeneralStructForm());
-        }
-
-        #endregion
-
-        #region Data
-
-        /// <summary>
-        /// Shows form for producing a dataset and sql
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void miDataSet_Click(object sender, EventArgs e)
-        {
-            ShowNewForm(new DatasetForm());
-        }
-
-        #endregion
-
-        #region Code test
-
-        /// <summary>
-        /// Shows form for producing a code test
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void miCodeInput_Click(object sender, EventArgs e)
-        {
-            ShowNewForm(new CodeTestForm());
         }
 
         #endregion
