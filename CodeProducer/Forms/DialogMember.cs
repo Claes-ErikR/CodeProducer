@@ -18,7 +18,8 @@ namespace Utte.Code.Controls
 
         #region Private/protected members
 
-        Member _value;
+        private Member _value;
+        private List<string> _attributeList;
 
         #endregion
 
@@ -40,6 +41,7 @@ namespace Utte.Code.Controls
             chkProtectedSetProperty.Checked = false;
             chkConstructorSet.Checked=false;
             chkValueType.Checked=false;
+            _attributeList = null;
         }
 
         #endregion
@@ -67,6 +69,8 @@ namespace Utte.Code.Controls
                 _value.ConstructorSet = chkConstructorSet.Checked;
                 _value.ValueType = chkValueType.Checked;
                 _value.ValueIsNullable = chkPropertyIsNullable.Checked;
+                _value.Attributes = _attributeList;
+
                 this.DialogResult = DialogResult.OK;
             }
             else
@@ -93,8 +97,12 @@ namespace Utte.Code.Controls
             frmAttributeAddition faa = new frmAttributeAddition();
             DialogResult result = faa.ShowDialog();
             if (result == DialogResult.OK)
+            {
                 if (faa.Value.Count > 0)
-                    _value.Attributes = faa.Value;
+                    _attributeList = faa.Value;
+                else
+                    _attributeList = null;
+            }
             faa.Dispose();
         }
 
