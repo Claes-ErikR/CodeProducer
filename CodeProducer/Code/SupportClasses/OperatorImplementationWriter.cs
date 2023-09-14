@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using Utte.Code.Code.Helpers;
 
 namespace Utte.Code.Code.SupportClasses
 {
@@ -43,12 +41,144 @@ namespace Utte.Code.Code.SupportClasses
         /// <param name="multdivoutputresultclass"></param>
         public void WriteOperators(CodeWriter writer, string multdivoutputresultclass)
         {
-            WriteArithmeticOperators(writer, multdivoutputresultclass);
+            if (ImplementsArithmetic)
+                WriteArithmeticOperators(writer, multdivoutputresultclass);
+            if (ImplementsEquality)
+                ImplementsEqualityOperators(writer);
+            if (ImplementsComparison)
+                ImplementsComparisonOperators(writer);
         }
 
         #endregion
 
         #region Private/protected methods
+
+        /// <summary>
+        /// Writes code for comparison operators
+        /// </summary>
+        /// <param name="writer"></param>
+        private void ImplementsComparisonOperators(CodeWriter writer)
+        {
+            writer.ProduceDescription("Check if lhs is smaller than rhs");
+            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
+            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
+            writer.WriteLine("/// <returns></returns>", true);
+            writer.Write("public static bool operator <(", true);
+            writer.Write(_classname);
+            writer.Write(" lhs, ");
+            writer.Write(_classname);
+            writer.WriteLine(" rhs)");
+            writer.WriteLine("{", true);
+            writer.AddIndentation();
+            writer.WriteLine("if(lhs == null)", true);
+            writer.AddIndentation();
+            writer.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("return lhs.CompareTo(rhs)<0;", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("}", true);
+            writer.WriteLine("");
+
+            writer.ProduceDescription("Check if lhs is smaller than or equal to rhs");
+            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
+            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
+            writer.WriteLine("/// <returns></returns>", true);
+            writer.Write("public static bool operator <=(", true);
+            writer.Write(_classname);
+            writer.Write(" lhs, ");
+            writer.Write(_classname);
+            writer.WriteLine(" rhs)");
+            writer.WriteLine("{", true);
+            writer.AddIndentation();
+            writer.WriteLine("if(lhs == null)", true);
+            writer.AddIndentation();
+            writer.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("return lhs.CompareTo(rhs)<=0;", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("}", true);
+            writer.WriteLine("");
+
+            writer.ProduceDescription("Check if lhs is greater than rhs");
+            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
+            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
+            writer.WriteLine("/// <returns></returns>", true);
+            writer.Write("public static bool operator >(", true);
+            writer.Write(_classname);
+            writer.Write(" lhs, ");
+            writer.Write(_classname);
+            writer.WriteLine(" rhs)");
+            writer.WriteLine("{", true);
+            writer.AddIndentation();
+            writer.WriteLine("if(lhs == null)", true);
+            writer.AddIndentation();
+            writer.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("return lhs.CompareTo(rhs)>0;", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("}", true);
+            writer.WriteLine("");
+
+            writer.ProduceDescription("Check if lhs is greater than or equal to rhs");
+            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
+            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
+            writer.WriteLine("/// <returns></returns>", true);
+            writer.Write("public static bool operator >=(", true);
+            writer.Write(_classname);
+            writer.Write(" lhs, ");
+            writer.Write(_classname);
+            writer.WriteLine(" rhs)");
+            writer.WriteLine("{", true);
+            writer.AddIndentation();
+            writer.WriteLine("if(lhs == null)", true);
+            writer.AddIndentation();
+            writer.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("return lhs.CompareTo(rhs)>=0;", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("}", true);
+            writer.WriteLine("");
+        }
+
+        /// <summary>
+        /// Writes code for equality operators
+        /// </summary>
+        /// <param name="writer"></param>
+        private void ImplementsEqualityOperators(CodeWriter writer)
+        {
+            writer.ProduceDescription("Compares lhs and rhs for equality");
+            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
+            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
+            writer.WriteLine("/// <returns></returns>", true);
+            writer.Write("public static bool operator ==(", true);
+            writer.Write(_classname);
+            writer.Write(" lhs, ");
+            writer.Write(_classname);
+            writer.WriteLine(" rhs)");
+            writer.WriteLine("{", true);
+            writer.AddIndentation();
+            writer.Write("return ", true);
+            writer.Write(_classname);
+            writer.WriteLine(".Equals(lhs,rhs);");
+            writer.SubtractIndentation();
+            writer.WriteLine("}", true);
+            writer.WriteLine("");
+            writer.ProduceDescription("Compares lhs and rhs for inequality");
+            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
+            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
+            writer.WriteLine("/// <returns></returns>", true);
+            writer.Write("public static bool operator !=(", true);
+            writer.Write(_classname);
+            writer.Write(" lhs, ");
+            writer.Write(_classname);
+            writer.WriteLine(" rhs)");
+            writer.WriteLine("{", true);
+            writer.AddIndentation();
+            writer.WriteLine("return !(lhs == rhs);", true);
+            writer.SubtractIndentation();
+            writer.WriteLine("}", true);
+            writer.WriteLine("");
+        }
 
         /// <summary>
         /// Writes code for arithmetic operators

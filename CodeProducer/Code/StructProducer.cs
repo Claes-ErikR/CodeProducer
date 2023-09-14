@@ -18,7 +18,6 @@ namespace Utte.Code
         protected string _visibility;
         protected List<StructMember> _members;
         protected bool _constructor;
-        protected bool _equalitycomparison;
         protected bool _produceempty;
         protected bool _implementdeconstruct;
 
@@ -46,7 +45,7 @@ namespace Utte.Code
             _visibility = visibility;
             _members = members;
             _constructor = constructor;
-            _equalitycomparison = equalitycomparison;
+            _operatorImplementationWriter.ImplementsEquality = equalitycomparison;
             _produceempty = produceempty;
             _operatorImplementationWriter.ImplementationClasses.AddRange(operatorclasses);
             if (_operatorImplementationWriter.ImplementationClasses.Count > 0)
@@ -71,7 +70,7 @@ namespace Utte.Code
             else
                 _codeWriter.Write(_visibility.ToString().ToLower(), true);
             _codeWriter.Write(" struct ");
-            if (_equalitycomparison)
+            if (_operatorImplementationWriter.ImplementsEquality)
             {
                 _codeWriter.Write(_name);
                 _codeWriter.Write(" : IEquatable<");
@@ -115,7 +114,7 @@ namespace Utte.Code
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
 
-                if (_equalitycomparison)
+                if (_operatorImplementationWriter.ImplementsEquality)
                 {
                     _codeWriter.WriteLine("#region Public static methods", true);
                     _codeWriter.WriteLine("");
@@ -172,7 +171,7 @@ namespace Utte.Code
             _codeWriter.SubtractIndentation();
             _codeWriter.WriteLine("}", true);
             _codeWriter.WriteLine("");
-            if (_equalitycomparison)
+            if (_operatorImplementationWriter.ImplementsEquality)
             {
                 _codeWriter.ProduceDescription("Compares the instance to an object add parameter description ...", true);
                 _codeWriter.WriteLine("public override bool Equals(object obj)", true);
@@ -273,49 +272,11 @@ namespace Utte.Code
         /// </summary>
         protected void ProduceOperators()
         {
-            if (_equalitycomparison || _operatorImplementationWriter.ImplementsArithmetic)
+            if (_operatorImplementationWriter.ImplementsAny)
             {
                 _codeWriter.WriteLine("#region Operators", true);
                 _codeWriter.WriteLine("");
-                if (_equalitycomparison)
-                {
-                    _codeWriter.ProduceDescription("Compares lhs and rhs for equality");
-                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
-                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
-                    _codeWriter.WriteLine("/// <returns></returns>", true);
-                    _codeWriter.Write("public static bool operator ==(", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.Write(" lhs, ");
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine(" rhs)");
-                    _codeWriter.WriteLine("{", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.Write("return ", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine(".Equals(lhs,rhs);");
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                    _codeWriter.WriteLine("");
-                    _codeWriter.ProduceDescription("Compares lhs and rhs for inequality");
-                    _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
-                    _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
-                    _codeWriter.WriteLine("/// <returns></returns>", true);
-                    _codeWriter.Write("public static bool operator !=(", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.Write(" lhs, ");
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine(" rhs)");
-                    _codeWriter.WriteLine("{", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("return !(lhs == rhs);", true);
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                    _codeWriter.WriteLine("");
-                }
-                if (_operatorImplementationWriter.ImplementsArithmetic)
-                {
                     _operatorImplementationWriter.WriteOperators(_codeWriter, _name);
-                }
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }
