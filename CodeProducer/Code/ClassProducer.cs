@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using Utte.Code.Code.Helpers;
 using Utte.Code.Code.SupportClasses;
 
 namespace Utte.Code
@@ -1265,7 +1266,7 @@ namespace Utte.Code
         public void Produce(int indentation)
         {
             _codeWriter.Indentation = indentation;
-            ProduceDescription(_description);
+            _codeWriter.ProduceDescription(_description);
             if (_attributes != null && _attributes.Count > 0)
             {
                 _codeWriter.Write("[", true);
@@ -1415,7 +1416,7 @@ namespace Utte.Code
                 _codeWriter.WriteLine("");
                 if(_formcomponent)
                 {
-                    ProduceDescription("Initializes form", parameters);
+                    _codeWriter.ProduceDescription("Initializes form", parameters);
                     _codeWriter.Write("public ",true);
                     _codeWriter.Write(_name);
                     _codeWriter.WriteLine("()");
@@ -1437,7 +1438,7 @@ namespace Utte.Code
                         sb.Append("private instances of objects");
                     else
                         sb.Remove(sb.Length-5,5);
-                    ProduceDescription(sb.ToString(), parameters);
+                    _codeWriter.ProduceDescription(sb.ToString(), parameters);
                     _codeWriter.Write("public ",true);
                     _codeWriter.Write(_name);
                     if (parameters.Count > 0)
@@ -1522,7 +1523,7 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Static constructor", true);
                 _codeWriter.WriteLine("");
-                ProduceDescription("Static constructor initializing private instances of objects");
+                _codeWriter.ProduceDescription("Static constructor initializing private instances of objects");
                 _codeWriter.Write("static ", true);
                 _codeWriter.Write(_name);
                 _codeWriter.WriteLine("()");
@@ -1585,7 +1586,7 @@ namespace Utte.Code
                 _codeWriter.WriteLine("");
                 foreach (Method method in methods)
                 {
-                    ProduceDescription(method.Description, method.Parameters, method.Type != "void");
+                    _codeWriter.ProduceDescription(method.Description, method.Parameters, method.Type != "void");
                     if (method.Attributes != null && method.Attributes.Count > 0)
                     {
                         _codeWriter.Write("[", true);
@@ -1685,7 +1686,7 @@ namespace Utte.Code
                             description = "Returns " + member.Name.ToLower();
                     else
                         description = member.Description;
-                    ProduceDescription(description);
+                    _codeWriter.ProduceDescription(description);
                     if (member.Attributes != null && member.Attributes.Count > 0)
                     {
                         _codeWriter.Write("[", true);
@@ -1780,7 +1781,7 @@ namespace Utte.Code
                 _operatorimplementations.WriteOperators(_codeWriter, "    ", _name);
                 if (_operatorimplementations.ImplementsEquality)
                 {
-                    ProduceDescription("Compares lhs and rhs for equality");
+                    _codeWriter.ProduceDescription("Compares lhs and rhs for equality");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);
@@ -1797,7 +1798,7 @@ namespace Utte.Code
                     _codeWriter.SubtractIndentation();
                     _codeWriter.WriteLine("}", true);
                     _codeWriter.WriteLine("");
-                    ProduceDescription("Compares lhs and rhs for inequality");
+                    _codeWriter.ProduceDescription("Compares lhs and rhs for inequality");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);
@@ -1815,7 +1816,7 @@ namespace Utte.Code
                 }
                 if (_operatorimplementations.ImplementsComparison)
                 {
-                    ProduceDescription("Check if lhs is smaller than rhs");
+                    _codeWriter.ProduceDescription("Check if lhs is smaller than rhs");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);
@@ -1835,7 +1836,7 @@ namespace Utte.Code
                     _codeWriter.WriteLine("}", true);
                     _codeWriter.WriteLine("");
 
-                    ProduceDescription("Check if lhs is smaller than or equal to rhs");
+                    _codeWriter.ProduceDescription("Check if lhs is smaller than or equal to rhs");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);
@@ -1855,7 +1856,7 @@ namespace Utte.Code
                     _codeWriter.WriteLine("}", true);
                     _codeWriter.WriteLine("");
 
-                    ProduceDescription("Check if lhs is greater than rhs");
+                    _codeWriter.ProduceDescription("Check if lhs is greater than rhs");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);
@@ -1875,7 +1876,7 @@ namespace Utte.Code
                     _codeWriter.WriteLine("}", true);
                     _codeWriter.WriteLine("");
 
-                    ProduceDescription("Check if lhs is greater than or equal to rhs");
+                    _codeWriter.ProduceDescription("Check if lhs is greater than or equal to rhs");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);

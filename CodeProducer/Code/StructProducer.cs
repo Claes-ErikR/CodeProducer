@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Utte.Code.Code.SupportClasses;
+using Utte.Code.Code.Helpers;
 
 namespace Utte.Code
 {
@@ -64,7 +65,7 @@ namespace Utte.Code
         {
             _codeWriter.Indentation = 0;
             if (_description != "")
-                ProduceDescription(_description);
+                _codeWriter.ProduceDescription(_description);
             if (_visibility == "ProtectedInternal")
                 _codeWriter.Write("protected internal", true);
             else
@@ -103,7 +104,7 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Static constructor", true);
                 _codeWriter.WriteLine("");
-                ProduceDescription("Sets empty instance", false);
+                _codeWriter.ProduceDescription("Sets empty instance", false);
                 _codeWriter.WriteLine("static " + _name + "()", true);
                 _codeWriter.WriteLine("{", true);
                 _codeWriter.AddIndentation();
@@ -122,7 +123,7 @@ namespace Utte.Code
                     structmember.Name = "instance";
                     structmember.Type = _name;
                     List<StructMember> structmemberlist = new List<StructMember>() { structmember };
-                    ProduceDescription("Compares to empty instance", structmemberlist, true);
+                    _codeWriter.ProduceDescription("Compares to empty instance", structmemberlist, true);
                     _codeWriter.WriteLine("public static bool IsEmpty(" + _name + " instance)", true);
                     _codeWriter.WriteLine("{", true);
                     _codeWriter.AddIndentation();
@@ -136,7 +137,7 @@ namespace Utte.Code
 
                 _codeWriter.WriteLine("#region Static properties", true);
                 _codeWriter.WriteLine("");
-                ProduceDescription("Returns empty instance", false);
+                _codeWriter.ProduceDescription("Returns empty instance", false);
                 _codeWriter.WriteLine("public static " + _name + " Empty { get; }", true);
                 _codeWriter.WriteLine("");
                 _codeWriter.WriteLine("#endregion", true);
@@ -151,7 +152,7 @@ namespace Utte.Code
         {
             _codeWriter.WriteLine("#region Public methods", true);
             _codeWriter.WriteLine("");
-            ProduceDescription("Returns string representation of struct", true);
+            _codeWriter.ProduceDescription("Returns string representation of struct", true);
             _codeWriter.WriteLine("public override string ToString()", true);
             _codeWriter.WriteLine("{", true);
             _codeWriter.AddIndentation();
@@ -173,7 +174,7 @@ namespace Utte.Code
             _codeWriter.WriteLine("");
             if (_equalitycomparison)
             {
-                ProduceDescription("Compares the instance to an object add parameter description ...", true);
+                _codeWriter.ProduceDescription("Compares the instance to an object add parameter description ...", true);
                 _codeWriter.WriteLine("public override bool Equals(object obj)", true);
                 _codeWriter.WriteLine("{", true);
                 _codeWriter.AddIndentation();
@@ -194,7 +195,7 @@ namespace Utte.Code
                 _codeWriter.WriteLine("}", true);
                 _codeWriter.WriteLine("");
 
-                ProduceDescription("Compares the instance to an object, typesafe add parameter description ...", true);
+                _codeWriter.ProduceDescription("Compares the instance to an object, typesafe add parameter description ...", true);
                 _codeWriter.Write("public bool Equals(", true);
                 _codeWriter.Write(_name);
                 _codeWriter.WriteLine(" obj)");
@@ -222,7 +223,7 @@ namespace Utte.Code
                 _codeWriter.WriteLine("}", true);
                 _codeWriter.WriteLine("");
 
-                ProduceDescription("Get hashcode calculated from string representation of the instance", true);
+                _codeWriter.ProduceDescription("Get hashcode calculated from string representation of the instance", true);
                 _codeWriter.WriteLine("public override int GetHashCode()", true);
                 _codeWriter.WriteLine("{", true);
                 _codeWriter.AddIndentation();
@@ -235,7 +236,7 @@ namespace Utte.Code
             {
                 if (_members.Count > 1)
                 {
-                    ProduceDescription("Deconstructs struct into properties", true);
+                    _codeWriter.ProduceDescription("Deconstructs struct into properties", true);
                     _codeWriter.Write("public void Deconstruct(", true);
                     for (int i = 0; i < _members.Count; i++)
                     {
@@ -278,7 +279,7 @@ namespace Utte.Code
                 _codeWriter.WriteLine("");
                 if (_equalitycomparison)
                 {
-                    ProduceDescription("Compares lhs and rhs for equality");
+                    _codeWriter.ProduceDescription("Compares lhs and rhs for equality");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);
@@ -295,7 +296,7 @@ namespace Utte.Code
                     _codeWriter.SubtractIndentation();
                     _codeWriter.WriteLine("}", true);
                     _codeWriter.WriteLine("");
-                    ProduceDescription("Compares lhs and rhs for inequality");
+                    _codeWriter.ProduceDescription("Compares lhs and rhs for inequality");
                     _codeWriter.WriteLine("/// <param name=\"lhs\"></param>", true);
                     _codeWriter.WriteLine("/// <param name=\"rhs\"></param>", true);
                     _codeWriter.WriteLine("/// <returns></returns>", true);
@@ -333,7 +334,7 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Constructors", true);
                 _codeWriter.WriteLine("");
-                ProduceDescription("Initializes members", members);
+                _codeWriter.ProduceDescription("Initializes members", members);
                 _codeWriter.Write("public ", true);
                 _codeWriter.Write(_name);
                 _codeWriter.Write("(");
