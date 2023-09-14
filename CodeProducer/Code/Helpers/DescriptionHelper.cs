@@ -87,5 +87,19 @@ namespace Utte.Code.Code.Helpers
             if (returnparameter)
                 codeWriter.WriteLine("/// <returns></returns>", true);
         }
+
+        public static void ProduceDescription(this CodeWriter codeWriter, string description, bool returnparameter, params string[] parameters)
+        {
+            codeWriter.ProduceDescription(description);
+            if (parameters != null)
+                foreach (string parameter in parameters)
+                {
+                    codeWriter.Write("/// <param name=\"", true);
+                    codeWriter.Write(parameter);
+                    codeWriter.WriteLine("\"></param>");
+                }
+            if (returnparameter)
+                codeWriter.WriteLine("/// <returns></returns>", true);
+        }
     }
 }

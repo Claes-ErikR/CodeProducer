@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Utte.Code.Code.Helpers;
+using static Utte.Code.Method;
 
 namespace Utte.Code.Code.SupportClasses
 {
@@ -59,10 +61,7 @@ namespace Utte.Code.Code.SupportClasses
         /// <param name="writer"></param>
         private void ImplementsComparisonOperators(CodeWriter writer)
         {
-            writer.ProduceDescription("Check if lhs is smaller than rhs");
-            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
-            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
-            writer.WriteLine("/// <returns></returns>", true);
+            writer.ProduceDescription("Check if lhs is smaller than rhs", true, "lhs", "rhs");
             writer.Write("public static bool operator <(", true);
             writer.Write(_classname);
             writer.Write(" lhs, ");
@@ -79,10 +78,7 @@ namespace Utte.Code.Code.SupportClasses
             writer.WriteLine("}", true);
             writer.WriteLine("");
 
-            writer.ProduceDescription("Check if lhs is smaller than or equal to rhs");
-            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
-            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
-            writer.WriteLine("/// <returns></returns>", true);
+            writer.ProduceDescription("Check if lhs is smaller than or equal to rhs", true, "lhs", "rhs");
             writer.Write("public static bool operator <=(", true);
             writer.Write(_classname);
             writer.Write(" lhs, ");
@@ -99,10 +95,7 @@ namespace Utte.Code.Code.SupportClasses
             writer.WriteLine("}", true);
             writer.WriteLine("");
 
-            writer.ProduceDescription("Check if lhs is greater than rhs");
-            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
-            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
-            writer.WriteLine("/// <returns></returns>", true);
+            writer.ProduceDescription("Check if lhs is greater than rhs", true, "lhs", "rhs");
             writer.Write("public static bool operator >(", true);
             writer.Write(_classname);
             writer.Write(" lhs, ");
@@ -119,10 +112,7 @@ namespace Utte.Code.Code.SupportClasses
             writer.WriteLine("}", true);
             writer.WriteLine("");
 
-            writer.ProduceDescription("Check if lhs is greater than or equal to rhs");
-            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
-            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
-            writer.WriteLine("/// <returns></returns>", true);
+            writer.ProduceDescription("Check if lhs is greater than or equal to rhs", true, "lhs", "rhs");
             writer.Write("public static bool operator >=(", true);
             writer.Write(_classname);
             writer.Write(" lhs, ");
@@ -146,10 +136,7 @@ namespace Utte.Code.Code.SupportClasses
         /// <param name="writer"></param>
         private void ImplementsEqualityOperators(CodeWriter writer)
         {
-            writer.ProduceDescription("Compares lhs and rhs for equality");
-            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
-            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
-            writer.WriteLine("/// <returns></returns>", true);
+            writer.ProduceDescription("Compares lhs and rhs for equality", true, "lhs", "rhs");
             writer.Write("public static bool operator ==(", true);
             writer.Write(_classname);
             writer.Write(" lhs, ");
@@ -163,10 +150,7 @@ namespace Utte.Code.Code.SupportClasses
             writer.SubtractIndentation();
             writer.WriteLine("}", true);
             writer.WriteLine("");
-            writer.ProduceDescription("Compares lhs and rhs for inequality");
-            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
-            writer.WriteLine("/// <param name=\"rhs\"></param>", true);
-            writer.WriteLine("/// <returns></returns>", true);
+            writer.ProduceDescription("Compares lhs and rhs for inequality", true, "lhs", "rhs");
             writer.Write("public static bool operator !=(", true);
             writer.Write(_classname);
             writer.Write(" lhs, ");
@@ -217,41 +201,37 @@ namespace Utte.Code.Code.SupportClasses
         /// <param name="invert"></param>
         private void WriteArithmeticOperator(CodeWriter writer, string returntype, string lhstype, string rhstype, string op, bool invert)
         {
-            writer.WriteLine("/// <summary>", true);
-            writer.Write("/// ", true);
+            var sb = new StringBuilder();
             if (op == "*")
-                writer.Write("Multiplies a ");
+                sb.Append("Multiplies a ");
             else if (op == "/")
-                writer.Write("Divides a ");
+                sb.Append("Divides a ");
             else if (op == "+")
-                writer.Write("Adds a ");
+                sb.Append("Adds a ");
             else if (op == "-" && rhstype != null)
-                writer.Write("Subtracts a ");
+                sb.Append("Subtracts a ");
             else if (op == "-")
-                writer.WriteLine("Unary negative of ");
+                sb.Append("Unary negative of ");
             if (rhstype != null)
             {
-                writer.Write(lhstype);
+                sb.Append(lhstype);
                 if (op == "*" || op == "/")
-                    writer.Write(" with a ");
+                    sb.Append(" with a ");
                 else if (op == "+")
-                    writer.Write(" to a ");
+                    sb.Append(" to a ");
                 else if (op == "-")
-                    writer.Write(" from a ");
-                writer.WriteLine(rhstype);
+                    sb.Append(" from a ");
+                sb.Append(rhstype);
                 if (lhstype != returntype && rhstype != returntype)
                 {
-                    writer.Write(" to get a ");
-                    writer.WriteLine(returntype);
+                    sb.Append(" to get a ");
+                    sb.Append(returntype);
                 }
+                writer.ProduceDescription(sb.ToString(), true, "lhs", "rhs");
             }
-            writer.WriteLine("/// </summary>", true);
-            writer.WriteLine("/// <param name=\"lhs\"></param>", true);
-            if (rhstype != null)
-            {
-                writer.WriteLine("/// <param name=\"rhs\"></param>", true);
-            }
-            writer.WriteLine("/// <returns></returns>", true);
+            else
+                writer.ProduceDescription(sb.ToString(), true, "lhs");
+
             writer.Write("public static ", true);
             writer.Write(returntype);
             writer.Write(" operator ");
