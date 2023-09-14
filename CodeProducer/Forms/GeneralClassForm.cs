@@ -1,13 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using Utte.Code.Controls;
-using Utte.Controls.Input;
-using System.IO;
 
 namespace Utte.Code
 {

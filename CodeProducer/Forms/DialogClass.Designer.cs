@@ -35,7 +35,7 @@ namespace Utte.Code.Controls
             // 
             // cmdOk
             // 
-            this.cmdOk.Location = new System.Drawing.Point(28, 492);
+            this.cmdOk.Location = new System.Drawing.Point(28, 523);
             this.cmdOk.Name = "cmdOk";
             this.cmdOk.Size = new System.Drawing.Size(104, 28);
             this.cmdOk.TabIndex = 2;
@@ -46,7 +46,7 @@ namespace Utte.Code.Controls
             // cmdCancel
             // 
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Location = new System.Drawing.Point(154, 492);
+            this.cmdCancel.Location = new System.Drawing.Point(156, 523);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(89, 28);
             this.cmdCancel.TabIndex = 3;
@@ -59,7 +59,7 @@ namespace Utte.Code.Controls
             this.cpClass.Dock = System.Windows.Forms.DockStyle.Top;
             this.cpClass.Location = new System.Drawing.Point(0, 0);
             this.cpClass.Name = "cpClass";
-            this.cpClass.Size = new System.Drawing.Size(784, 486);
+            this.cpClass.Size = new System.Drawing.Size(784, 520);
             this.cpClass.TabIndex = 4;
             // 
             // DialogClass
@@ -68,7 +68,7 @@ namespace Utte.Code.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cmdCancel;
-            this.ClientSize = new System.Drawing.Size(784, 529);
+            this.ClientSize = new System.Drawing.Size(784, 563);
             this.ControlBox = false;
             this.Controls.Add(this.cpClass);
             this.Controls.Add(this.cmdCancel);
