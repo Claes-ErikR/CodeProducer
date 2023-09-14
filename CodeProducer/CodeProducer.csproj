@@ -102,12 +102,6 @@
     <Compile Include="Forms\DialogMember.Designer.cs">
       <DependentUpon>DialogMember.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormComponentForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormComponentForm.Designer.cs">
-      <DependentUpon>FormComponentForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\GeneralClassForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,10 +140,6 @@
     <EmbeddedResource Include="Forms\DialogMember.resx">
       <SubType>Designer</SubType>
       <DependentUpon>DialogMember.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormComponentForm.resx">
-      <DependentUpon>FormComponentForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GeneralClassForm.resx">
       <DependentUpon>GeneralClassForm.cs</DependentUpon>
