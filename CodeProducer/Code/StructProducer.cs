@@ -90,13 +90,7 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Static constructor", true);
                 _codeWriter.WriteLine("");
-                _codeWriter.ProduceDescription("Sets empty instance", false);
-                _codeWriter.WriteLine("static " + _name + "()", true);
-                _codeWriter.WriteLine("{", true);
-                _codeWriter.AddIndentation();
-                _codeWriter.WriteLine("Empty = new " + _name + "();", true);
-                _codeWriter.SubtractIndentation();
-                _codeWriter.WriteLine("}", true);
+                _codeWriter.ProduceStaticStructConstructor(_name);
                 _codeWriter.WriteLine("");
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
@@ -282,34 +276,7 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Constructors", true);
                 _codeWriter.WriteLine("");
-                _codeWriter.ProduceDescription("Initializes members", members);
-                _codeWriter.Write("public ", true);
-                _codeWriter.Write(_name);
-                _codeWriter.Write("(");
-                StringBuilder sb = new StringBuilder();
-                foreach (StructMember member in members)
-                {
-                    sb.Append(member.Type);
-                    if (member.IsNullable)
-                        sb.Append("?");
-                    sb.Append(" ");
-                    sb.Append(member.Name.ToLower());
-                    sb.Append(", ");
-                }
-                sb.Remove(sb.Length - 2, 2);
-                _codeWriter.Write(sb.ToString());
-                _codeWriter.WriteLine(")");
-                _codeWriter.WriteLine("{", true);
-                _codeWriter.AddIndentation();
-                foreach (StructMember member in members)
-                {
-                    _codeWriter.Write(member.Name, true);
-                    _codeWriter.Write(" = ");
-                    _codeWriter.Write(member.Name.ToLower());
-                    _codeWriter.WriteLine(";");
-                }
-                _codeWriter.SubtractIndentation();
-                _codeWriter.WriteLine("}", true);
+                _codeWriter.ProduceStructConstructor(_name, members);
                 _codeWriter.WriteLine("");
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");

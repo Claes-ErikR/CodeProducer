@@ -1371,23 +1371,10 @@ namespace Utte.Code
                 _codeWriter.WriteLine("#region Constructors", true);
                 _codeWriter.WriteLine("");
                 _codeWriter.ProduceClassConstructor(_name, initialization, parameters, _formcomponent, _formcomponent && _interfaces.Contains("IValid"));
+                _codeWriter.WriteLine("");
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }
-        }
-
-        private string GetDefault(string type)
-        {
-            if (type == "string")
-                return "string.Empty";
-            else if (type == "double")
-                return "double.NaN";
-            else if (type == "int")
-                return "0";
-            else if (type == "bool")
-                return "false";
-            else
-                return "";
         }
 
         /// <summary>
@@ -1408,38 +1395,7 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Static constructor", true);
                 _codeWriter.WriteLine("");
-                _codeWriter.ProduceDescription("Static constructor initializing private instances of objects");
-                _codeWriter.Write("static ", true);
-                _codeWriter.Write(_name);
-                _codeWriter.WriteLine("()");
-                _codeWriter.WriteLine("{", true);
-                _codeWriter.AddIndentation();
-                foreach (Member member in initialization)
-                {
-                    if (member.ValueType)
-                    {
-                        if(member.PrivateProtected)
-                        {
-                            _codeWriter.Write("_", true);
-                            _codeWriter.Write(member.Name.ToLower());
-                        }
-                        else
-                            _codeWriter.Write(member.Name, true);
-                        _codeWriter.Write(" = ");
-                        _codeWriter.Write(GetDefault(member.Type));
-                        _codeWriter.WriteLine(";");
-                    }
-                    else
-                    {
-                        _codeWriter.Write("_", true);
-                        _codeWriter.Write(member.Name.ToLower());
-                        _codeWriter.Write(" = new ");
-                        _codeWriter.Write(member.Type);
-                        _codeWriter.WriteLine("();");
-                    }
-                }
-                _codeWriter.SubtractIndentation();
-                _codeWriter.WriteLine("}", true);
+                _codeWriter.ProduceStaticClassConstructor(_name, initialization);
                 _codeWriter.WriteLine("");
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
