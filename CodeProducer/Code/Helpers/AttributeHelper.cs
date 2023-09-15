@@ -3,6 +3,10 @@ using Utte.Code.Code.SupportClasses;
 
 namespace Utte.Code.Code.Helpers
 {
+
+    /// <summary>
+    /// Class to produce text for attributes
+    /// </summary>
     public static class AttributeHelper
     {
         /// <summary>
