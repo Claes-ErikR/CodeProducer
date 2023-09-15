@@ -21,9 +21,7 @@ namespace Utte.Code
         protected string _parentclass;
         protected string _description;
         protected List<string> _interfaces;
-        protected List<Member> _members;
         protected List<ClassProducer> _classes;
-        protected bool _hastostring;
 
         #endregion
 
@@ -49,9 +47,7 @@ namespace Utte.Code
             _visibility = visibility;
             _parentclass = parentclass;
             _interfaces=new List<string>();
-            _members=new List<Member>();
             _classes = new List<ClassProducer>();
-            _hastostring=false;
             _description = description;
         }
 
@@ -170,95 +166,12 @@ namespace Utte.Code
         /// <summary>
         /// Adds a member to the class
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="privateprotected"></param>
-        /// <param name="inputstatic"></param>
-        /// <param name="description"></param>
-        /// <param name="getproperty"></param>
-        /// <param name="setproperty"></param>
-        /// <param name="constructorset"></param>
-        /// <param name="valuetype"></param>
-        public void AddMember(string name, string type, bool privateprotected, bool inputstatic, string description,bool getproperty, bool setproperty, bool constructorset, bool valuetype)
-        {
-            Member newmember = new Member();
-            newmember.Name = name;
-            newmember.Type = type;
-            newmember.PrivateProtected=privateprotected;
-            if (IsStatic)
-                newmember.Static = true;
-            else
-                newmember.Static=inputstatic;
-            newmember.Description = description;
-            newmember.GetProperty=getproperty;
-            newmember.SetProperty=setproperty;
-            newmember.ConstructorSet=constructorset;
-            newmember.ValueType = valuetype;
-            _members.Add(newmember);
-        }
-
-        /// <summary>
-        /// Adds a member to the class
-        /// </summary>
         /// <param name="member"></param>
         public void AddMember(Member member)
         {
             if (IsStatic)
                 member.Static = true;
-            _members.Add(member);
-        }
-
-        /// <summary>
-        /// Adds a member without exposing a property
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="inputstatic"></param>
-        /// <param name="constructorset"></param>
-        /// <param name="valuetype"></param>
-        public void AddHidddenMember(string name, string type,bool inputstatic, bool constructorset, bool valuetype)
-        {
-            Member newmember = new Member();
-            newmember.Name = name;
-            newmember.Type = type;
-            newmember.PrivateProtected = true;
-            if (IsStatic)
-                newmember.Static = true;
-            else
-                newmember.Static = inputstatic;
-            newmember.Description = "";
-            newmember.GetProperty = false;
-            newmember.SetProperty = false;
-            newmember.ConstructorSet = constructorset;
-            newmember.ValueType = valuetype;
-            _members.Add(newmember);
-        }
-
-        /// <summary>
-        /// Adds a property without an underlying parameter
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="inputstatic"></param>
-        /// <param name="description"></param>
-        /// <param name="getproperty"></param>
-        /// <param name="setproperty"></param>
-        public void AddProperty(string name, string type, bool inputstatic, string description, bool getproperty, bool setproperty)
-        {
-            Member newmember = new Member();
-            newmember.Name = name;
-            newmember.Type = type;
-            newmember.PrivateProtected = false;
-            if (IsStatic)
-                newmember.Static = true;
-            else
-                newmember.Static = inputstatic;
-            newmember.Description = description;
-            newmember.GetProperty = getproperty;
-            newmember.SetProperty = setproperty;
-            newmember.ConstructorSet = false;
-            newmember.ValueType = false;
-            _members.Add(newmember);
+            _memberWriter.Add(member);
         }
 
         /// <summary>
@@ -286,8 +199,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("ICircularCoordinates");
 
-                _members.Add(GetCoordinateMember("R"));
-                _members.Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
+                _memberWriter.AddICircularCoordinatesMembers();
             }
         }
 
@@ -300,8 +212,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IEuclidean2D");
 
-                _members.Add(GetCoordinateMember("x"));
-                _members.Add(GetCoordinateMember("y"));
+                _memberWriter.AddIEuclidean2DMembers();
             }
         }
 
@@ -314,9 +225,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("ISphericaloordinates");
 
-                _members.Add(GetCoordinateMember("R"));
-                _members.Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
-                _members.Add(GetCoordinateMember("Theta", "AngleMeasurement", false));
+                _memberWriter.AddISphericaloordinatesMembers();
             }
         }
 
@@ -329,9 +238,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("ICylindricalCoordinates");
 
-                _members.Add(GetCoordinateMember("R"));
-                _members.Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
-                _members.Add(GetCoordinateMember("z"));
+                _memberWriter.AddICylindricalCoordinatesMembers();
             }
         }
 
@@ -344,47 +251,9 @@ namespace Utte.Code
             {
                 _interfaces.Add("IEuclidean3D");
 
-                _members.Add(GetCoordinateMember("x"));
-                _members.Add(GetCoordinateMember("y"));
-                _members.Add(GetCoordinateMember("z"));
+                _memberWriter.AddIEuclidean3DMembers();
             }
         }
-
-        #region Coordinate interface support methods
-
-        /// <summary>
-        /// Builds member for coordinate interface
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        protected Member GetCoordinateMember(string name)
-        {
-            return GetCoordinateMember(name, "double", true);
-        }
-
-        /// <summary>
-        /// Builds member for coordinate interface
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="valuetype"></param>
-        /// <returns></returns>
-        protected Member GetCoordinateMember(string name, string type, bool valuetype)
-        {
-            Member member = new Member();
-            member.ConstructorSet = false;
-            member.Description = "Returns coordinate " + name;
-            member.GetProperty = true;
-            member.SetProperty = false;
-            member.Name = name;
-            member.PrivateProtected = true;
-            member.Static = false;
-            member.Type = type;
-            member.ValueType = valuetype;
-            return member;
-        }
-
-        #endregion
 
         #endregion
 
@@ -399,20 +268,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IValid");
 
-                Member member = new Member();
-                member.Attributes = new List<string>();
-                member.Attributes.Add("Browsable(false)");
-                member.ConstructorSet = false;
-                member.Description = "Returns if input data is valid";
-                member.GetProperty = true;
-                member.GetText = "return true;";
-                member.SetProperty = false;
-                member.Name = "Valid";
-                member.PrivateProtected = false;
-                member.Static = false;
-                member.Type = "bool";
-                member.ValueType = true;
-                _members.Add(member);
+                _memberWriter.AddIValidMember();
             }
         }
 
@@ -427,20 +283,7 @@ namespace Utte.Code
 
                 _methodsImplementationWriter.AddIXmlSaveMethods(_codeWriter);
 
-                Member member = new Member();
-                member.Attributes = new List<string>();
-                member.Attributes.Add("Category(\"Behavior\")");
-                member.Attributes.Add("Description(\"Returns or sets inclusion in XmlSave\")");
-                member.ConstructorSet = false;
-                member.Description="Decides wether the object should be saved in XmlSave";
-                member.GetProperty=true;
-                member.SetProperty=true;
-                member.Name="IncludeXmlSave";
-                member.PrivateProtected=true;
-                member.Static=false;
-                member.Type="bool";
-                member.ValueType=true;
-                _members.Add(member);
+                _memberWriter.AddIXmlSaveMember();
             }
         }
 
@@ -500,7 +343,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("ICloneable");
 
-                _methodsImplementationWriter.AddICloneableMethod(_codeWriter, _name, _members);
+                _methodsImplementationWriter.AddICloneableMethod(_codeWriter, _name, _memberWriter.List);
             }
         }
 
@@ -526,7 +369,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IFormattable");
 
-                _methodsImplementationWriter.AddIFormattableMethods(_codeWriter, _members);
+                _methodsImplementationWriter.AddIFormattableMethods(_codeWriter, _memberWriter.List);
             }
         }
 
@@ -543,31 +386,8 @@ namespace Utte.Code
             if (!IsStatic)
             {
                 _interfaces.Add("IEnumerable");
-                
-                Member member = new Member();
-                member.ConstructorSet = false;
-                member.Description = "";
-                member.GetProperty = false;
-                member.SetProperty = false;
-                member.Name = "list";
-                member.PrivateProtected = true;
-                member.Static = false;
-                member.Type = "List<" + type + ">";
-                member.ValueType = false;
-                _members.Add(member);
 
-                member = new Member();
-                member.ConstructorSet = false;
-                member.Description = "Returns number of elements in the list";
-                member.GetProperty = true;
-                member.GetText = "return _list.Count;";
-                member.SetProperty = false;
-                member.Name = "Count";
-                member.PrivateProtected = false;
-                member.Static = false;
-                member.Type = "int";
-                member.ValueType = true;
-                _members.Add(member);
+                _memberWriter.AddListWrapperMembers(type);
 
                 _methodsImplementationWriter.AddListWrapperMethods(_codeWriter, type);
             }
@@ -602,7 +422,7 @@ namespace Utte.Code
                 _operatorImplementationWriter.ImplementsEquality = true;
                 _interfaces.Add("IEquatable<" + _name + ">");
 
-                _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _members);
+                _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _memberWriter.List);
             }
         }
 
@@ -616,7 +436,7 @@ namespace Utte.Code
         public void EnsureToStringImplemented()
         {
             if (!IsStatic)
-                _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _members);
+                _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _memberWriter.List);
         }
 
         #endregion
@@ -626,7 +446,7 @@ namespace Utte.Code
         public void ImplementDeconstruct()
         {
             if (!IsStatic)
-                _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _members);
+                _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _memberWriter.List);
         }
 
         #endregion
@@ -639,9 +459,7 @@ namespace Utte.Code
         public void ImplementXmlReadSave()
         {
             if (!IsStatic)
-            {
-                _methodsImplementationWriter.AddXmlReadSaveMethods(_codeWriter, _members);
-            }
+                _methodsImplementationWriter.AddXmlReadSaveMethods(_codeWriter, _memberWriter.List);
         }
 
         #endregion
@@ -701,32 +519,14 @@ namespace Utte.Code
         /// </summary>
         protected void WritePrivateProtectedMembers(bool staticmembers)
         {
-            bool contains = false;
-            foreach (Member member in _members)
-                if (member.PrivateProtected && (member.Static==staticmembers))
-                    contains = true;
-            if (contains)
+            if(_memberWriter.HasPrivateProtectedMembers(staticmembers)) 
             {
-                if(staticmembers)
+                if (staticmembers)
                     _codeWriter.WriteLine("#region Private static members", true);
                 else
-                    _codeWriter.WriteLine("#region Private/protected members",true);
+                    _codeWriter.WriteLine("#region Private/protected members", true);
                 _codeWriter.WriteLine("");
-                foreach (Member member in _members)
-                    if (member.PrivateProtected && (member.Static == staticmembers))
-                    {
-                        if(member.Static)
-                            _codeWriter.Write("private static ", true);
-                        else
-                            _codeWriter.Write("private ", true);
-                        _codeWriter.Write(member.Type);
-                        if (member.ValueIsNullable)
-                            _codeWriter.Write("?");
-                        _codeWriter.Write(" _");
-                        _codeWriter.Write(member.Name.ToLower());
-                        _codeWriter.WriteLine(";");
-                    }
-                _codeWriter.WriteLine("");
+                _memberWriter.WritePrivateProtectedMembers(_codeWriter, staticmembers);
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }
@@ -739,7 +539,7 @@ namespace Utte.Code
         {
             List<Method.Parameter> parameters = new List<Method.Parameter>();
             List<Member> initialization=new List<Member>();
-            foreach (Member member in _members)
+            foreach (Member member in _memberWriter.List)
                 if (!member.Static)
                 {
                     if (member.PrivateProtected && member.ConstructorSet)
@@ -782,7 +582,7 @@ namespace Utte.Code
         protected void WriteStaticConstructor()
         {
             List<Member> initialization = new List<Member>();
-            foreach (Member member in _members)
+            foreach (Member member in _memberWriter.List)
                 if (member.Static)
                 {
                     if (member.PrivateProtected && !member.ValueType)
@@ -831,93 +631,14 @@ namespace Utte.Code
         /// </summary>
         protected void WriteProperties(bool staticproperties)
         {
-            List<Member> members = new List<Member>();
-            foreach (Member member in _members)
-                if (member.GetProperty && (member.Static==staticproperties))
-                    members.Add(member);
-            if (members.Count>0)
+            if(_memberWriter.HasProperties(staticproperties))
             {
-                if(staticproperties)
+                if (staticproperties)
                     _codeWriter.WriteLine("#region Static properties", true);
                 else
                     _codeWriter.WriteLine("#region Properties", true);
                 _codeWriter.WriteLine("");
-                foreach (Member member in members)
-                {
-                    string description;
-                    if (member.Description == "")
-                        if (member.SetProperty)
-                            description = "Returns or sets " + member.Name.ToLower();
-                        else if (member.ProtectedSetProperty)
-                            description = "Returns or protected sets " + member.Name.ToLower();
-                        else
-                            description = "Returns " + member.Name.ToLower();
-                    else
-                        description = member.Description;
-                    _codeWriter.ProduceDescription(description);
-                    _codeWriter.ProduceAttributes(member.Attributes);
-                    _codeWriter.Write("public ", true);
-                    if (staticproperties)
-                        _codeWriter.Write("static ");
-                    _codeWriter.Write(member.Type);
-                    if (member.ValueIsNullable)
-                        _codeWriter.Write("?");
-                    _codeWriter.Write(" ");
-                    if (!member.PrivateProtected && (member.SetProperty || member.ProtectedSetProperty || member.GetProperty))
-                    {
-                        _codeWriter.Write(member.Name);
-                        if(member.ProtectedSetProperty)
-                            _codeWriter.WriteLine(" { get; protected set; }");
-                        else if(member.SetProperty)
-                            _codeWriter.WriteLine(" { get; set; }");
-                        else
-                            _codeWriter.WriteLine(" { get; }");
-                    }
-                    else
-                    {
-                        _codeWriter.WriteLine(member.Name);
-                        _codeWriter.WriteLine("{", true);
-                        _codeWriter.AddIndentation();
-                        _codeWriter.WriteLine("get", true);
-                        _codeWriter.WriteLine("{", true);
-                        _codeWriter.AddIndentation();
-                        if (!string.IsNullOrEmpty(member.GetText))
-                            _codeWriter.WriteLine(member.GetText, true);
-                        else if (member.PrivateProtected)
-                        {
-                            _codeWriter.Write("return _", true);
-                            _codeWriter.Write(member.Name.ToLower());
-                            _codeWriter.WriteLine(";");
-                        }
-                        else
-                            NotImplemented();
-                        _codeWriter.SubtractIndentation();
-                        _codeWriter.WriteLine("}", true);
-                        if (member.ProtectedSetProperty)
-                            _codeWriter.WriteLine("protected", true);
-                        if (member.SetProperty || member.ProtectedSetProperty)
-                        {
-                            _codeWriter.WriteLine("set", true);
-                            _codeWriter.WriteLine("{", true);
-                            _codeWriter.AddIndentation();
-                            if (!string.IsNullOrEmpty(member.SetText))
-                                _codeWriter.WriteLine(member.SetText, true);
-                            else if (member.PrivateProtected)
-                            {
-                                _codeWriter.Write("_", true);
-                                _codeWriter.Write(member.Name.ToLower());
-                                _codeWriter.WriteLine(" = value;");
-                            }
-                            else
-                                NotImplemented();
-                            _codeWriter.SubtractIndentation();
-                            _codeWriter.WriteLine("}", true);
-                        }
-                        _codeWriter.SubtractIndentation();
-                        _codeWriter.WriteLine("}", true);
-                    }
-                    _codeWriter.WriteLine("");
-                }
+                _memberWriter.WriteProperties(_codeWriter, staticproperties);
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }

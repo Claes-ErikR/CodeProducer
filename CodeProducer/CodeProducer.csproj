@@ -69,6 +69,7 @@
     <Compile Include="Code\Helpers\ObjectTypeDeclarationHelper.cs" />
     <Compile Include="Code\StructProducer.cs" />
     <Compile Include="Code\SupportClasses\CodeWriter.cs" />
+    <Compile Include="Code\SupportClasses\MemberWriter.cs" />
     <Compile Include="Code\SupportClasses\MethodsImplementationWriter.cs" />
     <Compile Include="Code\SupportClasses\OperatorImplementationWriter.cs" />
     <Compile Include="Controls\TypeChoser.cs">

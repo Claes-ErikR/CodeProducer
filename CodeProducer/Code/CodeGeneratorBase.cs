@@ -17,6 +17,7 @@ namespace Utte.Code
         protected string _name;
         protected OperatorImplementationWriter _operatorImplementationWriter;
         protected MethodsImplementationWriter _methodsImplementationWriter;
+        protected MemberWriter _memberWriter;
 
         #endregion
 
@@ -31,6 +32,7 @@ namespace Utte.Code
             _name = name;
             _operatorImplementationWriter = new OperatorImplementationWriter(_name);
             _methodsImplementationWriter = new MethodsImplementationWriter();
+            _memberWriter = new MemberWriter();
         }
 
         /// <summary>
