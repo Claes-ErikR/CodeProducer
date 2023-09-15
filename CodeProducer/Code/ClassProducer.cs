@@ -1268,37 +1268,7 @@ namespace Utte.Code
             _codeWriter.Indentation = indentation;
             _codeWriter.ProduceDescription(_description);
             _codeWriter.ProduceAttributes(_attributes);
-            if(_visibility == Visibility.ProtectedInternal)
-                _codeWriter.Write("protected internal", true);
-            else
-                _codeWriter.Write(_visibility.ToString().ToLower(),true);
-            if (IsStatic)
-                _codeWriter.Write(" static");
-            if (IsSealed)
-                _codeWriter.Write(" sealed");
-            if (_formcomponent)
-                _codeWriter.Write(" partial");
-            _codeWriter.Write(" class ");
-            if (_parentclass == "" && _interfaces.Count == 0)
-                _codeWriter.WriteLine(_name);
-            else
-            {
-                _codeWriter.Write(_name);
-                _codeWriter.Write(" : ");
-                StringBuilder sb = new StringBuilder();
-                if (_parentclass != "")
-                {
-                    sb.Append(_parentclass);
-                    sb.Append(", ");
-                }
-                foreach (string interfacename in _interfaces)
-                {
-                    sb.Append(interfacename);
-                    sb.Append(", ");
-                }
-                sb.Remove(sb.Length - 2, 2);
-                _codeWriter.WriteLine(sb.ToString());
-            }
+            _codeWriter.ProduceClassDeclaration(_name, _parentclass, _interfaces, _visibility, IsStatic, IsSealed, _formcomponent);
             _codeWriter.WriteLine("{",true);
             _codeWriter.AddIndentation();
             _codeWriter.WriteLine("");

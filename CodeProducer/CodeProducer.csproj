@@ -65,6 +65,7 @@
     <Compile Include="Code\CodeGeneratorBase.cs" />
     <Compile Include="Code\Helpers\AttributeHelper.cs" />
     <Compile Include="Code\Helpers\DescriptionHelper.cs" />
+    <Compile Include="Code\Helpers\ObjectTypeDeclarationHelper.cs" />
     <Compile Include="Code\StructProducer.cs" />
     <Compile Include="Code\SupportClasses\CodeWriter.cs" />
     <Compile Include="Code\SupportClasses\OperatorImplementationWriter.cs" />

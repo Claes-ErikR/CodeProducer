@@ -65,20 +65,7 @@ namespace Utte.Code
             _codeWriter.Indentation = 0;
             if (_description != "")
                 _codeWriter.ProduceDescription(_description);
-            if (_visibility == "ProtectedInternal")
-                _codeWriter.Write("protected internal", true);
-            else
-                _codeWriter.Write(_visibility.ToString().ToLower(), true);
-            _codeWriter.Write(" struct ");
-            if (_operatorImplementationWriter.ImplementsEquality)
-            {
-                _codeWriter.Write(_name);
-                _codeWriter.Write(" : IEquatable<");
-                _codeWriter.Write(_name);
-                _codeWriter.WriteLine(">");
-            }
-            else
-                _codeWriter.WriteLine(_name);
+            _codeWriter.ProduceStructDeclaration(_name, _visibility, _operatorImplementationWriter.ImplementsEquality);
             _codeWriter.WriteLine("{", true);
             _codeWriter.AddIndentation();
             ProduceMembers();
