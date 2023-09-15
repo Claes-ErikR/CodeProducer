@@ -22,7 +22,6 @@ namespace Utte.Code
         protected string _description;
         protected List<string> _interfaces;
         protected List<Member> _members;
-        protected List<Method> _methods;
         protected List<ClassProducer> _classes;
         protected bool _hastostring;
 
@@ -51,7 +50,6 @@ namespace Utte.Code
             _parentclass = parentclass;
             _interfaces=new List<string>();
             _members=new List<Member>();
-            _methods=new List<Method>();
             _classes = new List<ClassProducer>();
             _hastostring=false;
             _description = description;
@@ -264,39 +262,6 @@ namespace Utte.Code
         }
 
         /// <summary>
-        /// Adds a method to the class
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="visibility"></param>
-        /// <param name="inputstatic"></param>
-        /// <param name="inputoverride"></param>
-        /// <param name="parameters"></param>
-        public void AddMethod(string name, string type, Visibility visibility, bool inputstatic, bool inputoverride, List<Method.Parameter> parameters)
-        {
-            Method newmethod = new Method();
-            newmethod.Name=name;
-            newmethod.Type=type;
-            newmethod.Visibility=visibility;
-            if (IsStatic)
-                newmethod.Static = true;
-            else
-                newmethod.Static = inputstatic;
-            newmethod.Override = inputoverride;
-            newmethod.Parameters = parameters;
-            _methods.Add(newmethod);
-        }
-
-        /// <summary>
-        /// Adds a method to the class
-        /// </summary>
-        /// <param name="method"></param>
-        public void AddMethod(Method method)
-        {
-            _methods.Add(method);
-        }
-
-        /// <summary>
         /// Adds a class as a member to the class
         /// </summary>
         /// <param name="classproducer"></param>
@@ -460,88 +425,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IXmlSave");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Reads data from an XmlDocument";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Read";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                Method.Parameter p = new Method.Parameter();
-                p.Type = "XmlNode";
-                p.Name = "node";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("foreach (XmlNode currnode in node)", true);
-                    _codeWriter.WriteLine("{", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("if (currnode.Name == this.Name)", true);
-                    NotImplemented();
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Saves data to an XmlDocument";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Save";
-                parameters = new List<Method.Parameter>();
-                p = new Method.Parameter();
-                p.Type = "XmlDocument";
-                p.Name = "document";
-                parameters.Add(p);
-                p = new Method.Parameter();
-                p.Type = "XmlNode";
-                p.Name = "node";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("if (Valid)", true);
-                    _codeWriter.WriteLine("{", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("XmlElement xmlelem;", true);
-                    _codeWriter.WriteLine("XmlText xmltext;", true);
-                    _codeWriter.WriteLine("xmlelem = document.CreateElement(\"\", this.Name, \"\");", true);
-                    NotImplemented();
-                    _codeWriter.WriteLine("node.AppendChild(xmlelem);", true);
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Compares XmlDocument to current values to check if it is saved";
-                method.Type = "bool";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "CheckSaved";
-                parameters = new List<Method.Parameter>();
-                p = new Method.Parameter();
-                p.Type = "XmlNode";
-                p.Name = "node";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("foreach (XmlNode currnode in node)", true);
-                    _codeWriter.WriteLine("{", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("if (currnode.Name == this.Name)", true);
-                    NotImplemented();
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                    _codeWriter.WriteLine("return false;", true);
-                };
-                _methods.Add(method);
+                _methodsImplementationWriter.AddIXmlSaveMethods(_codeWriter);
 
                 Member member = new Member();
                 member.Attributes = new List<string>();
@@ -573,14 +457,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IIntegrable<double>");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Calculates the integral function of the object";
-                method.Type = "IFunction<double>";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "CalculateIntegrand";
-                _methods.Add(method);
+                _methodsImplementationWriter.AddIIntegrableMethod("double");
             }
         }
 
@@ -593,14 +470,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IDerivable<double>");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Calculates the derivative function of the object";
-                method.Type = "IFunction<double>";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "CalculateDerivative";
-                _methods.Add(method);
+                _methodsImplementationWriter.AddIDerivableMethod("double");
             }
         }
 
@@ -613,20 +483,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IFunction<double>");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Calculates the function for a certain double";
-                method.Type = "double";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Calculate";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                Method.Parameter p = new Method.Parameter();
-                p.Type = "double";
-                p.Name = "x";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                _methods.Add(method);
+                _methodsImplementationWriter.AddIFunctionMethod("double");
             }
         }
 
@@ -643,56 +500,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("ICloneable");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Returns a clone (shallow copy) of the instance";
-                method.Type = "object";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Clone";
-                method.Text = delegate()
-                {
-                    _codeWriter.Write(_name, true);
-                    _codeWriter.Write(" clone = new ");
-                    _codeWriter.Write(_name);
-                    StringBuilder sb=new StringBuilder("(");
-                    foreach (Member member in _members)
-                    {
-                        if (member.ConstructorSet)
-                        {
-                            sb.Append("_");
-                            sb.Append(member.Name.ToLower());
-                            sb.Append(", ");
-                        }
-                    }
-                    if (sb.Length > 1)
-                        sb.Remove(sb.Length - 2, 2);
-                    sb.Append(");");
-                    _codeWriter.WriteLine(sb.ToString());
-                    foreach (Member member in _members)
-                    {
-                        if (!member.ConstructorSet && member.PrivateProtected)
-                        {
-                            _codeWriter.Write("clone._", true);
-                            _codeWriter.Write(member.Name.ToLower());
-                            _codeWriter.Write(" = ");
-                            _codeWriter.Write("this._");
-                            _codeWriter.Write(member.Name.ToLower());
-                            _codeWriter.WriteLine(";");
-                        }
-                        else if (!member.ConstructorSet && member.SetProperty)
-                        {
-                            _codeWriter.Write("clone.", true);
-                            _codeWriter.Write(member.Name);
-                            _codeWriter.Write(" = ");
-                            _codeWriter.Write("this.");
-                            _codeWriter.Write(member.Name);
-                            _codeWriter.WriteLine(";");
-                        }
-                    }
-                    _codeWriter.WriteLine("return clone;",true);
-                };
-                _methods.Add(method);
+                _methodsImplementationWriter.AddICloneableMethod(_codeWriter, _name, _members);
             }
         }
 
@@ -705,14 +513,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IDisposable");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Frees resources when not needed anymore";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Dispose";
-                _methods.Add(method);
+                _methodsImplementationWriter.AddIDisposableMethod();
             }
         }
 
@@ -725,54 +526,7 @@ namespace Utte.Code
             {
                 _interfaces.Add("IFormattable");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Returns a formatted string representation of the instance";
-                method.Type = "string";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "ToString";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                Method.Parameter p = new Method.Parameter();
-                p.Type = "string";
-                p.Name = "format";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("if (format == null)", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("return ToString();", true);
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("string formatupper = format.ToUpper();", true);
-                    _codeWriter.WriteLine("//Add code here", true);
-                };
-                _methods.Add(method);
-
-                EnsureToStringImplemented();
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Provides IFormattable support";
-                method.Type = "string";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "ToString";
-                parameters = new List<Method.Parameter>();
-                p = new Method.Parameter();
-                p.Type = "string";
-                p.Name = "format";
-                parameters.Add(p);
-                p = new Method.Parameter();
-                p.Type = "IFormatProvider";
-                p.Name = "formatProvider";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("return ToString(format);", true);
-                };
-                _methods.Add(method);
+                _methodsImplementationWriter.AddIFormattableMethods(_codeWriter, _members);
             }
         }
 
@@ -815,50 +569,7 @@ namespace Utte.Code
                 member.ValueType = true;
                 _members.Add(member);
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Adds a " + type + " to the end of the list";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Add";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                Method.Parameter p = new Method.Parameter();
-                p.Type = type;
-                p.Name = "item";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("_list.Add(item);", true);
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Clears the list";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Clear";
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("_list.Clear();", true);
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Implements IEnumerable to use foreach";
-                method.Type = "IEnumerator";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "GetEnumerator";
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("return _list.GetEnumerator();", true);
-                };
-                _methods.Add(method);
+                _methodsImplementationWriter.AddListWrapperMethods(_codeWriter, type);
             }
         }
 
@@ -877,57 +588,7 @@ namespace Utte.Code
                 _interfaces.Add("IComparable");
                 _interfaces.Add("IComparable<" + _name + ">");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Compares the instance to an object for sort order";
-                method.Type = "int";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "CompareTo";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                Method.Parameter p = new Method.Parameter();
-                p.Type = "object";
-                p.Name = "obj";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.Write("if (obj is ", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine(")");
-                    _codeWriter.AddIndentation();
-                    _codeWriter.Write("return this.CompareTo((", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine(")obj);");
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("throw new ArgumentException(\"Wrong type in sort comparison\");", true);
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Compares the instance to an " + _name + " for sort order";
-                method.Type = "int";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "CompareTo";
-                parameters = new List<Method.Parameter>();
-                p = new Method.Parameter();
-                p.Type = _name;
-                p.Name = _name.ToLower();
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.Write("if (", true);
-                    _codeWriter.Write(_name.ToLower());
-                    _codeWriter.WriteLine(" == null)");
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
-                    _codeWriter.SubtractIndentation();
-                    NotImplemented();
-                };
-                _methods.Add(method);
+                _methodsImplementationWriter.AddSortComparisonMethods(_codeWriter, _name);
             }
         }
 
@@ -941,103 +602,7 @@ namespace Utte.Code
                 _operatorImplementationWriter.ImplementsEquality = true;
                 _interfaces.Add("IEquatable<" + _name + ">");
 
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Compares the instance to an object";
-                method.Type = "bool";
-                method.Override = true;
-                method.Static = false;
-                method.Name = "Equals";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                Method.Parameter p = new Method.Parameter();
-                p.Type = "object";
-                p.Name = "obj";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("if (obj==null)", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("return false;", true);
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.Write("if (obj is ", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine(")");
-                    _codeWriter.AddIndentation();
-                    _codeWriter.Write("return this.Equals((", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine(")obj);");
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("return false;", true);
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Compares the instance to an object, typesafe";
-                method.Type = "bool";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Equals";
-                parameters = new List<Method.Parameter>();
-                p = new Method.Parameter();
-                p.Type = _name;
-                p.Name = _name.ToLower();
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.Write("if (", true);
-                    _codeWriter.Write(_name.ToLower());
-                    _codeWriter.WriteLine("==null)");
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("return false;", true);
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.Write("if (", true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.Write(".ReferenceEquals(this, ");
-                    _codeWriter.Write(_name.ToLower());
-                    _codeWriter.WriteLine("))");
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("return true;", true);
-                    _codeWriter.SubtractIndentation();
-                    StringBuilder sb = new StringBuilder("return ");
-                    foreach (Member member in _members)
-                        if(!member.Static)
-                        {
-                            sb.Append("(this.");
-                            sb.Append(member.Name);
-                            sb.Append(" == ");
-                            sb.Append(_name.ToLower());
-                            sb.Append(".");
-                            sb.Append(member.Name);
-                            sb.Append(") && ");
-                        }
-                    if (sb.ToString() == "return ")
-                        _codeWriter.WriteLine("return true;", true);
-                    else
-                    {
-                        sb.Remove(sb.Length - 4, 4);
-                        _codeWriter.Write(sb.ToString(), true);
-                        _codeWriter.WriteLine(";");
-                    }
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Get hashcode calculated from string representation of the instance";
-                method.Type = "int";
-                method.Override = true;
-                method.Static = false;
-                method.Name = "GetHashCode";
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("return this.ToString().GetHashCode();", true);
-                };
-                _methods.Add(method);
-
-                EnsureToStringImplemented();
+                _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _members);
             }
         }
 
@@ -1051,40 +616,7 @@ namespace Utte.Code
         public void EnsureToStringImplemented()
         {
             if (!IsStatic)
-            {
-                if (!_hastostring)
-                {
-                    var method = new Method();
-                    method.Visibility = Visibility.Public;
-                    method.Description = "Returns a string representation of the instance";
-                    method.Type = "string";
-                    method.Override = true;
-                    method.Static = false;
-                    method.Name = "ToString";
-                    method.Text = delegate ()
-                    {
-                        _codeWriter.WriteLine("StringBuilder sb = new StringBuilder();", true);
-                        for (int i = 0; i < _members.Count; i++)
-                        {
-                            Member member = _members[i];
-                            if (!member.Static)
-                            {
-                                _codeWriter.WriteLine("sb.Append(\"" + member.Name.ToString() + ": \");", true);
-                                if(member.Type == "string")
-                                    _codeWriter.WriteLine("sb.Append(" + member.Name.ToString() + ");", true);
-                                else
-                                    _codeWriter.WriteLine("sb.Append(" + member.Name.ToString() + ".ToString());", true);
-                                if(i < _members.Count - 1)
-                                    _codeWriter.WriteLine("sb.Append(\", \");", true);
-                            }
-                        }
-                        _codeWriter.WriteLine("");
-                        _codeWriter.WriteLine("return sb.ToString();", true);
-                    };
-                    _methods.Add(method);
-                    _hastostring = true;
-                }
-            }
+                _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _members);
         }
 
         #endregion
@@ -1093,38 +625,8 @@ namespace Utte.Code
 
         public void ImplementDeconstruct()
         {
-            if (!IsStatic && _members.Count > 1)
-            {
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Deconstructs object into properties";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Deconstruct";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                foreach (var member in _members)
-                {
-                    Method.Parameter p = new Method.Parameter();
-                    p.Type = member.Type;
-                    p.Name = member.Name.ToLower();
-                    p.IsOutParameter = true;
-                    p.IsNullable = member.ValueIsNullable;
-                    parameters.Add(p);
-                }
-                method.Parameters = parameters;
-                method.Text = delegate ()
-                {
-                    foreach (var member in _members)
-                    {
-                        _codeWriter.Write(member.Name.ToLower(), true);
-                        _codeWriter.Write(" = ");
-                        _codeWriter.Write(member.Name);
-                        _codeWriter.WriteLine(";");
-                    }
-                };
-                _methods.Add(method);
-            }
+            if (!IsStatic)
+                _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _members);
         }
 
         #endregion
@@ -1138,110 +640,7 @@ namespace Utte.Code
         {
             if (!IsStatic)
             {
-                Method method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Reads data from an XmlDocument";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Read";
-                List<Method.Parameter> parameters = new List<Method.Parameter>();
-                Method.Parameter p = new Method.Parameter();
-                p.Type = "XmlNode";
-                p.Name = "node";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("foreach (XmlNode currnode in node)", true);
-                    _codeWriter.AddIndentation();
-                    bool firstif=true;
-                    foreach(Member member in _members)
-                        if (member.PrivateProtected)
-                        {
-                            if (firstif)
-                            {
-                                _codeWriter.Write("if (currnode.Name == \"", true);
-                                firstif = false;
-                            }
-                            else
-                                _codeWriter.Write("else if (currnode.Name == \"", true);
-                            _codeWriter.Write(member.Name);
-                            _codeWriter.WriteLine("\")");
-                            _codeWriter.AddIndentation();
-                            if (member.ValueType)
-                            {
-                                _codeWriter.Write("_", true);
-                                _codeWriter.Write(member.Name.ToLower());
-                                _codeWriter.Write(" = ");
-                                if (member.Type == "string")
-                                    _codeWriter.WriteLine("currnode.InnerText;");
-                                else
-                                {
-                                    _codeWriter.Write(member.Type);
-                                    _codeWriter.WriteLine(".Parse(currnode.InnerText);");
-                                }
-                            }
-                            else
-                            {
-                                _codeWriter.Write("_", true);
-                                _codeWriter.Write(member.Name.ToLower());
-                                _codeWriter.WriteLine(".Read(currnode);");
-                            }
-                            _codeWriter.SubtractIndentation();
-                        }
-                    _codeWriter.SubtractIndentation();
-                };
-                _methods.Add(method);
-
-                method = new Method();
-                method.Visibility = Visibility.Public;
-                method.Description = "Saves data to an XmlDocument";
-                method.Type = "void";
-                method.Override = false;
-                method.Static = false;
-                method.Name = "Save";
-                parameters = new List<Method.Parameter>();
-                p = new Method.Parameter();
-                p.Type = "XmlDocument";
-                p.Name = "document";
-                parameters.Add(p);
-                p = new Method.Parameter();
-                p.Type = "XmlNode";
-                p.Name = "node";
-                parameters.Add(p);
-                method.Parameters = parameters;
-                method.Text = delegate()
-                {
-                    _codeWriter.WriteLine("XmlElement xmlelem;", true);
-                    _codeWriter.WriteLine("XmlText xmltext;", true);
-                    foreach(Member member in _members)
-                        if(member.PrivateProtected)
-                        {
-                            _codeWriter.WriteLine("");
-                            _codeWriter.Write("xmlelem = document.CreateElement(\"\", \"", true);
-                            _codeWriter.Write(member.Name);
-                            _codeWriter.WriteLine("\", \"\");");
-                            if(member.ValueType)
-                            {
-                                _codeWriter.Write("xmltext = document.CreateTextNode(_", true);
-                                _codeWriter.Write(member.Name.ToString().ToLower());
-                                if(member.Type=="string")
-                                    _codeWriter.WriteLine(");");
-                                else
-                                    _codeWriter.WriteLine(".ToString());");
-                                _codeWriter.WriteLine("xmlelem.AppendChild(xmltext);", true);
-                            }
-                            else
-                            {
-                                _codeWriter.Write("_", true);
-                                _codeWriter.Write(member.Name.ToString().ToLower());
-                                _codeWriter.WriteLine(".Save(document, xmlelem);");
-                            }
-                            _codeWriter.WriteLine("node.AppendChild(xmlelem);", true);
-                        }
-                };
-                _methods.Add(method);
+                _methodsImplementationWriter.AddXmlReadSaveMethods(_codeWriter, _members);
             }
         }
 
@@ -1408,11 +807,7 @@ namespace Utte.Code
         /// <param name="Public"></param>
         protected void WriteMethods(bool Public,bool staticmethods)
         {
-            List<Method> methods = new List<Method>();
-            foreach (Method method in _methods)
-                if (((method.Visibility == Visibility.Public && Public) || (method.Visibility != Visibility.Public && !Public)) && (method.Static == staticmethods))
-                    methods.Add(method);
-            if (methods.Count>0)
+            if (_methodsImplementationWriter.HasMethods(Public, staticmethods))
             {
                 if(staticmethods)
                     if(Public)
@@ -1425,75 +820,7 @@ namespace Utte.Code
                     else
                         _codeWriter.WriteLine("#region Private/protected methods", true);
                 _codeWriter.WriteLine("");
-                foreach (Method method in methods)
-                {
-                    _codeWriter.ProduceDescription(method.Description, method.Parameters, method.Type != "void");
-                    if (method.Attributes != null && method.Attributes.Count > 0)
-                    {
-                        _codeWriter.Write("[", true);
-                        for (int i = 0; i < method.Attributes.Count; i++)
-                        {
-                            if (i == 0)
-                                _codeWriter.Write(method.Attributes[i]);
-                            else
-                                _codeWriter.Write(method.Attributes[i], true);
-                            if (i == method.Attributes.Count - 1)
-                                _codeWriter.WriteLine("]");
-                            else
-                                _codeWriter.WriteLine(",");
-                        }
-                    }
-                    if (Public)
-                    {
-                        _codeWriter.Write("public ", true);
-                        if (staticmethods)
-                            _codeWriter.Write("static ");
-                    }
-                    else
-                    {
-                        if (staticmethods)
-                            _codeWriter.Write("private static ",true);
-                        else
-                        {
-                            _codeWriter.Write(method.Visibility.ToString().ToLower(), true);
-                            _codeWriter.Write(" ");
-                        }
-                    }
-                    if(method.Override && !staticmethods)
-                        _codeWriter.Write("override ");
-                    _codeWriter.Write(method.Type);
-                    _codeWriter.Write(" ");
-                    _codeWriter.Write(method.Name);
-                    if (method.Parameters==null || method.Parameters.Count == 0)
-                        _codeWriter.WriteLine("()");
-                    else
-                    {
-                        StringBuilder sb = new StringBuilder("(");
-                        foreach (Method.Parameter parameter in method.Parameters)
-                        {
-                            if(parameter.IsOutParameter)
-                                sb.Append("out ");
-                            sb.Append(parameter.Type);
-                            if(parameter.IsNullable)
-                                sb.Append("?");
-                            sb.Append(" ");
-                            sb.Append(parameter.Name);
-                            sb.Append(", ");
-                        }
-                        sb.Remove(sb.Length - 2, 2);
-                        sb.Append(")");
-                        _codeWriter.WriteLine(sb.ToString());
-                    }
-                    _codeWriter.WriteLine("{", true);
-                    _codeWriter.AddIndentation();
-                    if (method.Text == null)
-                        NotImplemented();
-                    else
-                        method.Text();
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                    _codeWriter.WriteLine("");
-                }
+                _methodsImplementationWriter.WriteMethods(_codeWriter, Public, staticmethods);
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }
