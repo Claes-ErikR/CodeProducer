@@ -9,19 +9,19 @@ namespace Utte.Code
     /// <summary>
     /// Class for producing basic code for a class
     /// </summary>
-    public class ClassProducer : CodeGeneratorBase
+    public sealed class ClassProducer : CodeGeneratorBase
     {
 
-        #region Private/protected members
+        #region Private members
 
-        protected ClassType _type;
-        protected List<string> _attributes;
-        protected bool _formcomponent;
-        protected Visibility _visibility;
-        protected string _parentclass;
-        protected string _description;
-        protected List<string> _interfaces;
-        protected List<ClassProducer> _classes;
+        private ClassType _type;
+        private List<string> _attributes;
+        private bool _formcomponent;
+        private Visibility _visibility;
+        private string _parentclass;
+        private string _description;
+        private List<string> _interfaces;
+        private List<ClassProducer> _classes;
 
         #endregion
 
@@ -510,14 +510,14 @@ namespace Utte.Code
 
         #endregion
 
-        #region Private/protected methods
+        #region Private methods
 
         #region Write to file methods
 
         /// <summary>
         /// Writes Private/protected members to textfile
         /// </summary>
-        protected void WritePrivateProtectedMembers(bool staticmembers)
+        private void WritePrivateProtectedMembers(bool staticmembers)
         {
             if(_memberWriter.HasPrivateProtectedMembers(staticmembers)) 
             {
@@ -535,7 +535,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes a constructor to textfile
         /// </summary>
-        protected void WriteConstructor()
+        private void WriteConstructor()
         {
             List<Method.Parameter> parameters = new List<Method.Parameter>();
             List<Member> initialization=new List<Member>();
@@ -579,7 +579,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes a static constructor to textfile
         /// </summary>
-        protected void WriteStaticConstructor()
+        private void WriteStaticConstructor()
         {
             List<Member> initialization = new List<Member>();
             foreach (Member member in _memberWriter.List)
@@ -605,7 +605,7 @@ namespace Utte.Code
         /// Writes methods to textfile
         /// </summary>
         /// <param name="Public"></param>
-        protected void WriteMethods(bool Public,bool staticmethods)
+        private void WriteMethods(bool Public,bool staticmethods)
         {
             if (_methodsImplementationWriter.HasMethods(Public, staticmethods))
             {
@@ -629,7 +629,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes properties to textfile
         /// </summary>
-        protected void WriteProperties(bool staticproperties)
+        private void WriteProperties(bool staticproperties)
         {
             if(_memberWriter.HasProperties(staticproperties))
             {
@@ -647,7 +647,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes operators to textfile
         /// </summary>
-        protected void WriteOperators()
+        private void WriteOperators()
         {
             if (_operatorImplementationWriter.ImplementsAny)
             {
@@ -663,7 +663,7 @@ namespace Utte.Code
         /// Writes classes to textfile
         /// </summary>
         /// <param name="Public"></param>
-        protected void WriteClasses(bool Public)
+        private void WriteClasses(bool Public)
         {
             List<ClassProducer> classes = new List<ClassProducer>();
             foreach (ClassProducer cp in _classes)
@@ -690,9 +690,9 @@ namespace Utte.Code
 
         #endregion
 
-        #region Private/protected static members
+        #region Private static members
 
-        protected static List<string> _implementedinterfaces;
+        private static List<string> _implementedinterfaces;
 
         #endregion
 
@@ -774,127 +774,4 @@ namespace Utte.Code
         #endregion
 
     }
-
-    /// <summary>
-    /// Struct for managing a member of the class
-    /// </summary>
-    public struct Member
-    {
-
-        #region Public members
-
-        public string Name;
-        public string Type;
-        public List<string> Attributes;
-        public bool PrivateProtected;
-        public bool Static;
-        public string Description;
-        public bool GetProperty;
-        public bool SetProperty;
-        public bool ProtectedSetProperty;
-        public bool ConstructorSet;
-        public bool ValueType;
-        public string GetText;
-        public string SetText;
-        public bool ValueIsNullable;
-
-        #endregion
-
-        #region Public methods
-
-        /// <summary>
-        /// Returns string representation of the Member
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder(Type);
-            if (ValueIsNullable)
-                sb.Append("?");
-            sb.Append(" ");
-            if (Static)
-                sb.Append("static ");
-            sb.Append(Name);
-            sb.Append(" ");
-            if (PrivateProtected)
-                sb.Append("member parameter ");
-            if (GetProperty)
-            {
-                sb.Append("get ");
-                if (SetProperty)
-                    sb.Append("set ");
-                else if (ProtectedSetProperty)
-                    sb.Append("protected set ");
-            }
-            sb.Remove(sb.Length - 1, 1);
-
-            return sb.ToString();
-        }
-
-        #endregion
-
-    }
-
-    /// <summary>
-    /// Enum for different levels of visibility
-    /// </summary>
-    public enum Visibility
-    {
-        Public = 0,
-        Protected = 1,
-        Private = 2,
-        Internal = 3,
-        ProtectedInternal = 4
-    }
-
-    /// <summary>
-    /// Struct for managing different methods
-    /// </summary>
-    public struct Method
-    {
-
-        #region Public members
-
-        public string Name;
-        public string Type;
-        public List<string> Attributes;
-        public Visibility Visibility;
-        public string Description;
-        public bool Static;
-        public bool Override;
-        public List<Parameter> Parameters;
-        public MethodText Text;
-
-        #endregion
-
-        #region Public structs/classes
-
-        /// <summary>
-        /// Struct for managing input parameters for the method
-        /// </summary>
-        public struct Parameter
-        {
-
-            #region Public members
-
-            public string Name;
-            public string Type;
-            public string PropertyName;
-            public bool HasProtectedMember;
-            public bool IsOutParameter;
-            public bool IsNullable;
-
-            #endregion
-
-        }
-
-        #endregion
-
-    }
-
-    /// <summary>
-    /// Delegate for implementing method text
-    /// </summary>
-    public delegate void MethodText();
-
 }

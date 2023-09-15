@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Utte.Code.Code.SupportClasses;
 
 namespace Utte.Code
@@ -57,17 +58,127 @@ namespace Utte.Code
 
         #endregion
 
-        #region Private/protected methods
+    }
+
+    /// <summary>
+    /// Struct for managing a member of the class
+    /// </summary>
+    public struct Member
+    {
+
+        #region Public members
+
+        public string Name;
+        public string Type;
+        public List<string> Attributes;
+        public bool PrivateProtected;
+        public bool Static;
+        public string Description;
+        public bool GetProperty;
+        public bool SetProperty;
+        public bool ProtectedSetProperty;
+        public bool ConstructorSet;
+        public bool ValueType;
+        public string GetText;
+        public string SetText;
+        public bool ValueIsNullable;
+
+        #endregion
+
+        #region Public methods
 
         /// <summary>
-        /// Returns text for a not implemented exception
+        /// Returns string representation of the Member
         /// </summary>
-        protected void NotImplemented()
+        /// <returns></returns>
+        public override string ToString()
         {
-            _codeWriter.WriteLine("throw new NotImplementedException();", true);
+            StringBuilder sb = new StringBuilder(Type);
+            if (ValueIsNullable)
+                sb.Append("?");
+            sb.Append(" ");
+            if (Static)
+                sb.Append("static ");
+            sb.Append(Name);
+            sb.Append(" ");
+            if (PrivateProtected)
+                sb.Append("member parameter ");
+            if (GetProperty)
+            {
+                sb.Append("get ");
+                if (SetProperty)
+                    sb.Append("set ");
+                else if (ProtectedSetProperty)
+                    sb.Append("protected set ");
+            }
+            sb.Remove(sb.Length - 1, 1);
+
+            return sb.ToString();
         }
 
         #endregion
 
     }
+
+    /// <summary>
+    /// Enum for different levels of visibility
+    /// </summary>
+    public enum Visibility
+    {
+        Public = 0,
+        Protected = 1,
+        Private = 2,
+        Internal = 3,
+        ProtectedInternal = 4
+    }
+
+    /// <summary>
+    /// Struct for managing different methods
+    /// </summary>
+    public struct Method
+    {
+
+        #region Public members
+
+        public string Name;
+        public string Type;
+        public List<string> Attributes;
+        public Visibility Visibility;
+        public string Description;
+        public bool Static;
+        public bool Override;
+        public List<Parameter> Parameters;
+        public MethodText Text;
+
+        #endregion
+
+        #region Public structs/classes
+
+        /// <summary>
+        /// Struct for managing input parameters for the method
+        /// </summary>
+        public struct Parameter
+        {
+
+            #region Public members
+
+            public string Name;
+            public string Type;
+            public string PropertyName;
+            public bool HasProtectedMember;
+            public bool IsOutParameter;
+            public bool IsNullable;
+
+            #endregion
+
+        }
+
+        #endregion
+
+    }
+
+    /// <summary>
+    /// Delegate for implementing method text
+    /// </summary>
+    public delegate void MethodText();
 }

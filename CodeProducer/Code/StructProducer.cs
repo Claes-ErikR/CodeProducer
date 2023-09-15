@@ -9,17 +9,17 @@ namespace Utte.Code
     /// <summary>
     /// Class for producing structured structs
     /// </summary>
-    public class StructProducer : CodeGeneratorBase
+    public sealed class StructProducer : CodeGeneratorBase
     {
 
-        #region Private/protected members
+        #region Private members
 
-        protected string _description;
-        protected string _visibility;
-        protected List<StructMember> _members;
-        protected bool _constructor;
-        protected bool _produceempty;
-        protected bool _implementdeconstruct;
+        private string _description;
+        private string _visibility;
+        private List<StructMember> _members;
+        private bool _constructor;
+        private bool _produceempty;
+        private bool _implementdeconstruct;
 
         #endregion
 
@@ -79,12 +79,12 @@ namespace Utte.Code
 
         #endregion
 
-        #region Private/protected methods
+        #region Private methods
 
         /// <summary>
         /// Produces support for empty instance
         /// </summary>
-        protected void ProduceEmpty()
+        private void ProduceEmpty()
         {
             if (_produceempty)
             {
@@ -128,7 +128,7 @@ namespace Utte.Code
         /// <summary>
         /// Produces public methods
         /// </summary>
-        protected void ProducePublicMethods()
+        private void ProducePublicMethods()
         {
             _codeWriter.WriteLine("#region Public methods", true);
             _codeWriter.WriteLine("");
@@ -251,7 +251,7 @@ namespace Utte.Code
         /// <summary>
         /// Produces operators
         /// </summary>
-        protected void ProduceOperators()
+        private void ProduceOperators()
         {
             if (_operatorImplementationWriter.ImplementsAny)
             {
@@ -266,7 +266,7 @@ namespace Utte.Code
         /// <summary>
         /// Produces constructor if necessary
         /// </summary>
-        protected void ProduceConstructor()
+        private void ProduceConstructor()
         {
             List<StructMember> members = new List<StructMember>();
             foreach (StructMember member in _members)
@@ -286,7 +286,7 @@ namespace Utte.Code
         /// <summary>
         /// Produces public members
         /// </summary>
-        protected void ProduceMembers()
+        private void ProduceMembers()
         {
             _codeWriter.WriteLine("");
             _codeWriter.WriteLine("#region Public members", true);
