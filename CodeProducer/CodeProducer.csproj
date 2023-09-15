@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Code\CodeGeneratorBase.cs" />
     <Compile Include="Code\Helpers\AttributeHelper.cs" />
+    <Compile Include="Code\Helpers\ConstructorHelper.cs" />
     <Compile Include="Code\Helpers\DescriptionHelper.cs" />
     <Compile Include="Code\Helpers\ObjectTypeDeclarationHelper.cs" />
     <Compile Include="Code\StructProducer.cs" />

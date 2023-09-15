@@ -1370,78 +1370,7 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Constructors", true);
                 _codeWriter.WriteLine("");
-                if(_formcomponent)
-                {
-                    _codeWriter.ProduceDescription("Initializes form", parameters);
-                    _codeWriter.Write("public ",true);
-                    _codeWriter.Write(_name);
-                    _codeWriter.WriteLine("()");
-                    _codeWriter.WriteLine("{",true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("InitializeComponent();",true);
-                    if(_interfaces.Contains("IValid"))
-                        _codeWriter.WriteLine("_includexmlsave = true;",true);
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                    _codeWriter.WriteLine("");
-                }
-                if (parameters.Count>0 || initialization.Count>0)
-                {
-                    StringBuilder sb = new StringBuilder("Initializes ");
-                    if(parameters.Count>0)
-                        sb.Append("private members with parameters and ");
-                    if(initialization.Count>0)
-                        sb.Append("private instances of objects");
-                    else
-                        sb.Remove(sb.Length-5,5);
-                    _codeWriter.ProduceDescription(sb.ToString(), parameters);
-                    _codeWriter.Write("public ",true);
-                    _codeWriter.Write(_name);
-                    if (parameters.Count > 0)
-                    {
-                        sb = new StringBuilder("(");
-                        foreach (Method.Parameter parameter in parameters)
-                        {
-                            sb.Append(parameter.Type);
-                            if(parameter.IsNullable)
-                                sb.Append("?");
-                            sb.Append(" ");
-                            sb.Append(parameter.Name);
-                            sb.Append(", ");
-                        }
-                        sb.Remove(sb.Length - 2, 2);
-                        sb.Append(")");
-                        _codeWriter.WriteLine(sb.ToString());
-                    }
-                    else
-                        _codeWriter.WriteLine("()");
-                    _codeWriter.WriteLine("{",true);
-                    _codeWriter.AddIndentation();
-                    foreach (Method.Parameter parameter in parameters)
-                    {
-                        if (parameter.HasProtectedMember)
-                        {
-                            _codeWriter.Write("_", true);
-                            _codeWriter.Write(parameter.Name);
-                        }
-                        else
-                            _codeWriter.Write(parameter.PropertyName, true);
-                        _codeWriter.Write(" = ");
-                        _codeWriter.Write(parameter.Name);
-                        _codeWriter.WriteLine(";");
-                    }
-                    foreach (Member member in initialization)
-                    {
-                        _codeWriter.Write("_", true);
-                        _codeWriter.Write(member.Name.ToLower());
-                        _codeWriter.Write(" = new ");
-                        _codeWriter.Write(member.Type);
-                        _codeWriter.WriteLine("();");
-                    }
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                    _codeWriter.WriteLine("");
-                }
+                _codeWriter.ProduceClassConstructor(_name, initialization, parameters, _formcomponent, _formcomponent && _interfaces.Contains("IValid"));
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }
