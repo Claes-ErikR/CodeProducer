@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using Utte.Code.Code.SupportClasses;
-using static Utte.Text.Latex.LatexPresentation.LatexSection;
 
 namespace Utte.Code.Code.Helpers
 {
