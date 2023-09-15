@@ -41,7 +41,7 @@ namespace Utte.Code.Controls
         {
             if (bBrowsable.Checked)
                 _value.Add("Browsable(false)");
-            if (!string.IsNullOrEmpty(cbCategory.SelectedItem.ToString()))
+            if (!string.IsNullOrEmpty(cbCategory.SelectedItem?.ToString()))
                 _value.Add("Category(\"" + cbCategory.SelectedItem.ToString() + "\")");
             if(!string.IsNullOrEmpty(sDescription.Text))
                 _value.Add("Description(\"" + sDescription.Text + "\")");

@@ -1267,21 +1267,7 @@ namespace Utte.Code
         {
             _codeWriter.Indentation = indentation;
             _codeWriter.ProduceDescription(_description);
-            if (_attributes != null && _attributes.Count > 0)
-            {
-                _codeWriter.Write("[", true);
-                for (int i = 0; i < _attributes.Count; i++)
-                {
-                    if(i==0)
-                        _codeWriter.Write(_attributes[i]);
-                    else
-                        _codeWriter.Write(_attributes[i],true);
-                    if (i == _attributes.Count - 1)
-                        _codeWriter.WriteLine("]");
-                    else
-                        _codeWriter.WriteLine(",");
-                }
-            }
+            _codeWriter.ProduceAttributes(_attributes);
             if(_visibility == Visibility.ProtectedInternal)
                 _codeWriter.Write("protected internal", true);
             else
@@ -1687,21 +1673,7 @@ namespace Utte.Code
                     else
                         description = member.Description;
                     _codeWriter.ProduceDescription(description);
-                    if (member.Attributes != null && member.Attributes.Count > 0)
-                    {
-                        _codeWriter.Write("[", true);
-                        for (int i = 0; i < member.Attributes.Count; i++)
-                        {
-                            if (i == 0)
-                                _codeWriter.Write(member.Attributes[i]);
-                            else
-                                _codeWriter.Write(member.Attributes[i], true);
-                            if (i == member.Attributes.Count - 1)
-                                _codeWriter.WriteLine("]");
-                            else
-                                _codeWriter.WriteLine(",");
-                        }
-                    }
+                    _codeWriter.ProduceAttributes(member.Attributes);
                     _codeWriter.Write("public ", true);
                     if (staticproperties)
                         _codeWriter.Write("static ");
