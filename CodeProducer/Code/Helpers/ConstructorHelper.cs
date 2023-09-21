@@ -170,17 +170,17 @@ namespace Utte.Code.Code.Helpers
         /// <param name="codeWriter"></param>
         /// <param name="structName"></param>
         /// <param name="members"></param>
-        public static void ProduceStructConstructor(this CodeWriter codeWriter, string structName, List<StructMember> members)
+        public static void ProduceStructConstructor(this CodeWriter codeWriter, string structName, List<Member> members)
         {
             codeWriter.ProduceDescription("Initializes members", members);
             codeWriter.Write("public ", true);
             codeWriter.Write(structName);
             codeWriter.Write("(");
             StringBuilder sb = new StringBuilder();
-            foreach (StructMember member in members)
+            foreach (Member member in members)
             {
                 sb.Append(member.Type);
-                if (member.IsNullable)
+                if (member.ValueIsNullable)
                     sb.Append("?");
                 sb.Append(" ");
                 sb.Append(member.Name.ToLower());
@@ -191,7 +191,7 @@ namespace Utte.Code.Code.Helpers
             codeWriter.WriteLine(")");
             codeWriter.WriteLine("{", true);
             codeWriter.AddIndentation();
-            foreach (StructMember member in members)
+            foreach (Member member in members)
             {
                 codeWriter.Write(member.Name, true);
                 codeWriter.Write(" = ");

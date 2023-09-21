@@ -65,7 +65,7 @@ namespace Utte.Code
     /// </summary>
     public struct Member
     {
-
+        
         #region Public members
 
         public string Name;
@@ -82,6 +82,8 @@ namespace Utte.Code
         public string GetText;
         public string SetText;
         public bool ValueIsNullable;
+        public bool IsStructMember;
+        public bool ReadOnly; // Only used by structs
 
         #endregion
 
@@ -93,27 +95,37 @@ namespace Utte.Code
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(Type);
-            if (ValueIsNullable)
-                sb.Append("?");
-            sb.Append(" ");
-            if (Static)
-                sb.Append("static ");
-            sb.Append(Name);
-            sb.Append(" ");
-            if (PrivateProtected)
-                sb.Append("member parameter ");
-            if (GetProperty)
+            if (!IsStructMember)
             {
-                sb.Append("get ");
-                if (SetProperty)
-                    sb.Append("set ");
-                else if (ProtectedSetProperty)
-                    sb.Append("protected set ");
-            }
-            sb.Remove(sb.Length - 1, 1);
+                StringBuilder sb = new StringBuilder(Type);
+                if (ValueIsNullable)
+                    sb.Append("?");
+                sb.Append(" ");
+                if (Static)
+                    sb.Append("static ");
+                sb.Append(Name);
+                sb.Append(" ");
+                if (PrivateProtected)
+                    sb.Append("member parameter ");
+                if (GetProperty)
+                {
+                    sb.Append("get ");
+                    if (SetProperty)
+                        sb.Append("set ");
+                    else if (ProtectedSetProperty)
+                        sb.Append("protected set ");
+                }
+                sb.Remove(sb.Length - 1, 1);
 
-            return sb.ToString();
+                return sb.ToString();
+            }
+            else
+            {
+                string isNullableText = ValueIsNullable ? "?" : "";
+                if (ReadOnly)
+                    return Name + " " + Type + isNullableText + " readonly";
+                return Name + " " + Type + isNullableText;
+            }
         }
 
         #endregion

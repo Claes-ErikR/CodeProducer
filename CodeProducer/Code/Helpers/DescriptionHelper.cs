@@ -47,11 +47,11 @@ namespace Utte.Code.Code.Helpers
         /// <param name="description"></param>
         /// <param name="parameters"></param>
         /// <param name="returnparameter"></param>
-        public static void ProduceDescription(this CodeWriter codeWriter, string description, List<StructMember> parameters, bool returnparameter = false)
+        public static void ProduceDescription(this CodeWriter codeWriter, string description, List<Member> parameters, bool returnparameter = false)
         {
             codeWriter.ProduceDescription(description);
             if (parameters != null)
-                foreach (StructMember parameter in parameters)
+                foreach (Member parameter in parameters)
                 {
                     codeWriter.Write("/// <param name=\"", true);
                     codeWriter.Write(parameter.Name.ToLower());

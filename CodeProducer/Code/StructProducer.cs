@@ -16,7 +16,7 @@ namespace Utte.Code
 
         private string _description;
         private string _visibility;
-        private List<StructMember> _members;
+        private List<Member> _members;
         private bool _constructor;
         private bool _produceempty;
         private bool _implementdeconstruct;
@@ -38,7 +38,7 @@ namespace Utte.Code
         /// <param name="filename"></param>
         /// <param name="operatorclasses"></param>
         /// <param name="implementdeconstruct"></param>
-        public StructProducer(string name, string description, string visibility, List<StructMember> members, bool constructor, bool equalitycomparison, bool produceempty, string filename, List<string> operatorclasses, bool implementdeconstruct) : base(name)
+        public StructProducer(string name, string description, string visibility, List<Member> members, bool constructor, bool equalitycomparison, bool produceempty, string filename, List<string> operatorclasses, bool implementdeconstruct) : base(name)
         {
             _codeWriter = new CodeWriter(filename, 4);
             _description = description;
@@ -99,10 +99,10 @@ namespace Utte.Code
                 {
                     _codeWriter.WriteLine("#region Public static methods", true);
                     _codeWriter.WriteLine("");
-                    StructMember structmember = new StructMember();
+                    Member structmember = new Member();
                     structmember.Name = "instance";
                     structmember.Type = _name;
-                    List<StructMember> structmemberlist = new List<StructMember>() { structmember };
+                    List<Member> structmemberlist = new List<Member>() { structmember };
                     _codeWriter.ProduceDescription("Compares to empty instance", structmemberlist, true);
                     _codeWriter.WriteLine("public static bool IsEmpty(" + _name + " instance)", true);
                     _codeWriter.WriteLine("{", true);
@@ -138,7 +138,7 @@ namespace Utte.Code
             _codeWriter.AddIndentation();
             StringBuilder sb = new StringBuilder();
             sb.Append("return ");
-            foreach (StructMember member in _members)
+            foreach (Member member in _members)
             {
                 sb.Append(member.Name);
                 if (member.Type != "string")
@@ -187,7 +187,7 @@ namespace Utte.Code
                 _codeWriter.SubtractIndentation();
                 sb = new StringBuilder();
                 sb.Append("return ");
-                foreach (StructMember member in _members)
+                foreach (Member member in _members)
                 {
                     sb.Append("(this.");
                     sb.Append(member.Name);
@@ -222,7 +222,7 @@ namespace Utte.Code
                     {
                         _codeWriter.Write("out ");
                         _codeWriter.Write(_members[i].Type);
-                        if (_members[i].IsNullable)
+                        if (_members[i].ValueIsNullable)
                             _codeWriter.Write("?");
                         _codeWriter.Write(" ");
                         _codeWriter.Write(_members[i].Name.ToLower());
@@ -268,8 +268,8 @@ namespace Utte.Code
         /// </summary>
         private void ProduceConstructor()
         {
-            List<StructMember> members = new List<StructMember>();
-            foreach (StructMember member in _members)
+            List<Member> members = new List<Member>();
+            foreach (Member member in _members)
                 if (_constructor || member.ReadOnly)
                     members.Add(member);
             if (members.Count != 0)
@@ -291,13 +291,13 @@ namespace Utte.Code
             _codeWriter.WriteLine("");
             _codeWriter.WriteLine("#region Public members", true);
             _codeWriter.WriteLine("");
-            foreach (StructMember member in _members)
+            foreach (Member member in _members)
             {
                 _codeWriter.Write("public ", true);
                 if (member.ReadOnly)
                     _codeWriter.Write("readonly ");
                 _codeWriter.Write(member.Type);
-                if (member.IsNullable)
+                if (member.ValueIsNullable)
                     _codeWriter.Write("?");
                 _codeWriter.Write(" ");
                 _codeWriter.Write(member.Name);
@@ -306,39 +306,6 @@ namespace Utte.Code
             _codeWriter.WriteLine("");
             _codeWriter.WriteLine("#endregion", true);
             _codeWriter.WriteLine("");
-        }
-
-        #endregion
-
-    }
-
-    /// <summary>
-    /// Struct for managing a menber of a struct
-    /// </summary>
-    public struct StructMember
-    {
-
-        #region Public members
-
-        public string Name;
-        public string Type;
-        public bool ReadOnly;
-        public bool IsNullable;
-
-        #endregion
-
-        #region Public methods
-
-        /// <summary>
-        /// Returns string representation of the struct
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            string isNullableText = IsNullable ? "?" : "";
-            if (ReadOnly)
-                return Name + " " + Type + isNullableText + " readonly";
-            return Name + " " + Type + isNullableText;
         }
 
         #endregion

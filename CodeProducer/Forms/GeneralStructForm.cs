@@ -51,9 +51,9 @@ namespace Utte.Code
                     DialogResult result = sfd.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        List<StructMember> members = new List<StructMember>();
+                        List<Member> members = new List<Member>();
                         foreach (StructMember member in lstStructMembers.Items)
-                            members.Add(member);
+                            members.Add(new Member() { IsStructMember = true, Name = member.Name, ValueIsNullable = member.IsNullable, ReadOnly = member.ReadOnly, Type = member.Type });
                         List<string> operatorclasses = new List<string>();
                         if (chkArithmeticOperators.Checked)
                             operatorclasses.Add(sStructName.Text);
@@ -107,5 +107,37 @@ namespace Utte.Code
 
         #endregion
 
+        /// <summary>
+        /// Struct for managing a member of a struct
+        /// </summary>
+        private struct StructMember
+        {
+
+            #region Public members
+
+            public string Name;
+            public string Type;
+            public bool ReadOnly;
+            public bool IsNullable;
+
+            #endregion
+
+            #region Public methods
+
+            /// <summary>
+            /// Returns string representation of the struct
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                string isNullableText = IsNullable ? "?" : "";
+                if (ReadOnly)
+                    return Name + " " + Type + isNullableText + " readonly";
+                return Name + " " + Type + isNullableText;
+            }
+
+            #endregion
+
+        }
     }
 }
