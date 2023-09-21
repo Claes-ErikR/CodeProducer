@@ -12,14 +12,16 @@ namespace Utte.Code.Code.SupportClasses
     {
         private List<Method> _methods;
         private bool _hastostring;
+        private DefinitionType _definitiontype;
 
         /// <summary>
         /// Initializes basic parameters
         /// </summary>
-        public MethodsImplementationWriter()
+        public MethodsImplementationWriter(DefinitionType definitionType)
         {
             _methods = new List<Method>();
             _hastostring = false;
+            _definitiontype = definitionType;
         }
 
         /// <summary>
@@ -127,7 +129,7 @@ namespace Utte.Code.Code.SupportClasses
             {
                 Method method = new Method();
                 method.Visibility = Visibility.Public;
-                method.Description = "Deconstructs object into properties";
+                method.Description = _definitiontype == DefinitionType.Struct ? "Deconstructs struct into members" : "Deconstructs object into properties";
                 method.Type = "void";
                 method.Override = false;
                 method.Static = false;
@@ -249,14 +251,17 @@ namespace Utte.Code.Code.SupportClasses
                 codeWriter.AddIndentation();
                 codeWriter.WriteLine("return false;", true);
                 codeWriter.SubtractIndentation();
-                codeWriter.Write("if (", true);
-                codeWriter.Write(typeName);
-                codeWriter.Write(".ReferenceEquals(this, ");
-                codeWriter.Write(typeName.ToLower());
-                codeWriter.WriteLine("))");
-                codeWriter.AddIndentation();
-                codeWriter.WriteLine("return true;", true);
-                codeWriter.SubtractIndentation();
+                if (_definitiontype != DefinitionType.Struct)
+                {
+                    codeWriter.Write("if (", true);
+                    codeWriter.Write(typeName);
+                    codeWriter.Write(".ReferenceEquals(this, ");
+                    codeWriter.Write(typeName.ToLower());
+                    codeWriter.WriteLine("))");
+                    codeWriter.AddIndentation();
+                    codeWriter.WriteLine("return true;", true);
+                    codeWriter.SubtractIndentation();
+                }
                 StringBuilder sb = new StringBuilder("return ");
                 foreach (Member member in members)
                     if (!member.Static)

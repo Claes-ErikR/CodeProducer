@@ -28,20 +28,12 @@ namespace Utte.Code
         /// Initializes basic parameters
         /// </summary>
         /// <param name="name"></param>
-        public CodeGeneratorBase(string name)
+        public CodeGeneratorBase(string name, DefinitionType definitionType)
         {
             _name = name;
             _operatorImplementationWriter = new OperatorImplementationWriter(_name);
-            _methodsImplementationWriter = new MethodsImplementationWriter();
+            _methodsImplementationWriter = new MethodsImplementationWriter(definitionType);
             _memberWriter = new MemberWriter();
-        }
-
-        /// <summary>
-        /// Initializes basic parameters
-        /// </summary>
-        public CodeGeneratorBase()
-            : this("")
-        {
         }
 
         #endregion
@@ -54,6 +46,35 @@ namespace Utte.Code
         public void Dispose()
         {
             _codeWriter.Dispose();
+        }
+
+        #endregion
+
+        #region Protected methods
+
+        /// <summary>
+        /// Writes methods to textfile
+        /// </summary>
+        /// <param name="Public"></param>
+        protected void WriteMethods(bool Public, bool staticmethods)
+        {
+            if (_methodsImplementationWriter.HasMethods(Public, staticmethods))
+            {
+                if (staticmethods)
+                    if (Public)
+                        _codeWriter.WriteLine("#region Public static methods", true);
+                    else
+                        _codeWriter.WriteLine("#region Private static methods", true);
+                else
+                    if (Public)
+                    _codeWriter.WriteLine("#region Public methods", true);
+                else
+                    _codeWriter.WriteLine("#region Private/protected methods", true);
+                _codeWriter.WriteLine("");
+                _methodsImplementationWriter.WriteMethods(_codeWriter, Public, staticmethods);
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
         }
 
         #endregion
@@ -142,6 +163,15 @@ namespace Utte.Code
         Private = 2,
         Internal = 3,
         ProtectedInternal = 4
+    }
+
+    /// <summary>
+    /// Defines what type of definition it is
+    /// </summary>
+    public enum DefinitionType
+    {
+        Class = 0,
+        Struct = 1
     }
 
     /// <summary>

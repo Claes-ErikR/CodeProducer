@@ -37,7 +37,8 @@ namespace Utte.Code
         /// <param name="visibility"></param>
         /// <param name="parentclass"></param>
         /// <param name="description"></param>
-        public ClassProducer(string name,List<string> attributes, ClassType classtype,bool formcomponent, Visibility visibility,string parentclass,string description) : base(name)
+        public ClassProducer(string name,List<string> attributes, ClassType classtype, bool formcomponent, Visibility visibility, string parentclass, string description)
+            : base(name, DefinitionType.Class)
         {
             _attributes = attributes;
             _type = classtype;
@@ -63,7 +64,7 @@ namespace Utte.Code
         /// <param name="description"></param>
         /// <param name="filename"></param>
         public ClassProducer(string name, List<string> attributes, ClassType classtype, bool formcomponent, Visibility visibility, string parentclass, string description, string filename)
-            : this(name,attributes, classtype, formcomponent, visibility, parentclass,description)
+            : this(name,attributes, classtype, formcomponent, visibility, parentclass, description)
         {
             _codeWriter = new CodeWriter(filename, 4);
         }
@@ -596,31 +597,6 @@ namespace Utte.Code
                 _codeWriter.WriteLine("");
                 _codeWriter.ProduceStaticClassConstructor(_name, initialization);
                 _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
-        /// <summary>
-        /// Writes methods to textfile
-        /// </summary>
-        /// <param name="Public"></param>
-        private void WriteMethods(bool Public,bool staticmethods)
-        {
-            if (_methodsImplementationWriter.HasMethods(Public, staticmethods))
-            {
-                if(staticmethods)
-                    if(Public)
-                        _codeWriter.WriteLine("#region Public static methods", true);
-                    else
-                        _codeWriter.WriteLine("#region Private static methods", true);
-                else
-                    if (Public)
-                        _codeWriter.WriteLine("#region Public methods", true);
-                    else
-                        _codeWriter.WriteLine("#region Private/protected methods", true);
-                _codeWriter.WriteLine("");
-                _methodsImplementationWriter.WriteMethods(_codeWriter, Public, staticmethods);
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }
