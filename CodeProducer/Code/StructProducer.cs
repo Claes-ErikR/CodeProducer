@@ -16,7 +16,6 @@ namespace Utte.Code
 
         private string _description;
         private string _visibility;
-        private List<Member> _members;
         private bool _constructor;
         private bool _produceempty;
 
@@ -43,7 +42,7 @@ namespace Utte.Code
             _codeWriter = new CodeWriter(filename, 4);
             _description = description;
             _visibility = visibility;
-            _members = members;
+            _memberWriter.AddRange(members);
             _constructor = constructor;
             _operatorImplementationWriter.ImplementsEquality = equalitycomparison;
             _produceempty = produceempty;
@@ -51,11 +50,11 @@ namespace Utte.Code
             if (_operatorImplementationWriter.ImplementationClasses.Count > 0)
                 _operatorImplementationWriter.ImplementsArithmetic = true;
 
-            _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _members);
+            _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _memberWriter.List);
             if (_operatorImplementationWriter.ImplementsEquality)
-                _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _members);
+                _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _memberWriter.List);
             if (implementdeconstruct)
-                _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _members);
+                _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _memberWriter.List);
         }
 
         #endregion
@@ -151,7 +150,7 @@ namespace Utte.Code
         private void ProduceConstructor()
         {
             List<Member> members = new List<Member>();
-            foreach (Member member in _members)
+            foreach (Member member in _memberWriter.List)
                 if (_constructor || member.ReadOnly)
                     members.Add(member);
             if (members.Count != 0)
@@ -173,19 +172,7 @@ namespace Utte.Code
             _codeWriter.WriteLine("");
             _codeWriter.WriteLine("#region Public members", true);
             _codeWriter.WriteLine("");
-            foreach (Member member in _members)
-            {
-                _codeWriter.Write("public ", true);
-                if (member.ReadOnly)
-                    _codeWriter.Write("readonly ");
-                _codeWriter.Write(member.Type);
-                if (member.ValueIsNullable)
-                    _codeWriter.Write("?");
-                _codeWriter.Write(" ");
-                _codeWriter.Write(member.Name);
-                _codeWriter.WriteLine(";");
-            }
-            _codeWriter.WriteLine("");
+            _memberWriter.WritePublicMembers(_codeWriter);
             _codeWriter.WriteLine("#endregion", true);
             _codeWriter.WriteLine("");
         }

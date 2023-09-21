@@ -136,6 +136,23 @@ namespace Utte.Code.Code.SupportClasses
             codeWriter.WriteLine("");
         }
 
+        public void WritePublicMembers(CodeWriter codeWriter)
+        {
+            foreach (Member member in _members)
+            {
+                codeWriter.Write("public ", true);
+                if (member.ReadOnly)
+                    codeWriter.Write("readonly ");
+                codeWriter.Write(member.Type);
+                if (member.ValueIsNullable)
+                    codeWriter.Write("?");
+                codeWriter.Write(" ");
+                codeWriter.Write(member.Name);
+                codeWriter.WriteLine(";");
+            }
+            codeWriter.WriteLine("");
+        }
+
         /// <summary>
         /// Adds a Member to the end of the list
         /// </summary>
@@ -143,6 +160,15 @@ namespace Utte.Code.Code.SupportClasses
         public void Add(Member member)
         { 
             _members.Add(member); 
+        }
+
+        /// <summary>
+        /// Adds a range of Members to the end of the list
+        /// </summary>
+        /// <param name="members"></param>
+        public void AddRange(IEnumerable<Member> members)
+        {
+            _members.AddRange(members);
         }
 
         public void AddListWrapperMembers(string type)
