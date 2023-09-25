@@ -77,6 +77,24 @@ namespace Utte.Code
             }
         }
 
+        /// <summary>
+        /// Writes properties to textfile
+        /// </summary>
+        protected void WriteProperties(bool staticproperties)
+        {
+            if (_memberWriter.HasProperties(staticproperties))
+            {
+                if (staticproperties)
+                    _codeWriter.WriteLine("#region Static properties", true);
+                else
+                    _codeWriter.WriteLine("#region Properties", true);
+                _codeWriter.WriteLine("");
+                _memberWriter.WriteProperties(_codeWriter, staticproperties);
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
+        }
+
         #endregion
 
     }

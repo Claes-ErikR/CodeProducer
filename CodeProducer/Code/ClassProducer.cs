@@ -595,26 +595,8 @@ namespace Utte.Code
             {
                 _codeWriter.WriteLine("#region Static constructor", true);
                 _codeWriter.WriteLine("");
-                _codeWriter.ProduceStaticClassConstructor(_name, initialization);
+                _codeWriter.ProduceStaticConstructor(_name, initialization, false);
                 _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
-        /// <summary>
-        /// Writes properties to textfile
-        /// </summary>
-        private void WriteProperties(bool staticproperties)
-        {
-            if(_memberWriter.HasProperties(staticproperties))
-            {
-                if (staticproperties)
-                    _codeWriter.WriteLine("#region Static properties", true);
-                else
-                    _codeWriter.WriteLine("#region Properties", true);
-                _codeWriter.WriteLine("");
-                _memberWriter.WriteProperties(_codeWriter, staticproperties);
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }

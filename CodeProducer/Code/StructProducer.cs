@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using Utte.Code.Code.SupportClasses;
 using Utte.Code.Code.Helpers;
 
@@ -55,6 +54,12 @@ namespace Utte.Code
                 _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _memberWriter.List);
             if (implementdeconstruct)
                 _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _memberWriter.List);
+
+            if (_produceempty)
+            {
+                _methodsImplementationWriter.AddIsEmptyMethod(_codeWriter, name, _operatorImplementationWriter.ImplementsEquality);
+                _memberWriter.AddEmptyMember(name);
+            }
         }
 
         #endregion
@@ -75,7 +80,9 @@ namespace Utte.Code
             ProduceMembers();
             ProduceConstructor();
             WriteMethods(true, false);
-            ProduceEmpty();
+            ProduceStaticConstructor();
+            WriteMethods(true, true);
+            WriteProperties(true);
             ProduceOperators();
             _codeWriter.SubtractIndentation();
             _codeWriter.WriteLine("}", true);
@@ -84,50 +91,6 @@ namespace Utte.Code
         #endregion
 
         #region Private methods
-
-        /// <summary>
-        /// Produces support for empty instance
-        /// </summary>
-        private void ProduceEmpty()
-        {
-            if (_produceempty)
-            {
-                _codeWriter.WriteLine("#region Static constructor", true);
-                _codeWriter.WriteLine("");
-                _codeWriter.ProduceStaticStructConstructor(_name);
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-
-                if (_operatorImplementationWriter.ImplementsEquality)
-                {
-                    _codeWriter.WriteLine("#region Public static methods", true);
-                    _codeWriter.WriteLine("");
-                    Member structmember = new Member();
-                    structmember.Name = "instance";
-                    structmember.Type = _name;
-                    List<Member> structmemberlist = new List<Member>() { structmember };
-                    _codeWriter.ProduceDescription("Compares to empty instance", structmemberlist, true);
-                    _codeWriter.WriteLine("public static bool IsEmpty(" + _name + " instance)", true);
-                    _codeWriter.WriteLine("{", true);
-                    _codeWriter.AddIndentation();
-                    _codeWriter.WriteLine("return instance == Empty;", true);
-                    _codeWriter.SubtractIndentation();
-                    _codeWriter.WriteLine("}", true);
-                    _codeWriter.WriteLine("");
-                    _codeWriter.WriteLine("#endregion", true);
-                    _codeWriter.WriteLine("");
-                }
-
-                _codeWriter.WriteLine("#region Static properties", true);
-                _codeWriter.WriteLine("");
-                _codeWriter.ProduceDescription("Returns empty instance", false);
-                _codeWriter.WriteLine("public static " + _name + " Empty { get; }", true);
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
 
         /// <summary>
         /// Produces operators
@@ -151,13 +114,29 @@ namespace Utte.Code
         {
             List<Member> members = new List<Member>();
             foreach (Member member in _memberWriter.List)
-                if (_constructor || member.ReadOnly)
+                if ((_constructor || member.ReadOnly) && !member.Static)
                     members.Add(member);
             if (members.Count != 0)
             {
                 _codeWriter.WriteLine("#region Constructors", true);
                 _codeWriter.WriteLine("");
                 _codeWriter.ProduceStructConstructor(_name, members);
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
+        }
+
+        /// <summary>
+        /// Writes a static constructor to textfile
+        /// </summary>
+        private void ProduceStaticConstructor()
+        {
+            if (_produceempty)
+            {
+                _codeWriter.WriteLine("#region Static constructor", true);
+                _codeWriter.WriteLine("");
+                _codeWriter.ProduceStaticConstructor(_name, null, true);
                 _codeWriter.WriteLine("");
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");

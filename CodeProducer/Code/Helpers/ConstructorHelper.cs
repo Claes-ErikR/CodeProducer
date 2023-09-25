@@ -95,34 +95,21 @@ namespace Utte.Code.Code.Helpers
         }
 
         /// <summary>
-        /// Produces static class constructor text
-        /// </summary>
-        /// <param name="codeWriter"></param>
-        /// <param name="className"></param>
-        /// <param name="initialization"></param>
-        public static void ProduceStaticClassConstructor(this CodeWriter codeWriter, string className, List<Member> initialization)
-        {
-            ProduceStaticConstructor(codeWriter, className, "Static constructor initializing private instances of objects", initialization, false);
-        }
-
-        /// <summary>
-        /// Produces static struct constructor text
-        /// </summary>
-        /// <param name="codeWriter"></param>
-        /// <param name="className"></param>
-        public static void ProduceStaticStructConstructor(this CodeWriter codeWriter, string className)
-        {
-            ProduceStaticConstructor(codeWriter, className, "Sets empty instance", null, true);
-        }
-
-        /// <summary>
         /// Produces static constructor text
         /// </summary>
         /// <param name="codeWriter"></param>
         /// <param name="name"></param>
         /// <param name="initialization"></param>
-        private static void ProduceStaticConstructor(CodeWriter codeWriter, string name, string description, List<Member> initialization, bool includeEmptyInitialization)
+        /// <param name="includeEmptyInitialization"></param>
+        public static void ProduceStaticConstructor(this CodeWriter codeWriter, string name, List<Member> initialization, bool includeEmptyInitialization)
         {
+            string description = "";
+
+            if (initialization?.Count > 0)
+                description = "Static constructor initializing private instances of objects";
+            else if (includeEmptyInitialization)
+                description = "Sets empty instance";
+
             codeWriter.ProduceDescription(description);
             codeWriter.Write("static ", true);
             codeWriter.Write(name);

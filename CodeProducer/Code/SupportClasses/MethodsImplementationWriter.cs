@@ -159,6 +159,32 @@ namespace Utte.Code.Code.SupportClasses
             }
         }
 
+        public void AddIsEmptyMethod(CodeWriter codeWriter, string className, bool equalityImplemented)
+        {
+            Method method = new Method();
+            method.Visibility = Visibility.Public;
+            method.Description = "Compares to empty instance";
+            method.Type = "bool";
+            method.Override = false;
+            method.Static = true;
+            method.Name = "IsEmpty";
+            List<Method.Parameter> parameters = new List<Method.Parameter>();
+            Method.Parameter p = new Method.Parameter();
+            p.Type = className;
+            p.Name = "instance";
+            parameters.Add(p);
+            method.Parameters = parameters;
+            method.Text = delegate ()
+            {
+                if(equalityImplemented)
+                    codeWriter.WriteLine("return instance == Empty;", true);
+                else
+                    codeWriter.WriteLine("throw new NotImplementedException();", true);
+            };
+
+            _methods.Add(method);
+        }
+
         public void EnsureToStringImplemented(CodeWriter codeWriter, List<Member> members)
         {
             if (!_hastostring)

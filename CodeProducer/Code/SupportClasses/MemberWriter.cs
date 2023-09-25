@@ -140,15 +140,18 @@ namespace Utte.Code.Code.SupportClasses
         {
             foreach (Member member in _members)
             {
-                codeWriter.Write("public ", true);
-                if (member.ReadOnly)
-                    codeWriter.Write("readonly ");
-                codeWriter.Write(member.Type);
-                if (member.ValueIsNullable)
-                    codeWriter.Write("?");
-                codeWriter.Write(" ");
-                codeWriter.Write(member.Name);
-                codeWriter.WriteLine(";");
+                if (!member.Static)
+                {
+                    codeWriter.Write("public ", true);
+                    if (member.ReadOnly)
+                        codeWriter.Write("readonly ");
+                    codeWriter.Write(member.Type);
+                    if (member.ValueIsNullable)
+                        codeWriter.Write("?");
+                    codeWriter.Write(" ");
+                    codeWriter.Write(member.Name);
+                    codeWriter.WriteLine(";");
+                }
             }
             codeWriter.WriteLine("");
         }
@@ -169,6 +172,20 @@ namespace Utte.Code.Code.SupportClasses
         public void AddRange(IEnumerable<Member> members)
         {
             _members.AddRange(members);
+        }
+
+        public void AddEmptyMember(string className)
+        {
+            Member member = new Member();
+            member.ConstructorSet = false;
+            member.Description = "Returns empty instance";
+            member.GetProperty = true;
+            member.SetProperty = false;
+            member.Name = "Empty";
+            member.PrivateProtected = false;
+            member.Static = true;
+            member.Type = className;
+            _members.Add(member);
         }
 
         public void AddListWrapperMembers(string type)
