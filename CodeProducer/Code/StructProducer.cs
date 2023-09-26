@@ -77,7 +77,7 @@ namespace Utte.Code
             _codeWriter.ProduceStructDeclaration(_name, _visibility, _operatorImplementationWriter.ImplementsEquality);
             _codeWriter.WriteLine("{", true);
             _codeWriter.AddIndentation();
-            ProduceMembers();
+            WritePublicMembers(false);
             ProduceConstructor();
             WriteMethods(true, false);
             ProduceStaticConstructor();
@@ -144,16 +144,19 @@ namespace Utte.Code
         }
 
         /// <summary>
-        /// Produces public members
+        /// Writes Private/protected members to textfile
         /// </summary>
-        private void ProduceMembers()
+        protected override void WritePublicMembers(bool staticmembers)
         {
-            _codeWriter.WriteLine("");
-            _codeWriter.WriteLine("#region Public members", true);
-            _codeWriter.WriteLine("");
-            _memberWriter.WritePublicMembers(_codeWriter);
-            _codeWriter.WriteLine("#endregion", true);
-            _codeWriter.WriteLine("");
+            if (_memberWriter.HasPublicMembers(staticmembers))
+            {
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#region Public members", true);
+                _codeWriter.WriteLine("");
+                _memberWriter.WritePublicMembers(_codeWriter);
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
         }
 
         #endregion

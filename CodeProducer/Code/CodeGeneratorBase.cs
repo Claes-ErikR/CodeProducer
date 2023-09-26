@@ -95,6 +95,22 @@ namespace Utte.Code
             }
         }
 
+        /// <summary>
+        /// Writes Private/protected members to textfile
+        /// </summary>
+        /// <param name="staticmembers"></param>
+        protected virtual void WritePrivateProtectedMembers(bool staticmembers)
+        {
+        }
+
+        /// <summary>
+        /// Writes Private/protected members to textfile
+        /// </summary>
+        /// <param name="staticmembers"></param>
+        protected virtual void WritePublicMembers(bool staticmembers)
+        {
+        }
+
         #endregion
 
     }

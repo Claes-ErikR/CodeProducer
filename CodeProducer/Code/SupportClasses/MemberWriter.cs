@@ -136,6 +136,15 @@ namespace Utte.Code.Code.SupportClasses
             codeWriter.WriteLine("");
         }
 
+        public bool HasPublicMembers(bool staticmembers)
+        {
+            foreach (Member member in _members)
+                if (!member.PrivateProtected && (member.Static == staticmembers))
+                    return true;
+
+            return false;
+        }
+
         public void WritePublicMembers(CodeWriter codeWriter)
         {
             foreach (Member member in _members)

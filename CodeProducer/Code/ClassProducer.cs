@@ -518,7 +518,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes Private/protected members to textfile
         /// </summary>
-        private void WritePrivateProtectedMembers(bool staticmembers)
+        protected override void WritePrivateProtectedMembers(bool staticmembers)
         {
             if(_memberWriter.HasPrivateProtectedMembers(staticmembers)) 
             {

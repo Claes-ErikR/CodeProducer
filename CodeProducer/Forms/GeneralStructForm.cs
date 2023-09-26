@@ -53,7 +53,16 @@ namespace Utte.Code
                     {
                         List<Member> members = new List<Member>();
                         foreach (StructMember member in lstStructMembers.Items)
-                            members.Add(new Member() { IsStructMember = true, Name = member.Name, ValueIsNullable = member.IsNullable, ReadOnly = member.ReadOnly, Type = member.Type });
+                            members.Add(new Member() { 
+                                IsStructMember = true, 
+                                Name = member.Name, 
+                                ValueIsNullable = member.IsNullable, 
+                                ReadOnly = member.ReadOnly, 
+                                Type = member.Type,
+                                Static = false,
+                                PrivateProtected = false,
+                                ConstructorSet = chkStructConstructor.Checked,
+                            });
                         List<string> operatorclasses = new List<string>();
                         if (chkArithmeticOperators.Checked)
                             operatorclasses.Add(sStructName.Text);
