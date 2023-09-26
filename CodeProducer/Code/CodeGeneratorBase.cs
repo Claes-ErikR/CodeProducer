@@ -74,10 +74,70 @@ namespace Utte.Code
         }
 
         /// <summary>
+        /// Writes a constructor to textfile if necessary
+        /// </summary>
+        protected virtual void WriteConstructor()
+        {
+        }
+
+        /// <summary>
+        /// Writes a static constructor to textfile
+        /// </summary>
+        protected virtual void WriteStaticConstructor()
+        {
+        }
+
+        /// <summary>
+        /// Writes classes to textfile
+        /// </summary>
+        /// <param name="Public"></param>
+        protected virtual void WriteClasses(bool Public)
+        {
+        }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Writes public members to textfile
+        /// </summary>
+        private void WritePublicMembers(bool staticmembers)
+        {
+            if (_memberWriter.HasPublicMembers(staticmembers))
+            {
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#region Public members", true);
+                _codeWriter.WriteLine("");
+                _memberWriter.WritePublicMembers(_codeWriter, staticmembers);
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
+        }
+
+        /// <summary>
+        /// Writes private/protected members to textfile
+        /// </summary>
+        private void WritePrivateProtectedMembers(bool staticmembers)
+        {
+            if (_memberWriter.HasPrivateProtectedMembers(staticmembers))
+            {
+                if (staticmembers)
+                    _codeWriter.WriteLine("#region Private static members", true);
+                else
+                    _codeWriter.WriteLine("#region Private/protected members", true);
+                _codeWriter.WriteLine("");
+                _memberWriter.WritePrivateProtectedMembers(_codeWriter, staticmembers);
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
+        }
+
+        /// <summary>
         /// Writes methods to textfile
         /// </summary>
         /// <param name="Public"></param>
-        protected void WriteMethods(bool Public, bool staticmethods)
+        private void WriteMethods(bool Public, bool staticmethods)
         {
             if (_methodsImplementationWriter.HasMethods(Public, staticmethods))
             {
@@ -101,7 +161,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes properties to textfile
         /// </summary>
-        protected void WriteProperties(bool staticproperties)
+        private void WriteProperties(bool staticproperties)
         {
             if (_memberWriter.HasProperties(staticproperties))
             {
@@ -119,7 +179,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes operators to textfile
         /// </summary>
-        protected void WriteOperators()
+        private void WriteOperators()
         {
             if (_operatorImplementationWriter.ImplementsAny)
             {
@@ -129,44 +189,6 @@ namespace Utte.Code
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
             }
-        }
-
-        /// <summary>
-        /// Writes Private/protected members to textfile
-        /// </summary>
-        /// <param name="staticmembers"></param>
-        protected virtual void WritePrivateProtectedMembers(bool staticmembers)
-        {
-        }
-
-        /// <summary>
-        /// Writes Private/protected members to textfile
-        /// </summary>
-        /// <param name="staticmembers"></param>
-        protected virtual void WritePublicMembers(bool staticmembers)
-        {
-        }
-
-        /// <summary>
-        /// Writes a constructor to textfile if necessary
-        /// </summary>
-        protected virtual void WriteConstructor()
-        {
-        }
-
-        /// <summary>
-        /// Writes a static constructor to textfile
-        /// </summary>
-        protected virtual void WriteStaticConstructor()
-        {
-        }
-
-        /// <summary>
-        /// Writes classes to textfile
-        /// </summary>
-        /// <param name="Public"></param>
-        protected virtual void WriteClasses(bool Public)
-        {
         }
 
         #endregion

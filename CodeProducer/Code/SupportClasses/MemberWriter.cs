@@ -145,13 +145,15 @@ namespace Utte.Code.Code.SupportClasses
             return false;
         }
 
-        public void WritePublicMembers(CodeWriter codeWriter)
+        public void WritePublicMembers(CodeWriter codeWriter, bool staticmembers)
         {
             foreach (Member member in _members)
             {
-                if (!member.Static)
+                if (!member.PrivateProtected && (member.Static == staticmembers))
                 {
                     codeWriter.Write("public ", true);
+                    if(member.Static)
+                        codeWriter.Write("static ");
                     if (member.ReadOnly)
                         codeWriter.Write("readonly ");
                     codeWriter.Write(member.Type);

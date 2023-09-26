@@ -504,24 +504,6 @@ namespace Utte.Code
         #region Write to file methods
 
         /// <summary>
-        /// Writes Private/protected members to textfile
-        /// </summary>
-        protected override void WritePrivateProtectedMembers(bool staticmembers)
-        {
-            if(_memberWriter.HasPrivateProtectedMembers(staticmembers)) 
-            {
-                if (staticmembers)
-                    _codeWriter.WriteLine("#region Private static members", true);
-                else
-                    _codeWriter.WriteLine("#region Private/protected members", true);
-                _codeWriter.WriteLine("");
-                _memberWriter.WritePrivateProtectedMembers(_codeWriter, staticmembers);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
-        /// <summary>
         /// Writes a constructor to textfile
         /// </summary>
         protected override void WriteConstructor()

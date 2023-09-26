@@ -122,22 +122,6 @@ namespace Utte.Code
             }
         }
 
-        /// <summary>
-        /// Writes Private/protected members to textfile
-        /// </summary>
-        protected override void WritePublicMembers(bool staticmembers)
-        {
-            if (_memberWriter.HasPublicMembers(staticmembers))
-            {
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#region Public members", true);
-                _codeWriter.WriteLine("");
-                _memberWriter.WritePublicMembers(_codeWriter);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
         #endregion
 
     }
