@@ -78,12 +78,12 @@ namespace Utte.Code
             _codeWriter.WriteLine("{", true);
             _codeWriter.AddIndentation();
             WritePublicMembers(false);
-            ProduceConstructor();
+            WriteConstructor();
             WriteMethods(true, false);
-            ProduceStaticConstructor();
+            WriteStaticConstructor();
             WriteMethods(true, true);
             WriteProperties(true);
-            ProduceOperators();
+            WriteOperators();
             _codeWriter.SubtractIndentation();
             _codeWriter.WriteLine("}", true);
         }
@@ -93,24 +93,9 @@ namespace Utte.Code
         #region Private methods
 
         /// <summary>
-        /// Produces operators
-        /// </summary>
-        private void ProduceOperators()
-        {
-            if (_operatorImplementationWriter.ImplementsAny)
-            {
-                _codeWriter.WriteLine("#region Operators", true);
-                _codeWriter.WriteLine("");
-                    _operatorImplementationWriter.WriteOperators(_codeWriter, _name);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
-        /// <summary>
         /// Produces constructor if necessary
         /// </summary>
-        private void ProduceConstructor()
+        protected override void WriteConstructor()
         {
             List<Member> members = new List<Member>();
             foreach (Member member in _memberWriter.List)
@@ -130,7 +115,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes a static constructor to textfile
         /// </summary>
-        private void ProduceStaticConstructor()
+        protected override void WriteStaticConstructor()
         {
             if (_produceempty)
             {

@@ -536,7 +536,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes a constructor to textfile
         /// </summary>
-        private void WriteConstructor()
+        protected override void WriteConstructor()
         {
             List<Method.Parameter> parameters = new List<Method.Parameter>();
             List<Member> initialization=new List<Member>();
@@ -580,7 +580,7 @@ namespace Utte.Code
         /// <summary>
         /// Writes a static constructor to textfile
         /// </summary>
-        private void WriteStaticConstructor()
+        protected override void WriteStaticConstructor()
         {
             List<Member> initialization = new List<Member>();
             foreach (Member member in _memberWriter.List)
@@ -603,25 +603,10 @@ namespace Utte.Code
         }
 
         /// <summary>
-        /// Writes operators to textfile
-        /// </summary>
-        private void WriteOperators()
-        {
-            if (_operatorImplementationWriter.ImplementsAny)
-            {
-                _codeWriter.WriteLine("#region Operators", true);
-                _codeWriter.WriteLine("");
-                _operatorImplementationWriter.WriteOperators(_codeWriter, _name);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
-        /// <summary>
         /// Writes classes to textfile
         /// </summary>
         /// <param name="Public"></param>
-        private void WriteClasses(bool Public)
+        protected override void WriteClasses(bool Public)
         {
             List<ClassProducer> classes = new List<ClassProducer>();
             foreach (ClassProducer cp in _classes)

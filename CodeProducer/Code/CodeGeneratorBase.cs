@@ -96,6 +96,21 @@ namespace Utte.Code
         }
 
         /// <summary>
+        /// Writes operators to textfile
+        /// </summary>
+        protected void WriteOperators()
+        {
+            if (_operatorImplementationWriter.ImplementsAny)
+            {
+                _codeWriter.WriteLine("#region Operators", true);
+                _codeWriter.WriteLine("");
+                _operatorImplementationWriter.WriteOperators(_codeWriter, _name);
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
+        }
+
+        /// <summary>
         /// Writes Private/protected members to textfile
         /// </summary>
         /// <param name="staticmembers"></param>
@@ -108,6 +123,28 @@ namespace Utte.Code
         /// </summary>
         /// <param name="staticmembers"></param>
         protected virtual void WritePublicMembers(bool staticmembers)
+        {
+        }
+
+        /// <summary>
+        /// Writes a constructor to textfile if necessary
+        /// </summary>
+        protected virtual void WriteConstructor()
+        {
+        }
+
+        /// <summary>
+        /// Writes a static constructor to textfile
+        /// </summary>
+        protected virtual void WriteStaticConstructor()
+        {
+        }
+
+        /// <summary>
+        /// Writes classes to textfile
+        /// </summary>
+        /// <param name="Public"></param>
+        protected virtual void WriteClasses(bool Public)
         {
         }
 
