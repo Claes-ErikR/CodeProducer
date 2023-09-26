@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Utte.Code.Code.Helpers;
 using Utte.Code.Code.SupportClasses;
 
 namespace Utte.Code
@@ -81,13 +82,6 @@ namespace Utte.Code
         }
 
         /// <summary>
-        /// Writes a static constructor to textfile
-        /// </summary>
-        protected virtual void WriteStaticConstructor()
-        {
-        }
-
-        /// <summary>
         /// Writes classes to textfile
         /// </summary>
         /// <param name="Public"></param>
@@ -98,6 +92,31 @@ namespace Utte.Code
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Writes a static constructor to textfile
+        /// </summary>
+        private void WriteStaticConstructor()
+        {
+            List<Member> initialization = new List<Member>();
+            foreach (Member member in _memberWriter.List)
+                if (member.Static)
+                {
+                    if (member.PrivateProtected && !member.ValueType)
+                        initialization.Add(member);
+                    else if (member.ValueType || member.ConstructorSet)
+                        initialization.Add(member);
+                }
+            if (initialization.Count > 0)
+            {
+                _codeWriter.WriteLine("#region Static constructor", true);
+                _codeWriter.WriteLine("");
+                _codeWriter.ProduceStaticConstructor(_name, initialization);
+                _codeWriter.WriteLine("");
+                _codeWriter.WriteLine("#endregion", true);
+                _codeWriter.WriteLine("");
+            }
+        }
 
         /// <summary>
         /// Writes public members to textfile

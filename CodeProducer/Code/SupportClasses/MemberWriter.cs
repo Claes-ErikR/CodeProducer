@@ -196,6 +196,7 @@ namespace Utte.Code.Code.SupportClasses
             member.PrivateProtected = false;
             member.Static = true;
             member.Type = className;
+            member.ConstructorSet = true;
             _members.Add(member);
         }
 

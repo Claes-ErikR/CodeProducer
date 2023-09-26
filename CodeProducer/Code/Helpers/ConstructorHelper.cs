@@ -100,15 +100,12 @@ namespace Utte.Code.Code.Helpers
         /// <param name="codeWriter"></param>
         /// <param name="name"></param>
         /// <param name="initialization"></param>
-        /// <param name="includeEmptyInitialization"></param>
-        public static void ProduceStaticConstructor(this CodeWriter codeWriter, string name, List<Member> initialization, bool includeEmptyInitialization)
+        public static void ProduceStaticConstructor(this CodeWriter codeWriter, string name, List<Member> initialization)
         {
             string description = "";
 
             if (initialization?.Count > 0)
                 description = "Static constructor initializing private instances of objects";
-            else if (includeEmptyInitialization)
-                description = "Sets empty instance";
 
             codeWriter.ProduceDescription(description);
             codeWriter.Write("static ", true);
@@ -135,17 +132,18 @@ namespace Utte.Code.Code.Helpers
                     }
                     else
                     {
-                        codeWriter.Write("_", true);
-                        codeWriter.Write(member.Name.ToLower());
+                        if (member.PrivateProtected)
+                        {
+                            codeWriter.Write("_", true);
+                            codeWriter.Write(member.Name.ToLower());
+                        }
+                        else
+                            codeWriter.Write(member.Name, true);
                         codeWriter.Write(" = new ");
                         codeWriter.Write(member.Type);
                         codeWriter.WriteLine("();");
                     }
                 }
-            }
-            if(includeEmptyInitialization)
-            {
-                codeWriter.WriteLine("Empty = new " + name + "();", true);
             }
             codeWriter.SubtractIndentation();
             codeWriter.WriteLine("}", true);

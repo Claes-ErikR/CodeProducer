@@ -548,31 +548,6 @@ namespace Utte.Code
         }
 
         /// <summary>
-        /// Writes a static constructor to textfile
-        /// </summary>
-        protected override void WriteStaticConstructor()
-        {
-            List<Member> initialization = new List<Member>();
-            foreach (Member member in _memberWriter.List)
-                if (member.Static)
-                {
-                    if (member.PrivateProtected && !member.ValueType)
-                        initialization.Add(member);
-                    else if (member.ValueType)
-                        initialization.Add(member);
-                }
-            if (initialization.Count > 0)
-            {
-                _codeWriter.WriteLine("#region Static constructor", true);
-                _codeWriter.WriteLine("");
-                _codeWriter.ProduceStaticConstructor(_name, initialization, false);
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
-        /// <summary>
         /// Writes classes to textfile
         /// </summary>
         /// <param name="Public"></param>

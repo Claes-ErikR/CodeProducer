@@ -16,7 +16,6 @@ namespace Utte.Code
         private string _description;
         private string _visibility;
         private bool _constructor;
-        private bool _produceempty;
 
         #endregion
 
@@ -44,7 +43,6 @@ namespace Utte.Code
             _memberWriter.AddRange(members);
             _constructor = constructor;
             _operatorImplementationWriter.ImplementsEquality = equalitycomparison;
-            _produceempty = produceempty;
             _operatorImplementationWriter.ImplementationClasses.AddRange(operatorclasses);
             if (_operatorImplementationWriter.ImplementationClasses.Count > 0)
                 _operatorImplementationWriter.ImplementsArithmetic = true;
@@ -55,7 +53,7 @@ namespace Utte.Code
             if (implementdeconstruct)
                 _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _memberWriter.List);
 
-            if (_produceempty)
+            if (produceempty)
             {
                 _methodsImplementationWriter.AddIsEmptyMethod(_codeWriter, name, _operatorImplementationWriter.ImplementsEquality);
                 _memberWriter.AddEmptyMember(name);
@@ -100,22 +98,6 @@ namespace Utte.Code
                 _codeWriter.WriteLine("#region Constructors", true);
                 _codeWriter.WriteLine("");
                 _codeWriter.ProduceStructConstructor(_name, members);
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
-            }
-        }
-
-        /// <summary>
-        /// Writes a static constructor to textfile
-        /// </summary>
-        protected override void WriteStaticConstructor()
-        {
-            if (_produceempty)
-            {
-                _codeWriter.WriteLine("#region Static constructor", true);
-                _codeWriter.WriteLine("");
-                _codeWriter.ProduceStaticConstructor(_name, null, true);
                 _codeWriter.WriteLine("");
                 _codeWriter.WriteLine("#endregion", true);
                 _codeWriter.WriteLine("");
