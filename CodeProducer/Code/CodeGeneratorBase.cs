@@ -53,6 +53,27 @@ namespace Utte.Code
         #region Protected methods
 
         /// <summary>
+        /// Produces the content of types
+        /// </summary>
+        protected void ProduceTypeContent()
+        {
+            WritePublicMembers(false);
+            WritePrivateProtectedMembers(false);
+            WritePrivateProtectedMembers(true);
+            WriteConstructor();
+            WriteStaticConstructor();
+            WriteMethods(true, false);
+            WriteMethods(false, false);
+            WriteMethods(true, true);
+            WriteMethods(false, true);
+            WriteProperties(false);
+            WriteProperties(true);
+            WriteClasses(true);
+            WriteClasses(false);
+            WriteOperators();
+        }
+
+        /// <summary>
         /// Writes methods to textfile
         /// </summary>
         /// <param name="Public"></param>

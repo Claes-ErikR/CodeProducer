@@ -77,13 +77,7 @@ namespace Utte.Code
             _codeWriter.ProduceStructDeclaration(_name, _visibility, _operatorImplementationWriter.ImplementsEquality);
             _codeWriter.WriteLine("{", true);
             _codeWriter.AddIndentation();
-            WritePublicMembers(false);
-            WriteConstructor();
-            WriteMethods(true, false);
-            WriteStaticConstructor();
-            WriteMethods(true, true);
-            WriteProperties(true);
-            WriteOperators();
+            ProduceTypeContent();
             _codeWriter.SubtractIndentation();
             _codeWriter.WriteLine("}", true);
         }

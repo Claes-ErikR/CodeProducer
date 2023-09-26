@@ -481,7 +481,7 @@ namespace Utte.Code
         /// Writes with indentation
         /// </summary>
         /// <param name="indentation"></param>
-        public void Produce(int indentation)
+        private void Produce(int indentation)
         {
             _codeWriter.Indentation = indentation;
             _codeWriter.ProduceDescription(_description);
@@ -490,19 +490,7 @@ namespace Utte.Code
             _codeWriter.WriteLine("{",true);
             _codeWriter.AddIndentation();
             _codeWriter.WriteLine("");
-            WritePrivateProtectedMembers(false);
-            WritePrivateProtectedMembers(true);
-            WriteConstructor();
-            WriteStaticConstructor();
-            WriteMethods(true,false);
-            WriteMethods(false,false);
-            WriteMethods(true,true);
-            WriteMethods(false,true);
-            WriteProperties(false);
-            WriteProperties(true);
-            WriteClasses(true);
-            WriteClasses(false);
-            WriteOperators();
+            ProduceTypeContent();
             _codeWriter.SubtractIndentation();
             _codeWriter.WriteLine("}",true);
         }
