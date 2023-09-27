@@ -63,19 +63,19 @@ namespace Utte.Code
                                 PrivateProtected = false,
                                 ConstructorSet = chkStructConstructor.Checked,
                             });
-                        List<string> operatorclasses = new List<string>();
-                        if (chkArithmeticOperators.Checked)
-                            operatorclasses.Add(sStructName.Text);
-                        if (chkArithmeticOperatorsVsDouble.Checked)
-                            operatorclasses.Add("double");
-                        if (chkArithmeticOperatorsVsInt.Checked)
-                            operatorclasses.Add("int");
-                        using (StructProducer newstruct = new StructProducer(sStructName.Text, txtStructDescription.Text, visStructVisibility.Value.ToString(), members, chkStructConstructor.Checked, sfd.FileName, operatorclasses, chkImplementDeconstruct.Checked))
+                        using (StructProducer newstruct = new StructProducer(sStructName.Text, txtStructDescription.Text, visStructVisibility.Value.ToString(), members, chkStructConstructor.Checked, sfd.FileName, chkImplementDeconstruct.Checked))
                         {
                             if(chkStructEqualityComparison.Checked)
                                 newstruct.ImplementEqualityComparison();
                             if (chkIncludeEmpty.Checked)
                                 newstruct.ImplementEmptyInstance(chkStructEqualityComparison.Checked);
+                            if (chkArithmeticOperators.Checked)
+                                newstruct.AddOperatorClass(sStructName.Text);
+                            if (chkArithmeticOperatorsVsDouble.Checked)
+                                newstruct.AddOperatorClass("double");
+                            if (chkArithmeticOperatorsVsInt.Checked)
+                                newstruct.AddOperatorClass("int");
+
                             newstruct.Produce();
                         }
                         ShowTextFile(sfd.FileName);

@@ -30,9 +30,8 @@ namespace Utte.Code
         /// <param name="members"></param>
         /// <param name="constructor"></param>
         /// <param name="filename"></param>
-        /// <param name="operatorclasses"></param>
         /// <param name="implementdeconstruct"></param>
-        public StructProducer(string name, string description, string visibility, List<Member> members, bool constructor, string filename, List<string> operatorclasses, bool implementdeconstruct)
+        public StructProducer(string name, string description, string visibility, List<Member> members, bool constructor, string filename, bool implementdeconstruct)
             : base(name, DefinitionType.Struct)
         {
             _codeWriter = new CodeWriter(filename, 4);
@@ -40,9 +39,6 @@ namespace Utte.Code
             _visibility = visibility;
             _memberWriter.AddRange(members);
             _constructor = constructor;
-            _operatorImplementationWriter.ImplementationClasses.AddRange(operatorclasses);
-            if (_operatorImplementationWriter.ImplementationClasses.Count > 0)
-                _operatorImplementationWriter.ImplementsArithmetic = true;
 
             _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _memberWriter.List);
             if (implementdeconstruct)

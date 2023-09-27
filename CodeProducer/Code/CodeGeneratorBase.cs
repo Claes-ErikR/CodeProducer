@@ -44,6 +44,16 @@ namespace Utte.Code
         #region Public methods
 
         /// <summary>
+        /// Adds a class to implement operators on
+        /// </summary>
+        /// <param name="operatorclass"></param>
+        public void AddOperatorClass(string operatorclass)
+        {
+            _operatorImplementationWriter.ImplementationClasses.Add(operatorclass);
+            _operatorImplementationWriter.ImplementsArithmetic = true;
+        }
+
+        /// <summary>
         /// Implements equality comparison for the instances of the class
         /// </summary>
         public void ImplementEqualityComparison()

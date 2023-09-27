@@ -100,16 +100,6 @@ namespace Utte.Code
         #region Add methods
 
         /// <summary>
-        /// Adds a class to implement operators on
-        /// </summary>
-        /// <param name="operatorclass"></param>
-        public void AddOperatorClass(string operatorclass)
-        {
-            _operatorImplementationWriter.ImplementationClasses.Add(operatorclass);
-            _operatorImplementationWriter.ImplementsArithmetic = true;
-        }
-
-        /// <summary>
         /// Adds an interface to the class
         /// </summary>
         /// <param name="inputinterface"></param>
