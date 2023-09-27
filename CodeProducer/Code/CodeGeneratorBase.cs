@@ -44,6 +44,18 @@ namespace Utte.Code
         #region Public methods
 
         /// <summary>
+        /// Implements sort comparison for the instances of the class
+        /// </summary>
+        public void ImplementSortComparison()
+        {
+            _operatorImplementationWriter.ImplementsComparison = true;
+            _interfaces.Add("IComparable");
+            _interfaces.Add("IComparable<" + _name + ">");
+
+            _methodsImplementationWriter.AddSortComparisonMethods(_codeWriter, _name);
+        }
+
+        /// <summary>
         /// Adds a method to deconstruct type
         /// </summary>
         public void ImplementDeconstruct()

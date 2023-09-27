@@ -45,6 +45,7 @@ namespace Utte.Code
             this.cmdDelete = new System.Windows.Forms.Button();
             this.chkIncludeEmpty = new System.Windows.Forms.CheckBox();
             this.chkImplementDeconstruct = new System.Windows.Forms.CheckBox();
+            this.chkStructComparisonImplementation = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // cmdProduce
@@ -148,7 +149,7 @@ namespace Utte.Code
             // chkArithmeticOperators
             // 
             this.chkArithmeticOperators.AutoSize = true;
-            this.chkArithmeticOperators.Location = new System.Drawing.Point(33, 439);
+            this.chkArithmeticOperators.Location = new System.Drawing.Point(33, 467);
             this.chkArithmeticOperators.Name = "chkArithmeticOperators";
             this.chkArithmeticOperators.Size = new System.Drawing.Size(147, 17);
             this.chkArithmeticOperators.TabIndex = 10;
@@ -158,7 +159,7 @@ namespace Utte.Code
             // chkArithmeticOperatorsVsDouble
             // 
             this.chkArithmeticOperatorsVsDouble.AutoSize = true;
-            this.chkArithmeticOperatorsVsDouble.Location = new System.Drawing.Point(33, 461);
+            this.chkArithmeticOperatorsVsDouble.Location = new System.Drawing.Point(33, 490);
             this.chkArithmeticOperatorsVsDouble.Name = "chkArithmeticOperatorsVsDouble";
             this.chkArithmeticOperatorsVsDouble.Size = new System.Drawing.Size(168, 17);
             this.chkArithmeticOperatorsVsDouble.TabIndex = 11;
@@ -168,7 +169,7 @@ namespace Utte.Code
             // chkArithmeticOperatorsVsInt
             // 
             this.chkArithmeticOperatorsVsInt.AutoSize = true;
-            this.chkArithmeticOperatorsVsInt.Location = new System.Drawing.Point(33, 484);
+            this.chkArithmeticOperatorsVsInt.Location = new System.Drawing.Point(33, 513);
             this.chkArithmeticOperatorsVsInt.Name = "chkArithmeticOperatorsVsInt";
             this.chkArithmeticOperatorsVsInt.Size = new System.Drawing.Size(147, 17);
             this.chkArithmeticOperatorsVsInt.TabIndex = 12;
@@ -188,7 +189,7 @@ namespace Utte.Code
             // chkIncludeEmpty
             // 
             this.chkIncludeEmpty.AutoSize = true;
-            this.chkIncludeEmpty.Location = new System.Drawing.Point(33, 419);
+            this.chkIncludeEmpty.Location = new System.Drawing.Point(34, 445);
             this.chkIncludeEmpty.Margin = new System.Windows.Forms.Padding(2);
             this.chkIncludeEmpty.Name = "chkIncludeEmpty";
             this.chkIncludeEmpty.Size = new System.Drawing.Size(136, 17);
@@ -199,18 +200,29 @@ namespace Utte.Code
             // chkImplementDeconstruct
             // 
             this.chkImplementDeconstruct.AutoSize = true;
-            this.chkImplementDeconstruct.Location = new System.Drawing.Point(33, 507);
+            this.chkImplementDeconstruct.Location = new System.Drawing.Point(33, 536);
             this.chkImplementDeconstruct.Name = "chkImplementDeconstruct";
             this.chkImplementDeconstruct.Size = new System.Drawing.Size(217, 17);
             this.chkImplementDeconstruct.TabIndex = 15;
             this.chkImplementDeconstruct.Text = "Implement Deconstruct (min. 2 members)";
             this.chkImplementDeconstruct.UseVisualStyleBackColor = true;
             // 
+            // chkStructComparisonImplementation
+            // 
+            this.chkStructComparisonImplementation.AutoSize = true;
+            this.chkStructComparisonImplementation.Location = new System.Drawing.Point(34, 421);
+            this.chkStructComparisonImplementation.Name = "chkStructComparisonImplementation";
+            this.chkStructComparisonImplementation.Size = new System.Drawing.Size(154, 17);
+            this.chkStructComparisonImplementation.TabIndex = 16;
+            this.chkStructComparisonImplementation.Text = "Comparison implementation";
+            this.chkStructComparisonImplementation.UseVisualStyleBackColor = true;
+            // 
             // GeneralStructForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(674, 555);
+            this.Controls.Add(this.chkStructComparisonImplementation);
             this.Controls.Add(this.chkImplementDeconstruct);
             this.Controls.Add(this.chkIncludeEmpty);
             this.Controls.Add(this.cmdDelete);
@@ -254,6 +266,7 @@ namespace Utte.Code
         private System.Windows.Forms.Button cmdDelete;
         private System.Windows.Forms.CheckBox chkIncludeEmpty;
         private System.Windows.Forms.CheckBox chkImplementDeconstruct;
+        private System.Windows.Forms.CheckBox chkStructComparisonImplementation;
     }
 }
 

@@ -77,6 +77,8 @@ namespace Utte.Code
                                 newstruct.AddOperatorClass("int");
                             if (chkImplementDeconstruct.Checked)
                                 newstruct.ImplementDeconstruct();
+                            if (chkStructComparisonImplementation.Checked)
+                                newstruct.ImplementSortComparison();
 
                             newstruct.Produce();
                         }
