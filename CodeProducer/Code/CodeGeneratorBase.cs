@@ -44,6 +44,14 @@ namespace Utte.Code
         #region Public methods
 
         /// <summary>
+        /// Adds a method to deconstruct type
+        /// </summary>
+        public void ImplementDeconstruct()
+        {
+            _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _memberWriter.List);
+        }
+
+        /// <summary>
         /// Adds a class to implement operators on
         /// </summary>
         /// <param name="operatorclass"></param>

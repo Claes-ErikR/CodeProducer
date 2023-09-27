@@ -416,16 +416,6 @@ namespace Utte.Code
 
         #endregion
 
-        #region Deconstruct
-
-        public void ImplementDeconstruct()
-        {
-            if (!IsStatic)
-                _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _memberWriter.List);
-        }
-
-        #endregion
-
         #region Utte code functionality
 
         /// <summary>

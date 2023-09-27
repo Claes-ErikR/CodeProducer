@@ -56,24 +56,27 @@ namespace Utte.Code
                                 newclass.AddClass(classproducer);
                             newclass.AddInterfaces(cpClassProduce.GetInterfaces());
                             newclass.AddImplementedInterfaces(cpClassProduce.GetImplementedInterfaces());
-                            if (cpClassProduce.ImplementEqualityComparison && !newclass.IsStatic)
-                                newclass.ImplementEqualityComparison();
-                            if (cpClassProduce.ImplementOperators)
-                                newclass.AddOperatorClass(cpClassProduce.ClassName);
-                            if (cpClassProduce.OperatorsVsDouble)
-                                newclass.AddOperatorClass("double");
-                            if (cpClassProduce.OperatorsVsInt)
-                                newclass.AddOperatorClass("int");
-                            if (cpClassProduce.ImplementSortComparison)
-                                newclass.ImplementSortComparison();
-                            if (cpClassProduce.ImplementListWrapper)
-                                newclass.ImplementListWrapper(cpClassProduce.ListWrapperType);
-                            if (cpClassProduce.ImplementXmlReadSave)
-                                newclass.ImplementXmlReadSave();
-                            if (cpClassProduce.ImplementDeconstruct)
-                                newclass.ImplementDeconstruct();
-                            if (cpClassProduce.EnsureToStringOverridden)
-                                newclass.EnsureToStringImplemented();
+                            if (!newclass.IsStatic)
+                            {
+                                if (cpClassProduce.ImplementEqualityComparison)
+                                    newclass.ImplementEqualityComparison();
+                                if (cpClassProduce.ImplementOperators)
+                                    newclass.AddOperatorClass(cpClassProduce.ClassName);
+                                if (cpClassProduce.OperatorsVsDouble)
+                                    newclass.AddOperatorClass("double");
+                                if (cpClassProduce.OperatorsVsInt)
+                                    newclass.AddOperatorClass("int");
+                                if (cpClassProduce.ImplementSortComparison)
+                                    newclass.ImplementSortComparison();
+                                if (cpClassProduce.ImplementListWrapper)
+                                    newclass.ImplementListWrapper(cpClassProduce.ListWrapperType);
+                                if (cpClassProduce.ImplementXmlReadSave)
+                                    newclass.ImplementXmlReadSave();
+                                if (cpClassProduce.ImplementDeconstruct)
+                                    newclass.ImplementDeconstruct();
+                                if (cpClassProduce.EnsureToStringOverridden)
+                                    newclass.EnsureToStringImplemented();
+                            }
 
                             newclass.Produce();
                             ShowTextFile(sfd.FileName);

@@ -63,7 +63,7 @@ namespace Utte.Code
                                 PrivateProtected = false,
                                 ConstructorSet = chkStructConstructor.Checked,
                             });
-                        using (StructProducer newstruct = new StructProducer(sStructName.Text, txtStructDescription.Text, visStructVisibility.Value.ToString(), members, chkStructConstructor.Checked, sfd.FileName, chkImplementDeconstruct.Checked))
+                        using (StructProducer newstruct = new StructProducer(sStructName.Text, txtStructDescription.Text, visStructVisibility.Value.ToString(), members, chkStructConstructor.Checked, sfd.FileName))
                         {
                             if(chkStructEqualityComparison.Checked)
                                 newstruct.ImplementEqualityComparison();
@@ -75,6 +75,8 @@ namespace Utte.Code
                                 newstruct.AddOperatorClass("double");
                             if (chkArithmeticOperatorsVsInt.Checked)
                                 newstruct.AddOperatorClass("int");
+                            if (chkImplementDeconstruct.Checked)
+                                newstruct.ImplementDeconstruct();
 
                             newstruct.Produce();
                         }
