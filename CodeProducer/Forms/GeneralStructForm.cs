@@ -53,13 +53,14 @@ namespace Utte.Code
                     {
                         List<Member> members = new List<Member>();
                         foreach (StructMember member in lstStructMembers.Items)
-                            members.Add(new Member() { 
-                                IsStructMember = true, 
-                                Name = member.Name, 
-                                ValueIsNullable = member.IsNullable, 
-                                ReadOnly = member.ReadOnly, 
+                            members.Add(new Member() {
+                                IsStructMember = true,
+                                Name = member.Name,
+                                ValueIsNullable = member.IsNullable,
+                                ReadOnly = member.ReadOnly,
                                 Type = member.Type,
                                 Static = false,
+                                Public = true,
                                 PrivateProtected = false,
                                 ConstructorSet = chkStructConstructor.Checked,
                             });

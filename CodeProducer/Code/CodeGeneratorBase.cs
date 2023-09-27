@@ -274,21 +274,22 @@ namespace Utte.Code
         
         #region Public members
 
-        public string Name;
-        public string Type;
-        public List<string> Attributes;
-        public bool PrivateProtected;
-        public bool Static;
-        public string Description;
-        public bool GetProperty;
-        public bool SetProperty;
-        public bool ProtectedSetProperty;
-        public bool ConstructorSet;
-        public bool ValueType;
-        public string GetText;
-        public string SetText;
-        public bool ValueIsNullable;
-        public bool IsStructMember;
+        public string Name; // Name of the member
+        public string Type; // Type name of member
+        public List<string> Attributes; // Attributes associated with the member
+        public bool Public; // Decides if the member is public
+        public bool PrivateProtected; // Decides if the member is private and if so it decides what text to use in getter/setter when there is no such text
+        public bool Static; // Flag for a static member
+        public string Description; // Text used in comment
+        public bool GetProperty; // Decides wether there should be a property for the member
+        public bool SetProperty; // Decides if there should be a set property when no SetText provided
+        public bool ProtectedSetProperty; // Decides if there should be a protected set property without code
+        public bool ConstructorSet; // Decides if the member should be set in the constructor
+        public bool ValueType; // Flag deciding if it is a value type
+        public string GetText; // If there is text here there will be a getter with the text
+        public string SetText; // If there is text here there will be a setter with the text
+        public bool ValueIsNullable; // Indicates if member is nullable
+        public bool IsStructMember; // Indicates if member is part of struct
         public bool ReadOnly; // Only used by structs
 
         #endregion

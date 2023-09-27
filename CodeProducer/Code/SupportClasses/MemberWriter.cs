@@ -51,17 +51,8 @@ namespace Utte.Code.Code.SupportClasses
                 if (member.ValueIsNullable)
                     codeWriter.Write("?");
                 codeWriter.Write(" ");
-                if (!member.PrivateProtected && (member.SetProperty || member.ProtectedSetProperty || member.GetProperty))
-                {
-                    codeWriter.Write(member.Name);
-                    if (member.ProtectedSetProperty)
-                        codeWriter.WriteLine(" { get; protected set; }");
-                    else if (member.SetProperty)
-                        codeWriter.WriteLine(" { get; set; }");
-                    else
-                        codeWriter.WriteLine(" { get; }");
-                }
-                else
+
+                if(member.PrivateProtected || !string.IsNullOrEmpty(member.GetText) || !string.IsNullOrEmpty(member.SetText))
                 {
                     codeWriter.WriteLine(member.Name);
                     codeWriter.WriteLine("{", true);
@@ -104,6 +95,16 @@ namespace Utte.Code.Code.SupportClasses
                     codeWriter.SubtractIndentation();
                     codeWriter.WriteLine("}", true);
                 }
+                else
+                {
+                    codeWriter.Write(member.Name);
+                    if (member.ProtectedSetProperty)
+                        codeWriter.WriteLine(" { get; protected set; }");
+                    else if (member.SetProperty)
+                        codeWriter.WriteLine(" { get; set; }");
+                    else
+                        codeWriter.WriteLine(" { get; }");
+                }
                 codeWriter.WriteLine("");
             }
         }
@@ -139,7 +140,7 @@ namespace Utte.Code.Code.SupportClasses
         public bool HasPublicMembers(bool staticmembers)
         {
             foreach (Member member in _members)
-                if (!member.PrivateProtected && (member.Static == staticmembers))
+                if (member.Public && (member.Static == staticmembers))
                     return true;
 
             return false;
@@ -149,7 +150,7 @@ namespace Utte.Code.Code.SupportClasses
         {
             foreach (Member member in _members)
             {
-                if (!member.PrivateProtected && (member.Static == staticmembers))
+                if (member.Public && (member.Static == staticmembers))
                 {
                     codeWriter.Write("public ", true);
                     if(member.Static)
