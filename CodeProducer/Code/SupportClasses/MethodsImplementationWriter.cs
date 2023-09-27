@@ -401,6 +401,24 @@ namespace Utte.Code.Code.SupportClasses
             };
             _methods.Add(method);
 
+            method.Visibility = Visibility.Public;
+            method.Description = "Adds the elements of the collection to the end of the list";
+            method.Type = "void";
+            method.Override = false;
+            method.Static = false;
+            method.Name = "AddRange";
+            parameters = new List<Method.Parameter>();
+            p = new Method.Parameter();
+            p.Type = "IEnumerable<" + type + ">";
+            p.Name = "collection";
+            parameters.Add(p);
+            method.Parameters = parameters;
+            method.Text = delegate ()
+            {
+                codeWriter.WriteLine("_list.AddRange(collection);", true);
+            };
+            _methods.Add(method);
+
             method = new Method();
             method.Visibility = Visibility.Public;
             method.Description = "Clears the list";
@@ -411,6 +429,67 @@ namespace Utte.Code.Code.SupportClasses
             method.Text = delegate ()
             {
                 codeWriter.WriteLine("_list.Clear();", true);
+            };
+            _methods.Add(method);
+
+            method = new Method();
+            method.Visibility = Visibility.Public;
+            method.Description = "Removes first occurrence of a " + type + " from the list";
+            method.Type = "bool";
+            method.Override = false;
+            method.Static = false;
+            method.Name = "Remove";
+            parameters = new List<Method.Parameter>();
+            p = new Method.Parameter();
+            p.Type = type;
+            p.Name = "item";
+            parameters.Add(p);
+            method.Parameters = parameters;
+            method.Text = delegate ()
+            {
+                codeWriter.WriteLine("return _list.Remove(item);", true);
+            };
+            _methods.Add(method);
+
+            method = new Method();
+            method.Visibility = Visibility.Public;
+            method.Description = "Removes the element at position index from the list";
+            method.Type = "void";
+            method.Override = false;
+            method.Static = false;
+            method.Name = "RemoveAt";
+            parameters = new List<Method.Parameter>();
+            p = new Method.Parameter();
+            p.Type = "int";
+            p.Name = "index";
+            parameters.Add(p);
+            method.Parameters = parameters;
+            method.Text = delegate ()
+            {
+                codeWriter.WriteLine("_list.RemoveAt(index);", true);
+            };
+            _methods.Add(method);
+
+            method = new Method();
+            method.Visibility = Visibility.Public;
+            method.Description = "Inserts an element into the list at index";
+            method.Type = "void";
+            method.Override = false;
+            method.Static = false;
+            method.Name = "Insert";
+            parameters = new List<Method.Parameter>();
+            p = new Method.Parameter();
+            p.Type = "int";
+            p.Name = "index";
+            parameters.Add(p);
+            p = new Method.Parameter();
+            p.Type = type;
+            p.Name = "item";
+            parameters.Add(p);
+            method.Parameters = parameters;
+            method.Text = delegate ()
+            {
+                codeWriter.WriteLine("_list.Insert(index, item);", true);
             };
             _methods.Add(method);
 

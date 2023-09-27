@@ -227,6 +227,19 @@ namespace Utte.Code.Code.SupportClasses
             member.Type = "int";
             member.ValueType = true;
             _members.Add(member);
+
+            member = new Member();
+            member.ConstructorSet = false;
+            member.Description = "Returns indexed item";
+            member.GetProperty = true;
+            member.GetText = "return _list[index];";
+            member.SetProperty = false;
+            member.Name = "this[int index]";
+            member.PrivateProtected = false;
+            member.Static = false;
+            member.Type = type;
+            member.ValueType = true;
+            _members.Add(member);
         }
 
         public void AddIXmlSaveMember()
