@@ -127,8 +127,7 @@ namespace Utte.Code.Code.Helpers
                         else
                             codeWriter.Write(member.Name, true);
                         codeWriter.Write(" = ");
-                        codeWriter.Write(GetDefault(member.Type));
-                        codeWriter.WriteLine(";");
+                        codeWriter.WriteLine("default;");
                     }
                     else
                     {
@@ -185,20 +184,6 @@ namespace Utte.Code.Code.Helpers
             }
             codeWriter.SubtractIndentation();
             codeWriter.WriteLine("}", true);
-        }
-
-        private static string GetDefault(string type)
-        {
-            if (type == "string")
-                return "string.Empty";
-            else if (type == "double")
-                return "double.NaN";
-            else if (type == "int")
-                return "0";
-            else if (type == "bool")
-                return "false";
-            else
-                return "";
         }
     }
 }
