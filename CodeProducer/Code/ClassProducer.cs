@@ -20,7 +20,6 @@ namespace Utte.Code
         private Visibility _visibility;
         private string _parentclass;
         private string _description;
-        private List<string> _interfaces;
         private List<ClassProducer> _classes;
 
         #endregion
@@ -47,7 +46,6 @@ namespace Utte.Code
                 _type = ClassType.Normal;
             _visibility = visibility;
             _parentclass = parentclass;
-            _interfaces=new List<string>();
             _classes = new List<ClassProducer>();
             _description = description;
         }
@@ -410,20 +408,6 @@ namespace Utte.Code
                 _interfaces.Add("IComparable<" + _name + ">");
 
                 _methodsImplementationWriter.AddSortComparisonMethods(_codeWriter, _name);
-            }
-        }
-
-        /// <summary>
-        /// Implements equality comparison for the instances of the class
-        /// </summary>
-        public void ImplementEqualityComparison()
-        {
-            if (!IsStatic)
-            {
-                _operatorImplementationWriter.ImplementsEquality = true;
-                _interfaces.Add("IEquatable<" + _name + ">");
-
-                _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _memberWriter.List);
             }
         }
 

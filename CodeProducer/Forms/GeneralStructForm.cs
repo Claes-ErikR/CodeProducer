@@ -70,8 +70,12 @@ namespace Utte.Code
                             operatorclasses.Add("double");
                         if (chkArithmeticOperatorsVsInt.Checked)
                             operatorclasses.Add("int");
-                        using (StructProducer newstruct = new StructProducer(sStructName.Text, txtStructDescription.Text, visStructVisibility.Value.ToString(), members, chkStructConstructor.Checked, chkStructEqualityComparison.Checked, chkIncludeEmpty.Checked, sfd.FileName, operatorclasses, chkImplementDeconstruct.Checked))
+                        using (StructProducer newstruct = new StructProducer(sStructName.Text, txtStructDescription.Text, visStructVisibility.Value.ToString(), members, chkStructConstructor.Checked, sfd.FileName, operatorclasses, chkImplementDeconstruct.Checked))
                         {
+                            if(chkStructEqualityComparison.Checked)
+                                newstruct.ImplementEqualityComparison();
+                            if (chkIncludeEmpty.Checked)
+                                newstruct.ImplementEmptyInstance(chkStructEqualityComparison.Checked);
                             newstruct.Produce();
                         }
                         ShowTextFile(sfd.FileName);

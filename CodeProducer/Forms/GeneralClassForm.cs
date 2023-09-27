@@ -56,7 +56,7 @@ namespace Utte.Code
                                 newclass.AddClass(classproducer);
                             newclass.AddInterfaces(cpClassProduce.GetInterfaces());
                             newclass.AddImplementedInterfaces(cpClassProduce.GetImplementedInterfaces());
-                            if (cpClassProduce.ImplementEqualityComparison)
+                            if (cpClassProduce.ImplementEqualityComparison && !newclass.IsStatic)
                                 newclass.ImplementEqualityComparison();
                             if (cpClassProduce.ImplementOperators)
                                 newclass.AddOperatorClass(cpClassProduce.ClassName);

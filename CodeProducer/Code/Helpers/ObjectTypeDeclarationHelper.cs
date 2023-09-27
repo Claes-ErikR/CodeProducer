@@ -62,23 +62,30 @@ namespace Utte.Code.Code.Helpers
         /// <param name="codeWriter"></param>
         /// <param name="structName"></param>
         /// <param name="visibility"></param>
-        /// <param name="iequatableImplementation"></param>
-        public static void ProduceStructDeclaration(this CodeWriter codeWriter, string structName, string visibility, bool iequatableImplementation)
+        /// <param name="implementedInterfaces"></param>
+        public static void ProduceStructDeclaration(this CodeWriter codeWriter, string structName, string visibility, List<string> implementedInterfaces)
         {
             if (visibility == "ProtectedInternal")
                 codeWriter.Write("protected internal", true);
             else
                 codeWriter.Write(visibility.ToString().ToLower(), true);
             codeWriter.Write(" struct ");
-            if (iequatableImplementation)
+
+            if (implementedInterfaces.Count == 0)
+                codeWriter.WriteLine(structName);
+            else
             {
                 codeWriter.Write(structName);
-                codeWriter.Write(" : IEquatable<");
-                codeWriter.Write(structName);
-                codeWriter.WriteLine(">");
+                codeWriter.Write(" : ");
+                StringBuilder sb = new StringBuilder();
+                foreach (string interfacename in implementedInterfaces)
+                {
+                    sb.Append(interfacename);
+                    sb.Append(", ");
+                }
+                sb.Remove(sb.Length - 2, 2);
+                codeWriter.WriteLine(sb.ToString());
             }
-            else
-                codeWriter.WriteLine(structName);
         }
     }
 }

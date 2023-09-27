@@ -29,12 +29,10 @@ namespace Utte.Code
         /// <param name="visibility"></param>
         /// <param name="members"></param>
         /// <param name="constructor"></param>
-        /// <param name="equalitycomparison"></param>
-        /// <param name="produceempty"></param>
         /// <param name="filename"></param>
         /// <param name="operatorclasses"></param>
         /// <param name="implementdeconstruct"></param>
-        public StructProducer(string name, string description, string visibility, List<Member> members, bool constructor, bool equalitycomparison, bool produceempty, string filename, List<string> operatorclasses, bool implementdeconstruct)
+        public StructProducer(string name, string description, string visibility, List<Member> members, bool constructor, string filename, List<string> operatorclasses, bool implementdeconstruct)
             : base(name, DefinitionType.Struct)
         {
             _codeWriter = new CodeWriter(filename, 4);
@@ -42,22 +40,13 @@ namespace Utte.Code
             _visibility = visibility;
             _memberWriter.AddRange(members);
             _constructor = constructor;
-            _operatorImplementationWriter.ImplementsEquality = equalitycomparison;
             _operatorImplementationWriter.ImplementationClasses.AddRange(operatorclasses);
             if (_operatorImplementationWriter.ImplementationClasses.Count > 0)
                 _operatorImplementationWriter.ImplementsArithmetic = true;
 
             _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _memberWriter.List);
-            if (_operatorImplementationWriter.ImplementsEquality)
-                _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _memberWriter.List);
             if (implementdeconstruct)
                 _methodsImplementationWriter.AddDeconstructMethod(_codeWriter, _memberWriter.List);
-
-            if (produceempty)
-            {
-                _methodsImplementationWriter.AddIsEmptyMethod(_codeWriter, name, _operatorImplementationWriter.ImplementsEquality);
-                _memberWriter.AddEmptyMember(name);
-            }
         }
 
         #endregion
@@ -72,7 +61,7 @@ namespace Utte.Code
             _codeWriter.Indentation = 0;
             if (_description != "")
                 _codeWriter.ProduceDescription(_description);
-            _codeWriter.ProduceStructDeclaration(_name, _visibility, _operatorImplementationWriter.ImplementsEquality);
+            _codeWriter.ProduceStructDeclaration(_name, _visibility, _interfaces);
             _codeWriter.WriteLine("{", true);
             _codeWriter.AddIndentation();
             ProduceTypeContent();

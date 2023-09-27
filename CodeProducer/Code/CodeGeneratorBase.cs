@@ -20,6 +20,7 @@ namespace Utte.Code
         protected OperatorImplementationWriter _operatorImplementationWriter;
         protected MethodsImplementationWriter _methodsImplementationWriter;
         protected MemberWriter _memberWriter;
+        protected List<string> _interfaces;
 
         #endregion
 
@@ -35,11 +36,32 @@ namespace Utte.Code
             _operatorImplementationWriter = new OperatorImplementationWriter(_name);
             _methodsImplementationWriter = new MethodsImplementationWriter(definitionType);
             _memberWriter = new MemberWriter();
+            _interfaces = new List<string>();
         }
 
         #endregion
 
         #region Public methods
+
+        /// <summary>
+        /// Implements equality comparison for the instances of the class
+        /// </summary>
+        public void ImplementEqualityComparison()
+        {
+            _operatorImplementationWriter.ImplementsEquality = true;
+            _interfaces.Add("IEquatable<" + _name + ">");
+
+            _methodsImplementationWriter.AddEqualityComparisonMethods(_codeWriter, _name, _memberWriter.List);
+        }
+
+        /// <summary>
+        /// Implements empty instance for the type
+        /// </summary>
+        public void ImplementEmptyInstance(bool implementequality)
+        {
+            _methodsImplementationWriter.AddIsEmptyMethod(_codeWriter, _name, implementequality);
+            _memberWriter.AddEmptyMember(_name);
+        }
 
         /// <summary>
         /// Frees resources
