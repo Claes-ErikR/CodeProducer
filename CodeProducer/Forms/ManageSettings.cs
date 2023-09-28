@@ -33,6 +33,7 @@ namespace Utte.Code.Forms
         /// <param name="e"></param>
         private void btnSave_Click(object sender, EventArgs e)
         {
+            Settings.Default.UseRegions = chkUseRegions.Checked;
             Settings.Default.Save();
             this.Close();
         }
