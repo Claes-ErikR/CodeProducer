@@ -41,8 +41,11 @@ namespace Utte.Code
         {
             get
             {
-                if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Programming\CodeProducerResults\"))
-                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Programming\CodeProducerResults\";
+                var path = Settings.Default.BaseFolderPath;
+                if (Directory.Exists(path))
+                    return path;
+                else if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)))
+                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 else
                     return @"C:\";
             }

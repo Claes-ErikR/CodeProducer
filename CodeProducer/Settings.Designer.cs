@@ -34,5 +34,17 @@ namespace Utte.Code {
                 this["UseRegions"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BaseFolderPath {
+            get {
+                return ((string)(this["BaseFolderPath"]));
+            }
+            set {
+                this["BaseFolderPath"] = value;
+            }
+        }
     }
 }

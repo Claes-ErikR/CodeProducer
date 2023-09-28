@@ -24,6 +24,7 @@ namespace Utte.Code.Forms
         public void Initialize()
         {
             chkUseRegions.Checked = Settings.Default.UseRegions;
+            bfdBaseFileDirectory.FileName = Settings.Default.BaseFolderPath;
         }
 
         /// <summary>
@@ -34,6 +35,7 @@ namespace Utte.Code.Forms
         private void btnSave_Click(object sender, EventArgs e)
         {
             Settings.Default.UseRegions = chkUseRegions.Checked;
+            Settings.Default.BaseFolderPath = bfdBaseFileDirectory.FileName;
             Settings.Default.Save();
             this.Close();
         }
