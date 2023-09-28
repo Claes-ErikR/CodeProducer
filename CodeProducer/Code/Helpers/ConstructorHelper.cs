@@ -92,6 +92,7 @@ namespace Utte.Code.Code.Helpers
 
             codeWriter.SubtractIndentation();
             codeWriter.WriteLine("}", true);
+            codeWriter.WriteLine("");
         }
 
         /// <summary>
@@ -146,6 +147,7 @@ namespace Utte.Code.Code.Helpers
             }
             codeWriter.SubtractIndentation();
             codeWriter.WriteLine("}", true);
+            codeWriter.WriteLine("");
         }
 
         /// <summary>
@@ -184,6 +186,7 @@ namespace Utte.Code.Code.Helpers
             }
             codeWriter.SubtractIndentation();
             codeWriter.WriteLine("}", true);
+            codeWriter.WriteLine("");
         }
     }
 }

@@ -161,12 +161,9 @@ namespace Utte.Code
                 }
             if (initialization.Count > 0)
             {
-                _codeWriter.WriteLine("#region Static constructor", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionStart("Static constructor");
                 _codeWriter.ProduceStaticConstructor(_name, initialization);
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 
@@ -177,12 +174,9 @@ namespace Utte.Code
         {
             if (_memberWriter.HasPublicMembers(staticmembers))
             {
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#region Public members", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionStart("Public members");
                 _memberWriter.WritePublicMembers(_codeWriter, staticmembers);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 
@@ -194,13 +188,11 @@ namespace Utte.Code
             if (_memberWriter.HasPrivateProtectedMembers(staticmembers))
             {
                 if (staticmembers)
-                    _codeWriter.WriteLine("#region Private static members", true);
+                    _codeWriter.ProduceRegionStart("Private static members");
                 else
-                    _codeWriter.WriteLine("#region Private/protected members", true);
-                _codeWriter.WriteLine("");
+                    _codeWriter.ProduceRegionStart("Private/protected members");
                 _memberWriter.WritePrivateProtectedMembers(_codeWriter, staticmembers);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 
@@ -214,18 +206,16 @@ namespace Utte.Code
             {
                 if (staticmethods)
                     if (Public)
-                        _codeWriter.WriteLine("#region Public static methods", true);
+                        _codeWriter.ProduceRegionStart("Public static methods");
                     else
-                        _codeWriter.WriteLine("#region Private static methods", true);
+                        _codeWriter.ProduceRegionStart("Private static methods");
                 else
                     if (Public)
-                    _codeWriter.WriteLine("#region Public methods", true);
+                    _codeWriter.ProduceRegionStart("Public methods");
                 else
-                    _codeWriter.WriteLine("#region Private/protected methods", true);
-                _codeWriter.WriteLine("");
+                    _codeWriter.ProduceRegionStart("Private/protected methods");
                 _methodsImplementationWriter.WriteMethods(_codeWriter, Public, staticmethods);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 
@@ -237,13 +227,11 @@ namespace Utte.Code
             if (_memberWriter.HasProperties(staticproperties))
             {
                 if (staticproperties)
-                    _codeWriter.WriteLine("#region Static properties", true);
+                    _codeWriter.ProduceRegionStart("Static properties");
                 else
-                    _codeWriter.WriteLine("#region Properties", true);
-                _codeWriter.WriteLine("");
+                    _codeWriter.ProduceRegionStart("Properties");
                 _memberWriter.WriteProperties(_codeWriter, staticproperties);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 
@@ -254,11 +242,9 @@ namespace Utte.Code
         {
             if (_operatorImplementationWriter.ImplementsAny)
             {
-                _codeWriter.WriteLine("#region Operators", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionStart("Operators");
                 _operatorImplementationWriter.WriteOperators(_codeWriter, _name);
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 

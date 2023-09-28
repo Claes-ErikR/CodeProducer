@@ -57,6 +57,7 @@ namespace Utte.Code
             _codeWriter.ProduceStructDeclaration(_name, _visibility, _interfaces);
             _codeWriter.WriteLine("{", true);
             _codeWriter.AddIndentation();
+            _codeWriter.WriteLine("");
             ProduceTypeContent();
             _codeWriter.SubtractIndentation();
             _codeWriter.WriteLine("}", true);
@@ -77,12 +78,9 @@ namespace Utte.Code
                     members.Add(member);
             if (members.Count != 0)
             {
-                _codeWriter.WriteLine("#region Constructors", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionStart("Constructors");
                 _codeWriter.ProduceStructConstructor(_name, members);
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 

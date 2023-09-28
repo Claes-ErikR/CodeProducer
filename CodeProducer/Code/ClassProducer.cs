@@ -483,12 +483,9 @@ namespace Utte.Code
                 }
             if (parameters.Count>0 || initialization.Count>0 || _formcomponent)
             {
-                _codeWriter.WriteLine("#region Constructors", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionStart("Constructors");
                 _codeWriter.ProduceClassConstructor(_name, initialization, parameters, _formcomponent, _formcomponent && _interfaces.Contains("IValid"));
-                _codeWriter.WriteLine("");
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 
@@ -505,17 +502,15 @@ namespace Utte.Code
             if (classes.Count > 0)
             {
                 if (Public)
-                    _codeWriter.WriteLine("#region Public classes/structs", true);
+                    _codeWriter.ProduceRegionStart("Public classes/structs");
                 else
-                    _codeWriter.WriteLine("#region Private/protected classes/structs", true);
-                _codeWriter.WriteLine("");
+                    _codeWriter.ProduceRegionStart("Private/protected classes/structs");
                 foreach (ClassProducer cp in classes)
                 {
                     cp.Produce(_codeWriter.Indentation);
                     _codeWriter.WriteLine("");
                 }
-                _codeWriter.WriteLine("#endregion", true);
-                _codeWriter.WriteLine("");
+                _codeWriter.ProduceRegionEnd();
             }
         }
 

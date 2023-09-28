@@ -67,6 +67,7 @@
     <Compile Include="Code\Helpers\ConstructorHelper.cs" />
     <Compile Include="Code\Helpers\DescriptionHelper.cs" />
     <Compile Include="Code\Helpers\ObjectTypeDeclarationHelper.cs" />
+    <Compile Include="Code\Helpers\RegionHelper.cs" />
     <Compile Include="Code\StructProducer.cs" />
     <Compile Include="Code\SupportClasses\CodeWriter.cs" />
     <Compile Include="Code\SupportClasses\MemberWriter.cs" />
