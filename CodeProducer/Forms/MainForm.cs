@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Utte.Code.Forms;
 
 namespace Utte.Code
 {
@@ -72,6 +73,25 @@ namespace Utte.Code
             catch
             {
                 MessageBox.Show("Error, no form open?");
+            }
+        }
+
+        /// <summary>
+        /// Displays box to manage settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void miSettings_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var form = new ManageSettings();
+                form.Initialize();
+                form.ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Error showing settings");
             }
         }
 
@@ -168,6 +188,5 @@ namespace Utte.Code
         }
 
         #endregion
-
     }
 }

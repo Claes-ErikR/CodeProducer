@@ -43,6 +43,7 @@
             this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.miSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +59,7 @@
             // miGeneralClass
             // 
             this.miGeneralClass.Name = "miGeneralClass";
-            this.miGeneralClass.Size = new System.Drawing.Size(169, 22);
+            this.miGeneralClass.Size = new System.Drawing.Size(142, 22);
             this.miGeneralClass.Text = "General class";
             this.miGeneralClass.Click += new System.EventHandler(this.miGeneralClass_Click);
             // 
@@ -80,7 +81,8 @@
             // miTools
             // 
             this.miTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miProduce});
+            this.miProduce,
+            this.miSettings});
             this.miTools.Name = "miTools";
             this.miTools.Size = new System.Drawing.Size(46, 20);
             this.miTools.Text = "&Tools";
@@ -150,7 +152,7 @@
             // miHelp
             // 
             this.miHelp.Name = "miHelp";
-            this.miHelp.Size = new System.Drawing.Size(99, 22);
+            this.miHelp.Size = new System.Drawing.Size(180, 22);
             this.miHelp.Text = "Help";
             this.miHelp.Click += new System.EventHandler(this.miHelp_Click);
             // 
@@ -168,6 +170,13 @@
             this.menuStrip.Size = new System.Drawing.Size(632, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
+            // 
+            // miSettings
+            // 
+            this.miSettings.Name = "miSettings";
+            this.miSettings.Size = new System.Drawing.Size(180, 22);
+            this.miSettings.Text = "Settings";
+            this.miSettings.Click += new System.EventHandler(this.miSettings_Click);
             // 
             // MainForm
             // 
@@ -203,7 +212,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpMenu;
         private System.Windows.Forms.ToolStripMenuItem miHelp;
         private System.Windows.Forms.MenuStrip menuStrip;
-
+        private System.Windows.Forms.ToolStripMenuItem miSettings;
     }
 }
 
