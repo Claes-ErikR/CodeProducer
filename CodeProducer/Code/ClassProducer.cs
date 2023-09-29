@@ -384,19 +384,6 @@ namespace Utte.Code
 
         #endregion
 
-        #region ToString implementation
-
-        /// <summary>
-        /// Ensures there is an implementation of ToString
-        /// </summary>
-        public void EnsureToStringImplemented()
-        {
-            if (!IsStatic)
-                _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _memberWriter.List);
-        }
-
-        #endregion
-
         #region Utte code functionality
 
         /// <summary>

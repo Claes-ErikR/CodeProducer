@@ -44,6 +44,14 @@ namespace Utte.Code
         #region Public methods
 
         /// <summary>
+        /// Ensures there is an implementation of ToString
+        /// </summary>
+        public void EnsureToStringImplemented()
+        {
+            _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _memberWriter.List);
+        }
+
+        /// <summary>
         /// Implements sort comparison for the instances of the class
         /// </summary>
         public void ImplementSortComparison()

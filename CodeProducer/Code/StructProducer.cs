@@ -38,8 +38,6 @@ namespace Utte.Code
             _visibility = visibility;
             _memberWriter.AddRange(members);
             _constructor = constructor;
-
-            _methodsImplementationWriter.EnsureToStringImplemented(_codeWriter, _memberWriter.List);
         }
 
         #endregion

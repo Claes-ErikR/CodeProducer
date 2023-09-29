@@ -66,7 +66,8 @@ namespace Utte.Code
                             });
                         using (StructProducer newstruct = new StructProducer(sStructName.Text, txtStructDescription.Text, visStructVisibility.Value.ToString(), members, chkStructConstructor.Checked, sfd.FileName))
                         {
-                            if(chkStructEqualityComparison.Checked)
+                            newstruct.EnsureToStringImplemented();
+                            if (chkStructEqualityComparison.Checked)
                                 newstruct.ImplementEqualityComparison();
                             if (chkIncludeEmpty.Checked)
                                 newstruct.ImplementEmptyInstance(chkStructEqualityComparison.Checked);
