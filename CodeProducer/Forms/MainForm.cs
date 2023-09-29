@@ -68,11 +68,14 @@ namespace Utte.Code
         {
             try
             {
-                ((BaseForm)this.ActiveMdiChild).Produce();
+                if(this.ActiveMdiChild != null)
+                    ((BaseForm)this.ActiveMdiChild).Produce();
+                else
+                    MessageBox.Show("Error, no form open?");
             }
             catch
             {
-                MessageBox.Show("Error, no form open?");
+                MessageBox.Show("Unkown error");
             }
         }
 
