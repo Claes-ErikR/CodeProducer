@@ -325,7 +325,7 @@ namespace Utte.Code.Code.SupportClasses
             _methods.Add(method);
         }
 
-        public void AddSortComparisonMethods(CodeWriter codeWriter, string className)
+        public void AddSortComparisonMethods(CodeWriter codeWriter, string typeName)
         {
             Method method = new Method();
             method.Visibility = Visibility.Public;
@@ -343,11 +343,11 @@ namespace Utte.Code.Code.SupportClasses
             method.Text = delegate ()
             {
                 codeWriter.Write("if (obj is ", true);
-                codeWriter.Write(className);
+                codeWriter.Write(typeName);
                 codeWriter.WriteLine(")");
                 codeWriter.AddIndentation();
                 codeWriter.Write("return this.CompareTo((", true);
-                codeWriter.Write(className);
+                codeWriter.Write(typeName);
                 codeWriter.WriteLine(")obj);");
                 codeWriter.SubtractIndentation();
                 codeWriter.WriteLine("throw new ArgumentException(\"Wrong type in sort comparison\");", true);
@@ -356,25 +356,28 @@ namespace Utte.Code.Code.SupportClasses
 
             method = new Method();
             method.Visibility = Visibility.Public;
-            method.Description = "Compares the instance to an " + className + " for sort order";
+            method.Description = "Compares the instance to an " + typeName + " for sort order";
             method.Type = "int";
             method.Override = false;
             method.Static = false;
             method.Name = "CompareTo";
             parameters = new List<Method.Parameter>();
             p = new Method.Parameter();
-            p.Type = className;
-            p.Name = className.ToLower();
+            p.Type = typeName;
+            p.Name = typeName.ToLower();
             parameters.Add(p);
             method.Parameters = parameters;
             method.Text = delegate ()
             {
-                codeWriter.Write("if (", true);
-                codeWriter.Write(className.ToLower());
-                codeWriter.WriteLine(" == null)");
-                codeWriter.AddIndentation();
-                codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
-                codeWriter.SubtractIndentation();
+                if (_definitiontype != DefinitionType.Struct)
+                {
+                    codeWriter.Write("if (", true);
+                    codeWriter.Write(typeName.ToLower());
+                    codeWriter.WriteLine(" == null)");
+                    codeWriter.AddIndentation();
+                    codeWriter.WriteLine("throw new ArgumentNullException(\"null value in sort comparison\");", true);
+                    codeWriter.SubtractIndentation();
+                }
                 NotImplemented(codeWriter);
             };
             _methods.Add(method);
