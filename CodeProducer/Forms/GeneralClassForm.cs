@@ -54,10 +54,11 @@ namespace Utte.Code
                             List<ClassProducer> classproducers = cpClassProduce.GetClasses();
                             foreach (ClassProducer classproducer in classproducers)
                                 newclass.AddClass(classproducer);
-                            newclass.AddInterfaces(cpClassProduce.GetInterfaces());
-                            newclass.AddImplementedInterfaces(cpClassProduce.GetImplementedInterfaces());
                             if (!newclass.IsStatic)
                             {
+                                newclass.AddInterfaces(cpClassProduce.GetInterfaces());
+                                newclass.AddImplementedInterfaces(cpClassProduce.GetImplementedInterfaces());
+
                                 if (cpClassProduce.ImplementEqualityComparison)
                                     newclass.ImplementEqualityComparison();
                                 if (cpClassProduce.ImplementOperators)

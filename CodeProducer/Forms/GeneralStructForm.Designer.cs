@@ -46,6 +46,7 @@ namespace Utte.Code
             this.chkIncludeEmpty = new System.Windows.Forms.CheckBox();
             this.chkImplementDeconstruct = new System.Windows.Forms.CheckBox();
             this.chkStructComparisonImplementation = new System.Windows.Forms.CheckBox();
+            this.lstImplementedInterfaces = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // cmdProduce
@@ -217,11 +218,21 @@ namespace Utte.Code
             this.chkStructComparisonImplementation.Text = "Comparison implementation";
             this.chkStructComparisonImplementation.UseVisualStyleBackColor = true;
             // 
+            // lstImplementedInterfaces
+            // 
+            this.lstImplementedInterfaces.FormattingEnabled = true;
+            this.lstImplementedInterfaces.Location = new System.Drawing.Point(464, 345);
+            this.lstImplementedInterfaces.Name = "lstImplementedInterfaces";
+            this.lstImplementedInterfaces.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.lstImplementedInterfaces.Size = new System.Drawing.Size(120, 95);
+            this.lstImplementedInterfaces.TabIndex = 17;
+            // 
             // GeneralStructForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(674, 555);
+            this.Controls.Add(this.lstImplementedInterfaces);
             this.Controls.Add(this.chkStructComparisonImplementation);
             this.Controls.Add(this.chkImplementDeconstruct);
             this.Controls.Add(this.chkIncludeEmpty);
@@ -267,6 +278,7 @@ namespace Utte.Code
         private System.Windows.Forms.CheckBox chkIncludeEmpty;
         private System.Windows.Forms.CheckBox chkImplementDeconstruct;
         private System.Windows.Forms.CheckBox chkStructComparisonImplementation;
+        private System.Windows.Forms.ListBox lstImplementedInterfaces;
     }
 }
 

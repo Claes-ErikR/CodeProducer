@@ -31,6 +31,9 @@ namespace Utte.Code
             chkStructConstructor.Checked = true;
             chkStructEqualityComparison.Checked = true;
             chkIncludeEmpty.Checked = true;
+
+            foreach (string Interface in CodeGeneratorBase.ImplementedInterfaces)
+                lstImplementedInterfaces.Items.Add(Interface);
         }
 
         #endregion
@@ -82,6 +85,8 @@ namespace Utte.Code
                             if (chkStructComparisonImplementation.Checked)
                                 newstruct.ImplementSortComparison();
 
+                            newstruct.AddImplementedInterfaces(GetImplementedInterfaces());
+
                             newstruct.Produce();
                         }
                         ShowTextFile(sfd.FileName);
@@ -122,6 +127,19 @@ namespace Utte.Code
         {
             if (lstStructMembers.SelectedIndex >= 0)
                 lstStructMembers.Items.RemoveAt(lstStructMembers.SelectedIndex);
+        }
+
+        /// <summary>
+        /// Returns a list of added implemented interfaces
+        /// </summary>
+        /// <returns></returns>
+        private List<string> GetImplementedInterfaces()
+        {
+            List<string> Interfaces = new List<string>();
+            ListBox.SelectedObjectCollection SelectedInterfaces = lstImplementedInterfaces.SelectedItems;
+            foreach (object Interface in SelectedInterfaces)
+                Interfaces.Add(Interface.ToString());
+            return Interfaces;
         }
 
         #endregion

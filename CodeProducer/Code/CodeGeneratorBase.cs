@@ -44,6 +44,40 @@ namespace Utte.Code
         #region Public methods
 
         /// <summary>
+        /// Implements a list of implemented interfaces to the class
+        /// </summary>
+        /// <param name="interfaces"></param>
+        public void AddImplementedInterfaces(List<string> interfaces)
+        {
+            if (interfaces.Contains("IFormattable"))
+                ImplementIFormattable();
+            if (interfaces.Contains("IDisposable"))
+                ImplementIDisposable();
+            if (interfaces.Contains("ICloneable"))
+                ImplementICloneable();
+            if (interfaces.Contains("IFunction<double>"))
+                ImplementIFunctionOfDouble();
+            if (interfaces.Contains("IDerivable<double>"))
+                ImplementIDerivableOfDouble();
+            if (interfaces.Contains("IIntegrable<double>"))
+                ImplementIIntegrableOfDouble();
+            if (interfaces.Contains("IXmlSave"))
+                ImplementIXmlSave();
+            if (interfaces.Contains("IValid"))
+                ImplementIValid();
+            if (interfaces.Contains("IEuclidean3D"))
+                ImplementIEuclidean3D();
+            if (interfaces.Contains("ICylindricalCoordinates"))
+                ImplementICylindricalCoordinates();
+            if (interfaces.Contains("ISphericaloordinates"))
+                ImplementISphericaloordinates();
+            if (interfaces.Contains("IEuclidean2D"))
+                ImplementIEuclidean2D();
+            if (interfaces.Contains("ICircularCoordinates"))
+                ImplementICircularCoordinates();
+        }
+
+        /// <summary>
         /// Ensures there is an implementation of ToString
         /// </summary>
         public void EnsureToStringImplemented()
@@ -255,6 +289,178 @@ namespace Utte.Code
                 _codeWriter.ProduceRegionEnd();
             }
         }
+
+        #region Interfaces
+
+        /// <summary>
+        /// Implements ICircularCoordinates interface
+        /// </summary>
+        private void ImplementICircularCoordinates()
+        {
+            _interfaces.Add("ICircularCoordinates");
+
+            _memberWriter.AddICircularCoordinatesMembers();
+        }
+
+        /// <summary>
+        /// Implements IEuclidean2D interface
+        /// </summary>
+        private void ImplementIEuclidean2D()
+        {
+            _interfaces.Add("IEuclidean2D");
+
+            _memberWriter.AddIEuclidean2DMembers();
+        }
+
+        /// <summary>
+        /// Implements ISphericaloordinates interface
+        /// </summary>
+        private void ImplementISphericaloordinates()
+        {
+            _interfaces.Add("ISphericaloordinates");
+
+            _memberWriter.AddISphericaloordinatesMembers();
+        }
+
+        /// <summary>
+        /// Implements ICylindricalCoordinates interface
+        /// </summary>
+        private void ImplementICylindricalCoordinates()
+        {
+            _interfaces.Add("ICylindricalCoordinates");
+
+            _memberWriter.AddICylindricalCoordinatesMembers();
+        }
+
+        /// <summary>
+        /// Implements IEuclidean3D interface
+        /// </summary>
+        private void ImplementIEuclidean3D()
+        {
+            _interfaces.Add("IEuclidean3D");
+
+            _memberWriter.AddIEuclidean3DMembers();
+        }
+
+        /// <summary>
+        /// Implements IValid interface
+        /// </summary>
+        private void ImplementIValid()
+        {
+            _interfaces.Add("IValid");
+
+            _memberWriter.AddIValidMember();
+        }
+
+        /// <summary>
+        /// Implements IXmlSave interface
+        /// </summary>
+        private void ImplementIXmlSave()
+        {
+            _interfaces.Add("IXmlSave");
+
+            _methodsImplementationWriter.AddIXmlSaveMethods(_codeWriter);
+
+            _memberWriter.AddIXmlSaveMember();
+        }
+
+        /// <summary>
+        /// Implements IIntegrableOfDouble interface
+        /// </summary>
+        private void ImplementIIntegrableOfDouble()
+        {
+            _interfaces.Add("IIntegrable<double>");
+
+            _methodsImplementationWriter.AddIIntegrableMethod("double");
+        }
+
+        /// <summary>
+        /// Implements IDerivableOfDouble interface
+        /// </summary>
+        private void ImplementIDerivableOfDouble()
+        {
+            _interfaces.Add("IDerivable<double>");
+
+            _methodsImplementationWriter.AddIDerivableMethod("double");
+        }
+
+        /// <summary>
+        /// Implements IFunctionOfDouble interface
+        /// </summary>
+        private void ImplementIFunctionOfDouble()
+        {
+            _interfaces.Add("IFunction<double>");
+
+            _methodsImplementationWriter.AddIFunctionMethod("double");
+        }
+
+        /// <summary>
+        /// Implements ICloneable interface
+        /// </summary>
+        private void ImplementICloneable()
+        {
+            _interfaces.Add("ICloneable");
+
+            _methodsImplementationWriter.AddICloneableMethod(_codeWriter, _name, _memberWriter.List);
+        }
+
+        /// <summary>
+        /// Implements IDisposable interface
+        /// </summary>
+        private void ImplementIDisposable()
+        {
+            _interfaces.Add("IDisposable");
+
+            _methodsImplementationWriter.AddIDisposableMethod();
+        }
+
+        /// <summary>
+        /// Implements IFormattable interface
+        /// </summary>
+        private void ImplementIFormattable()
+        {
+            _interfaces.Add("IFormattable");
+
+            _methodsImplementationWriter.AddIFormattableMethods(_codeWriter, _memberWriter.List);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Static constructor
+
+        /// <summary>
+        /// Initializes static variables
+        /// </summary>
+        static CodeGeneratorBase()
+        {
+            ImplementedInterfaces = new List<string>
+            {
+                "IFormattable",
+                "IDisposable",
+                "ICloneable",
+                "IFunction<double>",
+                "IDerivable<double>",
+                "IIntegrable<double>",
+                "IXmlSave",
+                "IValid",
+                "IEuclidean3D",
+                "ICylindricalCoordinates",
+                "ISphericaloordinates",
+                "IEuclidean2D",
+                "ICircularCoordinates"
+            };
+        }
+
+        #endregion
+
+        #region Static properties
+
+        /// <summary>
+        /// Returns a list with implemented interfaces
+        /// </summary>
+        public static List<string> ImplementedInterfaces { get; }
 
         #endregion
 

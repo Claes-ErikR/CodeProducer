@@ -30,7 +30,7 @@ namespace Utte.Code.Controls
         {
             InitializeComponent();
             visClassVisibility.Initialize();
-            foreach (string Interface in ClassProducer.ImplementedInterfaces)
+            foreach (string Interface in CodeGeneratorBase.ImplementedInterfaces)
                 lstImplementedInterfaces.Items.Add(Interface);
             tcWrapperType.Initialize();
             edClassType.Initialize(ClassProducer.ClassType.Sealed);
