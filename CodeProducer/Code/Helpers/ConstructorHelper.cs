@@ -179,7 +179,13 @@ namespace Utte.Code.Code.Helpers
             codeWriter.AddIndentation();
             foreach (Member member in members)
             {
-                codeWriter.Write(member.Name, true);
+                if(member.IsStructMember)
+                    codeWriter.Write(member.Name, true);
+                else
+                {
+                    codeWriter.Write("_", true);
+                    codeWriter.Write(member.Name.ToLower());
+                }
                 codeWriter.Write(" = ");
                 codeWriter.Write(member.Name.ToLower());
                 codeWriter.WriteLine(";");

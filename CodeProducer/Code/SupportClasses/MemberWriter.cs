@@ -198,6 +198,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Static = true;
             member.Type = className;
             member.ConstructorSet = true;
+            member.ReadOnly = true;
             _members.Add(member);
         }
 
@@ -275,6 +276,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Static = false;
             member.Type = "bool";
             member.ValueType = true;
+            member.ReadOnly = true;
             _members.Add(member);
         }
 
@@ -354,6 +356,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Static = false;
             member.Type = type;
             member.ValueType = valuetype;
+            member.ReadOnly = true;
             return member;
         }
 
