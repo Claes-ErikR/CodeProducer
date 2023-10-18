@@ -101,7 +101,8 @@ namespace Utte.Code.Code.Helpers
         /// <param name="codeWriter"></param>
         /// <param name="name"></param>
         /// <param name="initialization"></param>
-        public static void ProduceStaticConstructor(this CodeWriter codeWriter, string name, List<Member> initialization)
+        /// <param name="constructorParametersCount"></param>
+        public static void ProduceStaticConstructor(this CodeWriter codeWriter, string name, List<Member> initialization, int constructorParametersCount)
         {
             string description = "";
 
@@ -141,7 +142,17 @@ namespace Utte.Code.Code.Helpers
                             codeWriter.Write(member.Name, true);
                         codeWriter.Write(" = new ");
                         codeWriter.Write(member.Type);
-                        codeWriter.WriteLine("();");
+                        codeWriter.Write("(");
+                        if(name == member.Type && constructorParametersCount > 0)
+                        {
+                            for (int i = 0; i < constructorParametersCount; i++)
+                            {
+                                codeWriter.Write("default");
+                                if(i < constructorParametersCount - 1)
+                                    codeWriter.Write(", ");
+                            }
+                        }
+                        codeWriter.WriteLine(");");
                     }
                 }
             }

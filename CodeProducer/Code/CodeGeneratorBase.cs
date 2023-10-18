@@ -194,7 +194,9 @@ namespace Utte.Code
         private void WriteStaticConstructor()
         {
             List<Member> initialization = new List<Member>();
+            int constructorParametersCount = 0;
             foreach (Member member in _memberWriter.List)
+            {
                 if (member.Static)
                 {
                     if (member.PrivateProtected && !member.ValueType)
@@ -202,10 +204,18 @@ namespace Utte.Code
                     else if (member.ValueType || member.ConstructorSet)
                         initialization.Add(member);
                 }
+                else
+                {
+                    if((member.ConstructorSet || member.ReadOnly) && member.IsStructMember)
+                        constructorParametersCount++;
+                    if(member.ConstructorSet && !member.IsStructMember)
+                        constructorParametersCount++;
+                }
+            }
             if (initialization.Count > 0)
             {
                 _codeWriter.ProduceRegionStart("Static constructor");
-                _codeWriter.ProduceStaticConstructor(_name, initialization);
+                _codeWriter.ProduceStaticConstructor(_name, initialization, constructorParametersCount);
                 _codeWriter.ProduceRegionEnd();
             }
         }
