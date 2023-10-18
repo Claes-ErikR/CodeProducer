@@ -165,12 +165,15 @@ namespace Utte.Code.Code.Helpers
             StringBuilder sb = new StringBuilder();
             foreach (Member member in members)
             {
-                sb.Append(member.Type);
-                if (member.ValueIsNullable)
-                    sb.Append("?");
-                sb.Append(" ");
-                sb.Append(member.Name.ToLower());
-                sb.Append(", ");
+                if (member.IsStructMember || member.ConstructorSet)
+                {
+                    sb.Append(member.Type);
+                    if (member.ValueIsNullable)
+                        sb.Append("?");
+                    sb.Append(" ");
+                    sb.Append(member.Name.ToLower());
+                    sb.Append(", ");
+                }
             }
             sb.Remove(sb.Length - 2, 2);
             codeWriter.Write(sb.ToString());
@@ -179,16 +182,21 @@ namespace Utte.Code.Code.Helpers
             codeWriter.AddIndentation();
             foreach (Member member in members)
             {
-                if(member.IsStructMember)
+                if (member.IsStructMember)
+                {
                     codeWriter.Write(member.Name, true);
-                else
+                    codeWriter.Write(" = ");
+                    codeWriter.Write(member.Name.ToLower());
+                    codeWriter.WriteLine(";");
+                }
+                else if (member.ConstructorSet)
                 {
                     codeWriter.Write("_", true);
                     codeWriter.Write(member.Name.ToLower());
+                    codeWriter.Write(" = ");
+                    codeWriter.Write(member.Name.ToLower());
+                    codeWriter.WriteLine(";");
                 }
-                codeWriter.Write(" = ");
-                codeWriter.Write(member.Name.ToLower());
-                codeWriter.WriteLine(";");
             }
             codeWriter.SubtractIndentation();
             codeWriter.WriteLine("}", true);

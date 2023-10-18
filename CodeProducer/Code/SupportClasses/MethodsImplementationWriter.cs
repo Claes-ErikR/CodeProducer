@@ -591,11 +591,25 @@ namespace Utte.Code.Code.SupportClasses
                 StringBuilder sb = new StringBuilder("(");
                 foreach (Member member in members)
                 {
-                    if (member.ConstructorSet)
+                    if (!member.Static)
                     {
-                        sb.Append("_");
-                        sb.Append(member.Name.ToLower());
-                        sb.Append(", ");
+                        if (member.IsStructMember)
+                        {
+                            if (member.ConstructorSet || member.ReadOnly)
+                            {
+                                sb.Append(member.Name);
+                                sb.Append(", ");
+                            }
+                        }
+                        else
+                        {
+                            if (member.ConstructorSet)
+                            {
+                                sb.Append("_");
+                                sb.Append(member.Name.ToLower());
+                                sb.Append(", ");
+                            }
+                        }
                     }
                 }
                 if (sb.Length > 1)
@@ -604,23 +618,41 @@ namespace Utte.Code.Code.SupportClasses
                 codeWriter.WriteLine(sb.ToString());
                 foreach (Member member in members)
                 {
-                    if (!member.ConstructorSet && member.PrivateProtected)
+                    if (!member.ConstructorSet && !member.Static)
                     {
-                        codeWriter.Write("clone._", true);
-                        codeWriter.Write(member.Name.ToLower());
-                        codeWriter.Write(" = ");
-                        codeWriter.Write("this._");
-                        codeWriter.Write(member.Name.ToLower());
-                        codeWriter.WriteLine(";");
-                    }
-                    else if (!member.ConstructorSet && member.SetProperty)
-                    {
-                        codeWriter.Write("clone.", true);
-                        codeWriter.Write(member.Name);
-                        codeWriter.Write(" = ");
-                        codeWriter.Write("this.");
-                        codeWriter.Write(member.Name);
-                        codeWriter.WriteLine(";");
+                        if (member.IsStructMember)
+                        {
+                            if (!member.ReadOnly)
+                            {
+                                codeWriter.Write("clone.", true);
+                                codeWriter.Write(member.Name);
+                                codeWriter.Write(" = ");
+                                codeWriter.Write("this.");
+                                codeWriter.Write(member.Name);
+                                codeWriter.WriteLine(";");
+                            }
+                        }
+                        else
+                        {
+                            if (member.PrivateProtected)
+                            {
+                                codeWriter.Write("clone._", true);
+                                codeWriter.Write(member.Name.ToLower());
+                                codeWriter.Write(" = ");
+                                codeWriter.Write("this._");
+                                codeWriter.Write(member.Name.ToLower());
+                                codeWriter.WriteLine(";");
+                            }
+                            else if (member.SetProperty)
+                            {
+                                codeWriter.Write("clone.", true);
+                                codeWriter.Write(member.Name);
+                                codeWriter.Write(" = ");
+                                codeWriter.Write("this.");
+                                codeWriter.Write(member.Name);
+                                codeWriter.WriteLine(";");
+                            }
+                        }
                     }
                 }
                 codeWriter.WriteLine("return clone;", true);

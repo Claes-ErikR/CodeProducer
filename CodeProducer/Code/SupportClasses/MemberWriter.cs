@@ -243,13 +243,13 @@ namespace Utte.Code.Code.SupportClasses
             _members.Add(member);
         }
 
-        public void AddIXmlSaveMember()
+        public void AddIXmlSaveMember(bool setMemberInConstructor)
         {
             Member member = new Member();
             member.Attributes = new List<string>();
             member.Attributes.Add("Category(\"Behavior\")");
             member.Attributes.Add("Description(\"Returns or sets inclusion in XmlSave\")");
-            member.ConstructorSet = false;
+            member.ConstructorSet = setMemberInConstructor;
             member.Description = "Decides wether the object should be saved in XmlSave";
             member.GetProperty = true;
             member.SetProperty = true;

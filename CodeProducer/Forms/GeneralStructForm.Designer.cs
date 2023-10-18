@@ -47,6 +47,7 @@ namespace Utte.Code
             this.chkImplementDeconstruct = new System.Windows.Forms.CheckBox();
             this.chkStructComparisonImplementation = new System.Windows.Forms.CheckBox();
             this.lstImplementedInterfaces = new System.Windows.Forms.ListBox();
+            this.lblInterfaces = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // cmdProduce
@@ -221,17 +222,27 @@ namespace Utte.Code
             // lstImplementedInterfaces
             // 
             this.lstImplementedInterfaces.FormattingEnabled = true;
-            this.lstImplementedInterfaces.Location = new System.Drawing.Point(464, 345);
+            this.lstImplementedInterfaces.Location = new System.Drawing.Point(423, 183);
             this.lstImplementedInterfaces.Name = "lstImplementedInterfaces";
             this.lstImplementedInterfaces.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.lstImplementedInterfaces.Size = new System.Drawing.Size(120, 95);
+            this.lstImplementedInterfaces.Size = new System.Drawing.Size(196, 186);
             this.lstImplementedInterfaces.TabIndex = 17;
+            // 
+            // lblInterfaces
+            // 
+            this.lblInterfaces.AutoSize = true;
+            this.lblInterfaces.Location = new System.Drawing.Point(420, 161);
+            this.lblInterfaces.Name = "lblInterfaces";
+            this.lblInterfaces.Size = new System.Drawing.Size(54, 13);
+            this.lblInterfaces.TabIndex = 18;
+            this.lblInterfaces.Text = "Interfaces";
             // 
             // GeneralStructForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(674, 555);
+            this.Controls.Add(this.lblInterfaces);
             this.Controls.Add(this.lstImplementedInterfaces);
             this.Controls.Add(this.chkStructComparisonImplementation);
             this.Controls.Add(this.chkImplementDeconstruct);
@@ -279,6 +290,7 @@ namespace Utte.Code
         private System.Windows.Forms.CheckBox chkImplementDeconstruct;
         private System.Windows.Forms.CheckBox chkStructComparisonImplementation;
         private System.Windows.Forms.ListBox lstImplementedInterfaces;
+        private System.Windows.Forms.Label lblInterfaces;
     }
 }
 

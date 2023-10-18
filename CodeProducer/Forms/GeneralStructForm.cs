@@ -85,7 +85,7 @@ namespace Utte.Code
                             if (chkStructComparisonImplementation.Checked)
                                 newstruct.ImplementSortComparison();
 
-                            newstruct.AddImplementedInterfaces(GetImplementedInterfaces());
+                            newstruct.AddImplementedInterfaces(GetImplementedInterfaces(), chkStructConstructor.Checked);
 
                             newstruct.Produce();
                         }

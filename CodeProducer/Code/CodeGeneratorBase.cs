@@ -47,7 +47,8 @@ namespace Utte.Code
         /// Implements a list of implemented interfaces to the class
         /// </summary>
         /// <param name="interfaces"></param>
-        public void AddImplementedInterfaces(List<string> interfaces)
+        /// <param name="setAllMembersInConstructor"></param>
+        public void AddImplementedInterfaces(List<string> interfaces, bool setAllMembersInConstructor = false)
         {
             if (interfaces.Contains("IFormattable"))
                 ImplementIFormattable();
@@ -62,7 +63,7 @@ namespace Utte.Code
             if (interfaces.Contains("IIntegrable<double>"))
                 ImplementIIntegrableOfDouble();
             if (interfaces.Contains("IXmlSave"))
-                ImplementIXmlSave();
+                ImplementIXmlSave(setAllMembersInConstructor);
             if (interfaces.Contains("IValid"))
                 ImplementIValid();
             if (interfaces.Contains("IEuclidean3D"))
@@ -355,13 +356,13 @@ namespace Utte.Code
         /// <summary>
         /// Implements IXmlSave interface
         /// </summary>
-        private void ImplementIXmlSave()
+        private void ImplementIXmlSave(bool setMemberInConstructor)
         {
             _interfaces.Add("IXmlSave");
 
             _methodsImplementationWriter.AddIXmlSaveMethods(_codeWriter);
 
-            _memberWriter.AddIXmlSaveMember();
+            _memberWriter.AddIXmlSaveMember(setMemberInConstructor);
         }
 
         /// <summary>
