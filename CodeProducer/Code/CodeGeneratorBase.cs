@@ -546,8 +546,69 @@ namespace Utte.Code
             }
         }
 
+        /// <summary>
+        /// Compares the instance to an object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is Member)
+                return this.Equals((Member)obj);
+            return false;
+        }
+
+        /// <summary>
+        /// Compares the instance to an object, typesafe
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public bool Equals(Member member)
+        {
+            if (member == null)
+                return false;
+
+            if((this.Attributes != null && this.Attributes.Count > 0) || (member.Attributes != null && member.Attributes.Count > 0))
+            {
+                if (this.Attributes == null || this.Attributes.Count == 0 || member.Attributes == null || member.Attributes.Count == 0 || this.Attributes.Count != member.Attributes.Count)
+                    return false;
+                for (int i = 0; i < this.Attributes.Count; i++)
+                    if (this.Attributes[i] != member.Attributes[i])
+                        return false;
+            }
+
+            return (this.Name == member.Name) && (this.Type == member.Type) && (this.Public == member.Public) && (this.PrivateProtected == member.PrivateProtected) && (this.Static == member.Static) && (this.Description == member.Description) && (this.GetProperty == member.GetProperty) && (this.SetProperty == member.SetProperty) && (this.ProtectedSetProperty == member.ProtectedSetProperty) && (this.ConstructorSet == member.ConstructorSet) && (this.ValueType == member.ValueType) && (this.GetText == member.GetText) && (this.SetText == member.SetText) && (this.ValueIsNullable == member.ValueIsNullable) && (this.IsStructMember == member.IsStructMember) && (this.ReadOnly == member.ReadOnly);
+        }
+
         #endregion
 
+        #region Operators
+
+        /// <summary>
+        /// Compares lhs and rhs for equality
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator ==(Member lhs, Member rhs)
+        {
+            return Member.Equals(lhs, rhs);
+        }
+
+        /// <summary>
+        /// Compares lhs and rhs for inequality
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool operator !=(Member lhs, Member rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        #endregion
     }
 
     /// <summary>

@@ -173,8 +173,9 @@ namespace Utte.Code.Code.SupportClasses
         /// </summary>
         /// <param name="member"></param>
         public void Add(Member member)
-        { 
-            _members.Add(member); 
+        {
+            if(!_members.Contains(member))
+                _members.Add(member); 
         }
 
         /// <summary>
@@ -183,7 +184,8 @@ namespace Utte.Code.Code.SupportClasses
         /// <param name="members"></param>
         public void AddRange(IEnumerable<Member> members)
         {
-            _members.AddRange(members);
+            foreach (Member member in members)
+                Add(member);
         }
 
         public void AddEmptyMember(string className)
@@ -199,7 +201,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Type = className;
             member.ConstructorSet = true;
             member.ReadOnly = true;
-            _members.Add(member);
+            Add(member);
         }
 
         public void AddListWrapperMembers(string type)
@@ -214,7 +216,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Static = false;
             member.Type = "List<" + type + ">";
             member.ValueType = false;
-            _members.Add(member);
+            Add(member);
 
             member = new Member();
             member.ConstructorSet = false;
@@ -227,7 +229,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Static = false;
             member.Type = "int";
             member.ValueType = true;
-            _members.Add(member);
+            Add(member);
 
             member = new Member();
             member.ConstructorSet = false;
@@ -240,7 +242,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Static = false;
             member.Type = type;
             member.ValueType = true;
-            _members.Add(member);
+            Add(member);
         }
 
         public void AddIXmlSaveMember(bool setMemberInConstructor)
@@ -258,7 +260,7 @@ namespace Utte.Code.Code.SupportClasses
             member.Static = false;
             member.Type = "bool";
             member.ValueType = true;
-            _members.Add(member);
+            Add(member);
         }
 
         public void AddIValidMember()
@@ -277,14 +279,14 @@ namespace Utte.Code.Code.SupportClasses
             member.Type = "bool";
             member.ValueType = true;
             member.ReadOnly = true;
-            _members.Add(member);
+            Add(member);
         }
 
         public void AddISphericaloordinatesMembers()
         {
-            _members.Add(GetCoordinateMember("R"));
-            _members.Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
-            _members.Add(GetCoordinateMember("Theta", "AngleMeasurement", false));
+            Add(GetCoordinateMember("R"));
+            Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
+            Add(GetCoordinateMember("Theta", "AngleMeasurement", false));
         }
 
         /// <summary>
@@ -292,9 +294,9 @@ namespace Utte.Code.Code.SupportClasses
         /// </summary>
         public void AddICylindricalCoordinatesMembers()
         {
-            _members.Add(GetCoordinateMember("R"));
-            _members.Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
-            _members.Add(GetCoordinateMember("z"));
+            Add(GetCoordinateMember("R"));
+            Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
+            Add(GetCoordinateMember("z"));
         }
 
         /// <summary>
@@ -302,21 +304,21 @@ namespace Utte.Code.Code.SupportClasses
         /// </summary>
         public void AddIEuclidean3DMembers()
         {
-            _members.Add(GetCoordinateMember("x"));
-            _members.Add(GetCoordinateMember("y"));
-            _members.Add(GetCoordinateMember("z"));
+            Add(GetCoordinateMember("x"));
+            Add(GetCoordinateMember("y"));
+            Add(GetCoordinateMember("z"));
         }
 
         public void AddIEuclidean2DMembers()
         {
-            _members.Add(GetCoordinateMember("x"));
-            _members.Add(GetCoordinateMember("y"));
+            Add(GetCoordinateMember("x"));
+            Add(GetCoordinateMember("y"));
         }
 
         public void AddICircularCoordinatesMembers()
         {
-            _members.Add(GetCoordinateMember("R"));
-            _members.Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
+            Add(GetCoordinateMember("R"));
+            Add(GetCoordinateMember("Phi", "AngleMeasurement", false));
         }
 
         public List<Member> List
