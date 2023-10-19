@@ -412,7 +412,7 @@ namespace Utte.Code
         {
             _interfaces.Add("ICloneable");
 
-            _methodsImplementationWriter.AddICloneableMethod(_codeWriter, _name, _memberWriter.List);
+            _methodsImplementationWriter.AddICloneableMethod(_codeWriter, _name);
         }
 
         /// <summary>

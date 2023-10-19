@@ -574,7 +574,7 @@ namespace Utte.Code.Code.SupportClasses
             _methods.Add(method);
         }
 
-        public void AddICloneableMethod(CodeWriter codeWriter, string className, IEnumerable<Member> members)
+        public void AddICloneableMethod(CodeWriter codeWriter, string className)
         {
             Method method = new Method();
             method.Visibility = Visibility.Public;
@@ -586,75 +586,10 @@ namespace Utte.Code.Code.SupportClasses
             method.Text = delegate ()
             {
                 codeWriter.Write(className, true);
-                codeWriter.Write(" clone = new ");
+                codeWriter.Write(" clone = (");
                 codeWriter.Write(className);
-                StringBuilder sb = new StringBuilder("(");
-                foreach (Member member in members)
-                {
-                    if (!member.Static)
-                    {
-                        if (member.IsStructMember)
-                        {
-                            if (member.ConstructorSet || member.ReadOnly)
-                            {
-                                sb.Append(member.Name);
-                                sb.Append(", ");
-                            }
-                        }
-                        else
-                        {
-                            if (member.ConstructorSet)
-                            {
-                                sb.Append("_");
-                                sb.Append(member.Name.ToLower());
-                                sb.Append(", ");
-                            }
-                        }
-                    }
-                }
-                if (sb.Length > 1)
-                    sb.Remove(sb.Length - 2, 2);
-                sb.Append(");");
-                codeWriter.WriteLine(sb.ToString());
-                foreach (Member member in members)
-                {
-                    if (!member.ConstructorSet && !member.Static)
-                    {
-                        if (member.IsStructMember)
-                        {
-                            if (!member.ReadOnly)
-                            {
-                                codeWriter.Write("clone.", true);
-                                codeWriter.Write(member.Name);
-                                codeWriter.Write(" = ");
-                                codeWriter.Write("this.");
-                                codeWriter.Write(member.Name);
-                                codeWriter.WriteLine(";");
-                            }
-                        }
-                        else
-                        {
-                            if (member.PrivateProtected)
-                            {
-                                codeWriter.Write("clone._", true);
-                                codeWriter.Write(member.Name.ToLower());
-                                codeWriter.Write(" = ");
-                                codeWriter.Write("this._");
-                                codeWriter.Write(member.Name.ToLower());
-                                codeWriter.WriteLine(";");
-                            }
-                            else if (member.SetProperty)
-                            {
-                                codeWriter.Write("clone.", true);
-                                codeWriter.Write(member.Name);
-                                codeWriter.Write(" = ");
-                                codeWriter.Write("this.");
-                                codeWriter.Write(member.Name);
-                                codeWriter.WriteLine(";");
-                            }
-                        }
-                    }
-                }
+                codeWriter.WriteLine(")MemberwiseClone();");
+
                 codeWriter.WriteLine("return clone;", true);
             };
             _methods.Add(method);
