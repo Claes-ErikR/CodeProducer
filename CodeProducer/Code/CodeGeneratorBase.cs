@@ -310,6 +310,8 @@ namespace Utte.Code
         {
             _interfaces.Add("ICircularCoordinates");
 
+            _methodsImplementationWriter.AddIsFiniteMethod();
+
             _memberWriter.AddICircularCoordinatesMembers();
         }
 
@@ -319,6 +321,8 @@ namespace Utte.Code
         private void ImplementIEuclidean2D()
         {
             _interfaces.Add("IEuclidean2D");
+
+            _methodsImplementationWriter.AddIsFiniteMethod();
 
             _memberWriter.AddIEuclidean2DMembers();
         }
@@ -330,6 +334,8 @@ namespace Utte.Code
         {
             _interfaces.Add("ISphericaloordinates");
 
+            _methodsImplementationWriter.AddIsFiniteMethod();
+
             _memberWriter.AddISphericaloordinatesMembers();
         }
 
@@ -340,6 +346,8 @@ namespace Utte.Code
         {
             _interfaces.Add("ICylindricalCoordinates");
 
+            _methodsImplementationWriter.AddIsFiniteMethod();
+
             _memberWriter.AddICylindricalCoordinatesMembers();
         }
 
@@ -349,6 +357,8 @@ namespace Utte.Code
         private void ImplementIEuclidean3D()
         {
             _interfaces.Add("IEuclidean3D");
+
+            _methodsImplementationWriter.AddIsFiniteMethod();
 
             _memberWriter.AddIEuclidean3DMembers();
         }

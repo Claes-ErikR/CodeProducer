@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Utte.Code.Code.Helpers;
 
@@ -829,6 +830,21 @@ namespace Utte.Code.Code.SupportClasses
                     }
             };
             _methods.Add(method);
+        }
+
+        public void AddIsFiniteMethod()
+        {
+            if (!_methods.Any(x => x.Name == "IsFinite"))
+            {
+                Method method = new Method();
+                method.Visibility = Visibility.Public;
+                method.Description = "Checks if coordinates is finite";
+                method.Type = "bool";
+                method.Override = false;
+                method.Static = false;
+                method.Name = "IsFinite";
+                _methods.Add(method);
+            }
         }
 
         private void NotImplemented(CodeWriter codeWriter)
